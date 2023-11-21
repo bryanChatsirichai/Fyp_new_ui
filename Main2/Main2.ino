@@ -280,31 +280,31 @@ int action_menu1_screen(int array_size,const char *menu_name ,const char *const 
 int get_Action_screen_1_Menu_update(int s);
 
 int zoom_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
-int zoom_movements_menu1_update(int s);
+int get_zoom_movements_menu1_update(int s);
 
 int zoom_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
-int zoom_movements_menu1_update(int s);
+int get_zoom_movements_menu2_update(int s);
 
 int focus_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
-int focus_movements_menu1_update(int s);
+int get_focus_movements_menu1_update(int s);
 
 int focus_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
-int focus_movements_menu2_update(int s);
+int get_focus_movements_menu2_update(int s);
 
 int zoomfocus_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
-int zoomfocus_movements_menu1_update(int s);
+int get_zoomfocus_movements_menu1_update(int s);
 
 int zoomfocus_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
-int zoomfocus_movements_menu2_update(int s);
+int get_zoomfocus_movements_menu2_update(int s);
 
 int zoomfocus_movements_menu3_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
-int zoomfocus_movements_menu3_update(int s);
+int get_zoomfocus_movements_menu3_update(int s);
 
 int custome_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
-int custom_movements_menu1_update(int s);
+int get_custom_movements_menu1_update(int s);
 
 int custome_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
-int custom_movements_menu2_update(int s);
+int get_custom_movements_menu2_update(int s);
 
 void setup() {
   // put your setup code here, to run once:
@@ -556,9 +556,10 @@ void loop() {
                 default:
                    //max_option = zoom_movements_menu2_screen(2,zm2_name ,zoom_menu2, option_selected,DEEPPINK);
                    zoom_movements_menu2_screen(2,zm2_name ,zoom_menu2, option_selected,DEEPPINK);
-                   zoom_movements_menu2 = zoom_movements_menu2_update(zoom_movements_menu2);
+                   zoom_movements_menu2 = get_zoom_movements_menu2_update(zoom_movements_menu2);
                    if(zoom_movements_menu2 == -2){
                     zoom_movements_menu1 = -1;
+                    zoom_movements_menu2 = -1;
                    }
 
               }
@@ -568,7 +569,7 @@ void loop() {
             default:
               //max_option = zoom_movements_menu1_screen(4,zm1_name ,zoom_menu1, option_selected,DEEPPINK)
               zoom_movements_menu1_screen(4,zm1_name ,zoom_menu1, option_selected,DEEPPINK);
-              zoom_movements_menu1 = zoom_movements_menu1_update(zoom_movements_menu1);
+              zoom_movements_menu1 = get_zoom_movements_menu1_update(zoom_movements_menu1);
           }
           break;
         }
@@ -606,9 +607,10 @@ void loop() {
                 default:
                    //max_option = focus_movements_menu2_screen(2,zm2_name ,zoom_menu2, option_selected,DEEPPINK);
                    focus_movements_menu2_screen(2,fm2_name ,focus_menu2, option_selected,DEEPPINK);
-                   focus_movements_menu2 = zoom_movements_menu2_update(focus_movements_menu2);
+                   focus_movements_menu2 = get_zoom_movements_menu2_update(focus_movements_menu2);
                    if(focus_movements_menu2 == -2){
                     focus_movements_menu1 = -1;
+                    focus_movements_menu2 = -1;
                    }
 
               }
@@ -618,7 +620,7 @@ void loop() {
             default:
               //max_option = focus_movements_menu1_screen(4,fm1_name ,focus_menu1, option_selected,DEEPPINK)
               focus_movements_menu1_screen(4,fm1_name ,focus_menu1, option_selected,DEEPPINK);
-              focus_movements_menu1 = zoom_movements_menu1_update(focus_movements_menu1);
+              focus_movements_menu1 = get_zoom_movements_menu1_update(focus_movements_menu1);
           }
           break;
         }
@@ -678,9 +680,10 @@ void loop() {
                     default:
                       //  max_option = zoomfocus_movements_menu3_screen(2, zf3_name,zoomfocus_menu3,option_selected,DEEPPINK);
                       zoomfocus_movements_menu3_screen(2, zf3_name,zoomfocus_menu3,option_selected,DEEPPINK);
-                      zoom_focus_movements_menu3 = zoomfocus_movements_menu3_update(zoom_focus_movements_menu3);
+                      zoom_focus_movements_menu3 = get_zoomfocus_movements_menu3_update(zoom_focus_movements_menu3);
                       if(zoom_focus_movements_menu3 == -2){
                           zoom_focus_movements_menu2 = -1;
+                          zoom_focus_movements_menu3 = -1;
                         }
                       break;
                   }
@@ -691,9 +694,10 @@ void loop() {
               default:
                 // max_option = zoomfocus_movements_menu2_screen(4, zf2_name ,zoomfocus_menu2, option_selected,DEEPPINK);
                 zoomfocus_movements_menu2_screen(4, zf2_name ,zoomfocus_menu2, option_selected,DEEPPINK);
-                zoom_focus_movements_menu2 = zoomfocus_movements_menu2_update(zoom_focus_movements_menu2);
+                zoom_focus_movements_menu2 = get_zoomfocus_movements_menu2_update(zoom_focus_movements_menu2);
                 if(zoom_focus_movements_menu2 == -2){
                     zoom_focus_movements_menu1 = -1;
+                    zoom_focus_movements_menu2 = -1;
                   }
                 break;
               }
@@ -703,7 +707,7 @@ void loop() {
             default:
               // max_option = zoomfocus_movements_menu1_screen(4, zf1_name ,zoomfocus_menu1, option_selected,DEEPPINK);
               zoomfocus_movements_menu1_screen(4, zf1_name ,zoomfocus_menu1, option_selected,DEEPPINK);
-              zoom_focus_movements_menu1 = zoomfocus_movements_menu1_update(zoom_focus_movements_menu1);
+              zoom_focus_movements_menu1 = get_zoomfocus_movements_menu1_update(zoom_focus_movements_menu1);
               break;
           }
           break;
@@ -740,8 +744,7 @@ void loop() {
 
         //fixed_paterns_menu2
         case 4: {
-          switch (fixed_paterns_menu2) {
-            
+          switch (fixed_paterns_menu2) {     
             //ZigZag
             case 0: {
               break;
@@ -751,12 +754,12 @@ void loop() {
             default:
               //max_option = custome_movements_menu1_screen(1, preset2_name, preset2_menu, option_selected,DEEPPINK);
               custome_movements_menu2_screen(1, preset2_name, preset2_menu, option_selected,DEEPPINK);
-              fixed_paterns_menu2 = custom_movements_menu2_update(fixed_paterns_menu2);
+              fixed_paterns_menu2 = get_custom_movements_menu2_update(fixed_paterns_menu2);
               if(fixed_paterns_menu2 == -2){
                     fixed_paterns_menu1 = -1;
+                    fixed_paterns_menu2 = -1;
               }
-              break;
-            
+              break;        
           }
           break;
         }
@@ -765,7 +768,7 @@ void loop() {
         default:
           // max_option = custome_movements_menu1_screen(4, preset1_name, preset1_menu, option_selected,DEEPPINK);
           custome_movements_menu1_screen(4, preset1_name, preset1_menu, option_selected,DEEPPINK);
-          fixed_paterns_menu1 = custom_movements_menu1_update(fixed_paterns_menu1);
+          fixed_paterns_menu1 = get_custom_movements_menu1_update(fixed_paterns_menu1);
           break;
       }
       break;

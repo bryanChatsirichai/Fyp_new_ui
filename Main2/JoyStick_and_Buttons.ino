@@ -245,7 +245,7 @@ int get_Action_screen_1_Menu_update(int s){
   return s;
 }
 
-int zoom_movements_menu1_update(int s){
+int get_zoom_movements_menu1_update(int s){
   //Go Home menu
   if (digitalRead(CENTER_BUTTON) == LOW) {
       resetToHomeScreen();
@@ -294,7 +294,7 @@ int zoom_movements_menu1_update(int s){
   return s;
 }
 
-int zoom_movements_menu2_update(int s){
+int get_zoom_movements_menu2_update(int s){
   //Go Home menu
   if (digitalRead(CENTER_BUTTON) == LOW) {
       resetToHomeScreen();
@@ -330,7 +330,7 @@ int zoom_movements_menu2_update(int s){
   return s;
 }
 
-int focus_movements_menu1_update(int s){
+int get_focus_movements_menu1_update(int s){
   //Go Home menu
   if (digitalRead(CENTER_BUTTON) == LOW) {
       resetToHomeScreen();
@@ -379,7 +379,7 @@ int focus_movements_menu1_update(int s){
   return s;
 }
 
-int focus_movements_menu2_update(int s){
+int get_focus_movements_menu2_update(int s){
   //Go Home menu
   if (digitalRead(CENTER_BUTTON) == LOW) {
       resetToHomeScreen();
@@ -415,7 +415,7 @@ int focus_movements_menu2_update(int s){
   return s;
 }
 
-int zoomfocus_movements_menu1_update(int s){
+int get_zoomfocus_movements_menu1_update(int s){
   //Go Home menu
   if (digitalRead(CENTER_BUTTON) == LOW) {
       resetToHomeScreen();
@@ -464,7 +464,7 @@ int zoomfocus_movements_menu1_update(int s){
   return s;
 }
 
-int zoomfocus_movements_menu2_update(int s){
+int get_zoomfocus_movements_menu2_update(int s){
   //Go Home menu
   if (digitalRead(CENTER_BUTTON) == LOW) {
       resetToHomeScreen();
@@ -522,7 +522,7 @@ int zoomfocus_movements_menu2_update(int s){
   return s;
 }
 
-int zoomfocus_movements_menu3_update(int s){
+int get_zoomfocus_movements_menu3_update(int s){
   //Go Home menu
   if (digitalRead(CENTER_BUTTON) == LOW) {
       resetToHomeScreen();
@@ -543,8 +543,6 @@ int zoomfocus_movements_menu3_update(int s){
     tft.fillScreen(ST77XX_BLACK);//clear screen
     updateMenu = true;
   }
-
-
   //scroll up 
   // -2 just a number to differentiate between -1s
   if (digitalRead(UP_BUTTON) == LOW) {
@@ -558,7 +556,7 @@ int zoomfocus_movements_menu3_update(int s){
   return s;
 }
 
-int custom_movements_menu1_update(int s){
+int get_custom_movements_menu1_update(int s){
   //Go Home menu
   if (digitalRead(CENTER_BUTTON) == LOW) {
       resetToHomeScreen();
@@ -607,7 +605,7 @@ int custom_movements_menu1_update(int s){
   return s;
 }
 
-int custom_movements_menu2_update(int s){
+int get_custom_movements_menu2_update(int s){
   //Go Home menu
   if (digitalRead(CENTER_BUTTON) == LOW) {
       resetToHomeScreen();
@@ -628,8 +626,6 @@ int custom_movements_menu2_update(int s){
     tft.fillScreen(ST77XX_BLACK);//clear screen
     updateMenu = true;
   }
-
-
   //scroll up 
   // -2 just a number to differentiate between -1s
   if (digitalRead(UP_BUTTON) == LOW) {
@@ -639,6 +635,5 @@ int custom_movements_menu2_update(int s){
   tft.fillScreen(ST77XX_BLACK);//clear screen
   updateMenu = true;
   }
-
   return s;
 }
