@@ -2,7 +2,6 @@
 void initializing_Page(){   
     tft.setTextSize(3);
     tft.setTextColor(WHITE);
-    //tft.drawRect(0, 80, 240,  60, WHITE);
     tft.setCursor(60,100);
     tft.print(F("ICM APP"));
     updateScreen();
