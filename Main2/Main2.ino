@@ -105,6 +105,9 @@ int home_screen = -1;
 int configuration_screen = -1;
 int camera_setting_screen = -1;
 int camera_positioning_screen = -1;
+int motor_calibration_screen1 = -1;
+//int motor_calibration_screen2 = -1;
+int exposure_option_screen = -1;
 int action_screen_1 = -1;
 int zoom_movements_menu1 = -1;
 int zoom_movements_menu2 = -1;
@@ -141,7 +144,7 @@ const char home_2[] PROGMEM = "Actions - Custom";
 const char mm_configuration_header[] PROGMEM = "|- Configuration Menu -|";
 const char mm_configuration_0[] PROGMEM = "Camera Settings";
 const char mm_configuration_1[] PROGMEM = "Motor Calibration";
-const char mm_configuration_2[] PROGMEM = "POV Calibration";
+const char mm_configuration_2[] PROGMEM = "RESET all values";
 
 ////main_menu2 options focus on actions,
 const char mm_action1_header[] PROGMEM = "|- Action Menu-1 -|";
@@ -159,6 +162,19 @@ const char cs_2[] PROGMEM = "Motor Movement Time";
 const char pm_name[] PROGMEM = "|- Positioning Setting -|";
 const char pm_0[] PROGMEM = "Zoom at the Back";
 const char pm_1[] PROGMEM = "Zoom at the Front";
+
+//motor callibration
+const char mc1_name[] PROGMEM = "|- Calibration -|";
+const char mc1_0[] PROGMEM = "Z_Cali";
+const char mc1_1[] PROGMEM = "F_Cali";
+const char mc1_2[] PROGMEM = "POV_Cali";
+const char mc1_3[] PROGMEM = "Exposure";
+
+//exposure option
+const char exposure_option_name[] PROGMEM = "|- Exposure -|";
+const char exposure_option_0[] PROGMEM = "Pre";
+const char exposure_option_1[] PROGMEM = "Split";
+const char exposure_option_2[] PROGMEM = "After";
 
 //Zoom page1
 const char zm1_name[] PROGMEM = "|- Zoom Movements -|";
@@ -211,8 +227,6 @@ const char preset2_name[] PROGMEM = "|----- Presets -----|";
 const char preset2_0[] PROGMEM = "ZigZag-pend";
 
 
-
-
 /* String Table */
 const char *const home_menu[] PROGMEM = {home_0, home_1,home_2}; //Home_menu table
 const char *const main_menu_1[] PROGMEM = {mm_configuration_0, mm_configuration_1, mm_configuration_2}; //main_menu1 table
@@ -220,6 +234,9 @@ const char *const main_menu_2[] PROGMEM = {mm_action1_0, mm_action1_1, mm_action
 
 const char *const camera_settings_menu[] PROGMEM = {cs_0, cs_1, cs_2};
 const char *const positioning_menu[] PROGMEM = {pm_0,pm_1};
+const char *const motor_calibration_menu1[] PROGMEM {mc1_0, mc1_1, mc1_2, mc1_3};
+const char *const exposure_option_menu[] PROGMEM {exposure_option_0, exposure_option_1,exposure_option_2};
+
 
 const char *const zoom_menu1[] PROGMEM = {zm1_0,zm1_1,zm1_2,zm1_3};
 const char *const zoom_menu2[] PROGMEM = {zm2_0,zm2_1};
@@ -252,6 +269,12 @@ int get_CameraSetting_Menu_update(int s);
 
 int positioning_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
 int get_positioning_Menu_update(int s);
+
+int motor_calibration_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+int get_motor_calibration_menu1_update(int s);
+
+int exposure_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+int get_exposure_menu_update(int s);
 
 int action_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
 int get_Action_screen_1_Menu_update(int s);
@@ -333,7 +356,7 @@ void setup() {
   orientation = EEPROM.read(4);
   // shutter_time = EEPROM.read(5);
   // motor_time = EEPROM.read(6);
-  // exposure_option_set = EEPROM.read(7);
+  exposure_option_set = EEPROM.read(7);
 
   // ***** Default Values *****
   // if empty (==255), setting default values to 0
@@ -407,9 +430,79 @@ void loop() {
           }
           break;
         }
+        //motor callibration
         case 1: {
+          switch (motor_calibration_screen1){
+
+            //Zoom Calibration
+            case 0: {
+              break;
+            }
+            //Focus Calibration
+            case 1: {
+              break;
+            }
+            //POV Calibration
+            case 2: {
+              break;
+            }
+            //Exposure Setting
+            case 3: {
+                  switch(exposure_option_screen){
+                    //pre
+                    case 0:{
+                      exposure_option_set = 0;
+                      exposure_option_screen = -1;
+                      //go back to prev screen after selection
+                      motor_calibration_screen1 = -1;
+                      EEPROM.write(7, exposure_option_set);
+                      EEPROM.commit();
+                      break;
+                    }
+                    //split
+                    case 1:{
+                      exposure_option_set = 1;
+                      exposure_option_screen = -1;
+                      //go back to prev screen after selection
+                      motor_calibration_screen1 = -1;
+                      EEPROM.write(7, exposure_option_set);
+                      EEPROM.commit();
+                      break;
+                    }
+                    //after
+                    case 2:{
+                      exposure_option_set = 2;
+                      exposure_option_screen = -1;
+                      //go back to prev screen after selection
+                      motor_calibration_screen1 = -1;
+                      EEPROM.write(7, exposure_option_set);
+                      EEPROM.commit();
+                      break;
+                    }
+                    default:
+                    //max_option = (3,exposure_option_name,exposure_option_menu, option_selected,DEEPPINK);  
+                    exposure_menu_screen(3,exposure_option_name,exposure_option_menu, option_selected,DEEPPINK);
+                    exposure_option_screen = get_exposure_menu_update(exposure_option_screen);
+                    break;
+                  }
+              break;
+            }
+
+            // motor_calibration_menu2 if needed
+            // case 4:{
+            //   break;
+            // }
+
+            //Show motor_calibration_menu1
+            default:
+              //max_option = motor_calibration_menu1_screen(4,mc1_name,motor_calibration_menu1, option_selected,DEEPPINK);
+              motor_calibration_menu1_screen(4,mc1_name,motor_calibration_menu1, option_selected,DEEPPINK);
+              motor_calibration_screen1 = get_motor_calibration_menu1_update(motor_calibration_screen1);
+              break;
+          }
           break;
         }
+        //reset all setting
         case 2: {
           break;
         }
