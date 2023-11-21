@@ -112,6 +112,8 @@ int focus_movements_menu2 = -1;
 int zoom_focus_movements_menu1 = -1;
 int zoom_focus_movements_menu2 = -1;
 int zoom_focus_movements_menu3 = -1;
+int fixed_paterns_menu1 = -1;
+int fixed_paterns_menu2 = -1;
 
 /* Motor Objects*/
 AccelStepper front_motor(AccelStepper::DRIVER, front_STEP, front_DIR);
@@ -192,6 +194,19 @@ const char zf3_name[] PROGMEM = "|- Zoom&Focous Movements -|";
 const char zf3_0[] PROGMEM = "ZF Value";
 const char zf3_1[] PROGMEM = "ZF Value&B";
 
+//presets page1
+const char preset1_name[] PROGMEM = "|----- Presets -----|";
+const char preset1_0[] PROGMEM = "Bokeh";
+const char preset1_1[] PROGMEM = "Firework";
+const char preset1_2[] PROGMEM = "ZoomBlur";
+const char preset1_3[] PROGMEM = "SineWave ";
+
+//presets page2
+const char preset2_name[] PROGMEM = "|----- Presets -----|";
+const char preset2_0[] PROGMEM = "ZigZag-pend";
+
+
+
 
 /* String Table */
 const char *const home_menu[] PROGMEM = {home_0, home_1,home_2}; //Home_menu table
@@ -209,6 +224,9 @@ const char *const focus_menu2[] PROGMEM = {fm2_0,fm2_1};
 const char *const zoomfocus_menu1[] PROGMEM = {zf1_0,zf1_1,zf1_2,zf1_3};
 const char *const zoomfocus_menu2[] PROGMEM = {zf2_0,zf2_1,zf2_2,zf2_3};
 const char *const zoomfocus_menu3[] PROGMEM = {zf3_0,zf3_1};
+
+const char *const preset1_menu[] PROGMEM = {preset1_0, preset1_1, preset1_2, preset1_3};
+const char *const preset2_menu[] PROGMEM = {preset2_0};
 
 // Function Declaration
 void initializing_Page();
@@ -249,6 +267,12 @@ int zoomfocus_movements_menu2_update(int s);
 
 int zoomfocus_movements_menu3_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
 int zoomfocus_movements_menu3_update(int s);
+
+int custome_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+int custom_movements_menu1_update(int s);
+
+int custome_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+int custom_movements_menu2_update(int s);
 
 void setup() {
   // put your setup code here, to run once:
@@ -433,7 +457,7 @@ void loop() {
                 case 1:{
                   break;
                 }
-
+                //show focus_movements_menu2
                 default:
                    //max_option = focus_movements_menu2_screen(2,zm2_name ,zoom_menu2, option_selected,DEEPPINK);
                    focus_movements_menu2_screen(2,fm2_name ,focus_menu2, option_selected,DEEPPINK);
@@ -445,7 +469,7 @@ void loop() {
               }
               break;
             }
-
+            //show focus_movements_menu1
             default:
               //max_option = focus_movements_menu1_screen(4,fm1_name ,focus_menu1, option_selected,DEEPPINK)
               focus_movements_menu1_screen(4,fm1_name ,focus_menu1, option_selected,DEEPPINK);
@@ -550,6 +574,55 @@ void loop() {
 
     //Action Custom
     case 2:{
+
+      switch (fixed_paterns_menu1) {
+        //Bokeh Effect
+        case 0: {
+          break;
+        }
+        //Firework Effect
+        case 1: {
+          break;
+        }
+        //Zoom Blur Effect
+        case 2: {
+          break;
+        }
+        //Sine Wave Effect
+        case 3: {
+          break;
+        }
+
+        //fixed_paterns_menu2
+        case 4: {
+          switch (fixed_paterns_menu2) {
+            
+            //ZigZag
+            case 0: {
+              break;
+            }
+            
+            //show fixed_paterns_menu2
+            default:
+              //max_option = custome_movements_menu1_screen(1, preset2_name, preset2_menu, option_selected,DEEPPINK);
+              custome_movements_menu2_screen(1, preset2_name, preset2_menu, option_selected,DEEPPINK);
+              fixed_paterns_menu2 = custom_movements_menu2_update(fixed_paterns_menu2);
+              if(fixed_paterns_menu2 == -2){
+                    fixed_paterns_menu1 = -1;
+              }
+              break;
+            
+          }
+          break;
+        }
+
+        //show fixed_paterns_menu1
+        default:
+          // max_option = custome_movements_menu1_screen(4, preset1_name, preset1_menu, option_selected,DEEPPINK);
+          custome_movements_menu1_screen(4, preset1_name, preset1_menu, option_selected,DEEPPINK);
+          fixed_paterns_menu1 = custom_movements_menu1_update(fixed_paterns_menu1);
+          break;
+      }
       break;
     }
 

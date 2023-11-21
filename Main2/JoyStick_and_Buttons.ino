@@ -304,7 +304,7 @@ int focus_movements_menu2_update(int s){
   }
 
 
-  //scroll up 
+  //scroll up to focus_movements_menu1
   // -2 just a number to differentiate between -1s
   if (digitalRead(UP_BUTTON) == LOW) {
   //update 
@@ -425,6 +425,91 @@ int zoomfocus_movements_menu2_update(int s){
 }
 
 int zoomfocus_movements_menu3_update(int s){
+  //Go Home menu
+  if (digitalRead(CENTER_BUTTON) == LOW) {
+      resetToHomeScreen();
+      s = -1;
+      option_selected = 0; //resets options
+      updateMenu = true;
+  }
+  if (digitalRead(A_BUTTON) == LOW) {
+    s = 0;
+    option_selected = 0; //resets options
+    tft.fillScreen(ST77XX_BLACK);//clear screen
+    updateMenu = true;
+  }
+  if (digitalRead(B_BUTTON) == LOW) {
+    //update 
+    s = 1;
+    option_selected = 0; //resets options
+    tft.fillScreen(ST77XX_BLACK);//clear screen
+    updateMenu = true;
+  }
+
+
+  //scroll up 
+  // -2 just a number to differentiate between -1s
+  if (digitalRead(UP_BUTTON) == LOW) {
+  //update 
+  s = -2;
+  option_selected = 0; //resets options
+  tft.fillScreen(ST77XX_BLACK);//clear screen
+  updateMenu = true;
+  }
+
+  return s;
+}
+
+int custom_movements_menu1_update(int s){
+  //Go Home menu
+  if (digitalRead(CENTER_BUTTON) == LOW) {
+      resetToHomeScreen();
+      s = -1;
+      option_selected = 0; //resets options
+      updateMenu = true;
+    }
+
+  if (digitalRead(A_BUTTON) == LOW) {
+    s = 0;
+    option_selected = 0; //resets options
+    tft.fillScreen(ST77XX_BLACK);//clear screen
+    updateMenu = true;
+  }
+  if (digitalRead(B_BUTTON) == LOW) {
+    //update 
+    s = 1;
+    option_selected = 0; //resets options
+    tft.fillScreen(ST77XX_BLACK);//clear screen
+    updateMenu = true;
+  }
+  if (digitalRead(X_BUTTON) == LOW) {
+    //update 
+    s = 2;
+    option_selected = 0; //resets options
+    tft.fillScreen(ST77XX_BLACK);//clear screen
+    updateMenu = true;
+  }
+  if (digitalRead(Y_BUTTON) == LOW) {
+    //update 
+    s = 3;
+    option_selected = 0; //resets options
+    tft.fillScreen(ST77XX_BLACK);//clear screen
+    updateMenu = true;
+  } 
+
+    //scroll down 
+    if (digitalRead(DOWN_BUTTON) == LOW) {
+    //update 
+    s = 4;
+    option_selected = 0; //resets options
+    tft.fillScreen(ST77XX_BLACK);//clear screen
+    updateMenu = true;
+  }
+
+  return s;
+}
+
+int custom_movements_menu2_update(int s){
   //Go Home menu
   if (digitalRead(CENTER_BUTTON) == LOW) {
       resetToHomeScreen();
