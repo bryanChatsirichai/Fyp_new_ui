@@ -104,6 +104,7 @@ int updateMenu = true;
 int home_screen = -1;
 int configuration_screen = -1;
 int camera_setting_screen = -1;
+int camera_positioning_screen = -1;
 int action_screen_1 = -1;
 int zoom_movements_menu1 = -1;
 int zoom_movements_menu2 = -1;
@@ -154,6 +155,10 @@ const char cs_0[] PROGMEM = "Zoom/Focus Position";
 const char cs_1[] PROGMEM = "Shutter Time"; //Camera Shutter Time, Shutter Speed
 const char cs_2[] PROGMEM = "Motor Movement Time";
 
+//position orientation 
+const char pm_name[] PROGMEM = "|- Positioning Setting -|";
+const char pm_0[] PROGMEM = "Zoom at the Back";
+const char pm_1[] PROGMEM = "Zoom at the Front";
 
 //Zoom page1
 const char zm1_name[] PROGMEM = "|- Zoom Movements -|";
@@ -214,6 +219,7 @@ const char *const main_menu_1[] PROGMEM = {mm_configuration_0, mm_configuration_
 const char *const main_menu_2[] PROGMEM = {mm_action1_0, mm_action1_1, mm_action1_2}; //main_menu2 table
 
 const char *const camera_settings_menu[] PROGMEM = {cs_0, cs_1, cs_2};
+const char *const positioning_menu[] PROGMEM = {pm_0,pm_1};
 
 const char *const zoom_menu1[] PROGMEM = {zm1_0,zm1_1,zm1_2,zm1_3};
 const char *const zoom_menu2[] PROGMEM = {zm2_0,zm2_1};
@@ -243,6 +249,9 @@ int get_Configuration_Menu_Update(int s);
 
 int cameraSetting_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
 int get_CameraSetting_Menu_update(int s);
+
+int positioning_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+int get_positioning_Menu_update(int s);
 
 int action_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
 int get_Action_screen_1_Menu_update(int s);
@@ -316,7 +325,20 @@ void setup() {
   tft.setTextColor(ST77XX_WHITE);
 
   // ***** EEPROM Read *****
-  //...
+  // reads the stored memory
+  // focus_range = EEPROM.read(0);
+  // zoom_range = EEPROM.read(1);
+  // focus_current = EEPROM.read(2);
+  // zoom_current = EEPROM.read(3);
+  orientation = EEPROM.read(4);
+  // shutter_time = EEPROM.read(5);
+  // motor_time = EEPROM.read(6);
+  // exposure_option_set = EEPROM.read(7);
+
+  // ***** Default Values *****
+  // if empty (==255), setting default values to 0
+  // for current positions -> Move the motor to stored current 
+  // to be implemented when finalise...
 
   //Show ICM APP 'loading page'
   //initializing_Page();
@@ -336,6 +358,36 @@ void loop() {
           switch (camera_setting_screen) {
             // Zoom-Focus position screen
             case 0: {
+              switch (camera_positioning_screen) {
+                // zoom at the back
+                case 0:{
+                  //Serial.println("zoom at the back");
+                  orientation = 0;
+                  EEPROM.write(4,orientation);
+                  EEPROM.commit();
+                  camera_positioning_screen = -1;
+                  //go back to prev screen after selection
+                  camera_setting_screen = -1;
+                  break;
+                }
+                // zoom at the front
+                case 1:{
+                  //Serial.println("zoom at the front");
+                  orientation = 1;
+                  EEPROM.write(4,orientation);
+                  EEPROM.commit();
+                  camera_positioning_screen = -1;
+                  //go back to prev screen after selection
+                  camera_setting_screen = -1;
+                  break;                
+                }
+                // show [positioning settings menu]
+                default: 
+                  // max_option = positioning_menu_screen(2,pm_name ,positioning_menu, option_selected);
+                  positioning_menu_screen(2,pm_name ,positioning_menu, option_selected,DEEPPINK);
+                  camera_positioning_screen = get_positioning_Menu_update(camera_positioning_screen);
+                  break;
+              }      
               break;
             }
             // Set Shutter Time screen - shutter time of the DSLR camera

@@ -115,6 +115,32 @@ int get_CameraSetting_Menu_update(int s){
   return s;
 }
 
+int get_positioning_Menu_update(int s){
+  
+  //Go Home menu
+  if (digitalRead(A_BUTTON) == LOW) {
+    resetToHomeScreen();
+    s = -1;
+    option_selected = 0; //resets options
+    updateMenu = true;
+  }
+  if (digitalRead(B_BUTTON) == LOW) {
+    //update 
+    s = 0;
+    option_selected = 0; //resets options
+    tft.fillScreen(ST77XX_BLACK);//clear screen
+    updateMenu = true;
+  }
+  if (digitalRead(X_BUTTON) == LOW) {
+    //update 
+    s = 1;
+    option_selected = 0; //resets options
+    tft.fillScreen(ST77XX_BLACK);//clear screen
+    updateMenu = true;
+  }
+  return s;
+}
+
 int get_Action_screen_1_Menu_update(int s){
   //Go Home menu
   if (digitalRead(A_BUTTON) == LOW) {

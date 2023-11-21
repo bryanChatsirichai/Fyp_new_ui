@@ -161,6 +161,38 @@ int cameraSetting_menu_screen(int array_size,const char *menu_name ,const char *
   return total_num; 
 }
 
+int positioning_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+    int total_num = array_size;
+    int max_option = array_size;
+    if (!updateMenu) {
+      //updateMenu false
+      return total_num; 
+    }
+    updateMenu = false;
+    tft.setTextSize(1);
+    tft.setCursor(0, 0);
+    tft.setTextColor(color);
+    tft.println(menu_name);
+    tft.setTextColor(WHITE,BLACK);
+    tft.setTextSize(2);
+    tft.setCursor(130, 25);
+    tft.println("Home - *");
+    int rect_y = 67;
+
+    for (int i=0; i<total_num; i++) {
+      tft.drawRect(0,rect_y,tft.width(),35,WHITE);
+      tft.setCursor(2,rect_y+10);
+
+      tft.setTextColor(WHITE,BLACK);
+      tft.print(string_table[i]);
+      rect_y = rect_y+55;
+    }
+    tft.setTextColor(WHITE,BLACK);
+    //maybe don't need  
+    return total_num; 
+}
+
+
 int action_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
     int total_num = array_size;
     int max_option = array_size;
