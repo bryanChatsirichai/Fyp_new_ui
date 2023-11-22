@@ -145,7 +145,6 @@ int getLeftRight_value(int range, int current, int low_limit, int delay_ms) {
   return current;
 }
 
-
 int get_camera_calibration_update() {
   int s = -1;
   //Go Home menu
@@ -187,16 +186,18 @@ int get_motor_calibration_update() {
   hotbar(NULL, current_step, max_steps, 0, false, false, 1, color, updateBar);
 
   //can add more text in needed...
-  // tft.setTextSize(1);
-  // int i = 0;
-  // tft.setCursor(0,0);
-  // tft.setTextColor(color);
-  // tft.println(string_table[i++]);
-  // tft.setCursor(0, 59);
-  // tft.setTextColor(WHITE);
-  // tft.print(string_table[i++]);
-  // tft.setTextColor(DARKGREEN);
-  // tft.println(string_table[i++]);
-  // tft.setTextColor(WHITE);
+  tft.setTextSize(1);
+  int i = 0;
+  tft.setCursor(0,0);
+  tft.setTextColor(color);
+  tft.println(string_table[i++]);
+                   
+  tft.setCursor(32,140);
+  //tft.setCursor(0, 59);
+  tft.setTextColor(WHITE);
+  tft.print(string_table[i++]);
+  tft.setTextColor(DARKGREEN);
+  tft.println(string_table[i++]);
+  tft.setTextColor(WHITE);
   return;
 }
