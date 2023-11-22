@@ -66,7 +66,7 @@ void hotbar(const char title[], int current, int max_range, int current_option, 
     tft.setTextSize(2);
     tft.setCursor(160, 25);
     //tft.println("Home - *");
-    tft.println(F("[Back]"));
+    tft.println(F("[Home]"));
   }
 
   //comfirm buttom
@@ -127,6 +127,44 @@ void hotbar(const char title[], int current, int max_range, int current_option, 
   return;
 }
 
+/*
+ * checks for left and right joystick
+ * able to set to lower limit if required
+ */
+int getLeftRight_value(int range, int current, int low_limit, int delay_ms) {
+  if (digitalRead(RIGHT_BUTTON) == LOW) {
+    delay(delay_ms);
+    updateMenu = true;
+    return (current == range) ? current : ++current; 
+  }
+  if (digitalRead(LEFT_BUTTON) == LOW) {
+    delay(delay_ms);
+    updateMenu = true;
+    return (current == low_limit) ? low_limit : --current;
+  }
+  return current;
+}
+
+
+int get_calibration_update() {
+  int s = -1;
+  //Go Home menu
+  if (digitalRead(A_BUTTON) == LOW) {
+    resetToHomeScreen();
+    s = 0;
+    option_selected = 0; //resets options
+    updateMenu = true;
+  }
+
+  //go back camera_setting_screen
+  if (digitalRead(Y_BUTTON) == LOW) {
+  s = 1;
+  option_selected = 0; //resets options
+  tft.fillScreen(ST77XX_BLACK);//clear screen
+  updateMenu = true;
+  }
+  return s;
+}
 
 /* --- Calibrate Screen ---
  String_table will determine if zoom/focus

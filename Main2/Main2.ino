@@ -274,6 +274,9 @@ int getUpDown(int max_option, int current_option, int delay_ms);
 void resetToHomeScreen();
 
 void hotbar(const char title[], int current, int max_range, int current_option=0, bool haveBack=false, int header=-1, int footer=-1, uint16_t color=WHITE, bool updateBar=false);
+int getLeftRight_value(int range, int current, int low_limit, int delay_ms);
+int get_calibration_update();
+void caliMenu(const char *const string_table[], int current_step, int max_steps, uint16_t color, bool updateBar);
 
 int home_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected, uint16_t color=DEEPPINK);
 int get_HomeMenu_Update(int s);
@@ -369,13 +372,13 @@ void setup() {
 
   // ***** EEPROM Read *****
   // reads the stored memory
-  // focus_range = EEPROM.read(0);
-  // zoom_range = EEPROM.read(1);
-  // focus_current = EEPROM.read(2);
-  // zoom_current = EEPROM.read(3);
+  focus_range = EEPROM.read(0);
+  zoom_range = EEPROM.read(1);
+  focus_current = EEPROM.read(2);
+  zoom_current = EEPROM.read(3);
   orientation = EEPROM.read(4);
-  //shutter_time = EEPROM.read(5);
-  // motor_time = EEPROM.read(6);
+  shutter_time = EEPROM.read(5);
+  motor_time = EEPROM.read(6);
   exposure_option_set = EEPROM.read(7);
 
   // ***** Default Values *****
@@ -438,24 +441,57 @@ void loop() {
                 //display shutter speed bar (motor calibration).
                 option_selected = 0; //set selected option on shutter menu
                 int max_shutter_time = 40;
+                int old_shutter_time = shutter_time; //if go_home before setting
                 //hotbar(shutter_menu,cur_shutter_time,max_shutter_time,option_selected,has_back)
                 hotbar(shutter_menu, shutter_time, max_shutter_time, option_selected, true,0,1);
-                // do {
-                // //hotbar(shutter_menu,cur_shutter_time,max_shutter_time,option_selected,has_back,header,footer,color,updatebar)
-                //   hotbar(shutter_menu, shutter_time, max_shutter_time, option_selected, true, 0, 3, GOLDENROD, true);
-                //   option_selected = getUpDown(2, option_selected, 0);
-                //   if (!option_selected) {
-                //     // !0 - true in C, only update when option_selected is at 'option-0'
-                //     shutter_time = getLeftRight(max_shutter_time, shutter_time,0, 0);
-                //   }
-                // } while(!(digitalRead(A_BUTTON) == LOW && option_selected));
-                // EEPROM.write(5, shutter_time);
-                // EEPROM.commit();
-                // camera_setting_screen = resetScreen(camera_setting_screen); //set camera_setting_screen -1
+                while(true){
+                  hotbar(shutter_menu, shutter_time, max_shutter_time, option_selected, true, 0, 1, GOLDENROD, true);
+                  int option = get_calibration_update();
+                  shutter_time = getLeftRight_value(max_shutter_time, shutter_time,0, 0);
+
+                  //go home not set value
+                  if(option == 0){
+                    //reset to home inside get_calibration_update();
+                    shutter_time = old_shutter_time;
+                    camera_setting_screen = -1;
+                    break;
+                  }
+                  else if (option == 1){
+                    EEPROM.write(5, shutter_time);
+                    EEPROM.commit();
+                    camera_setting_screen = -1;
+                    break;
+                  }
+                }
                 break;
             } 
             // set motor movement time -  time needed to execute a sequence
             case 2: {
+              option_selected = 0; //set selected option on shutter menu
+              int motor_time_max = 40;
+              int old_motor_time = motor_time;
+               hotbar(motor_time_menu, motor_time, motor_time_max, option_selected, true,0,1);
+              while(true){
+                hotbar(motor_time_menu, motor_time, motor_time_max, option_selected, true,0,1, GOLDENROD, true);
+                int option = get_calibration_update();
+                motor_time = getLeftRight_value(motor_time_max, motor_time,0, 0);
+
+                //go home not set value
+                if(option == 0){
+                  //reset to home inside get_calibration_update();
+                  motor_time = old_motor_time;
+                  camera_setting_screen = -1;
+                  break;
+                }
+
+                //Set value
+                else if(option == 1){
+                  EEPROM.write(6, motor_time);
+                  EEPROM.commit();
+                  camera_setting_screen = -1;
+                  break;
+                }
+              }
               break;
             }
             //show [camera settings menu]
@@ -541,6 +577,24 @@ void loop() {
         }
         //reset all setting
         case 2: {
+          EEPROM.write(0,0);
+          EEPROM.write(1,0);
+          EEPROM.write(2,0);
+          EEPROM.write(3,0);
+          EEPROM.write(4,0);
+          EEPROM.write(5,0);
+          EEPROM.write(6,0);                 
+          EEPROM.write(7,0);
+          focus_range = 0;
+          zoom_range = 0;
+          focus_current = 0;
+          zoom_current = 0;
+          orientation = 0;
+          shutter_time = 0;
+          motor_time = 0;
+          exposure_option_set = 0;
+          EEPROM.commit();
+          configuration_screen = resetScreen(configuration_screen);
           break;
         }
         

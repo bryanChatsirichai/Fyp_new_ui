@@ -18,7 +18,6 @@ int getUpDown(int max_option, int current_option, int delay_ms) {
 
 }
 
-
 int get_HomeMenu_Update(int s) {
   
   //Home menu but since this already Home do nthing
