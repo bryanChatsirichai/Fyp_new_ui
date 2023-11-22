@@ -279,6 +279,12 @@ int get_camera_calibration_update();
 int get_motor_calibration_update();
 void caliMenu(const char *const string_table[], int current_step, int max_steps, uint16_t color, bool updateBar);
 
+void printMoveSteps(int type, const char title[], uint16_t color, int goBack);
+void setAccel(int type, float accel);
+void setCurrentPos(int type, float value);
+
+void moveMotor(int type, int pos_desired, float motor_time = motor_time);
+
 int home_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected, uint16_t color=DEEPPINK);
 int get_HomeMenu_Update(int s);
 
@@ -519,12 +525,13 @@ void loop() {
               zoom_current = zoom_range;
               zoom_current = calibrate(ZOOM, calizoom_right, MOTOR_STEPS, 0);
               int maxZoom = zoom_current;
+              //updateScreen(100);
               
               moveMotor(ZOOM, 0, 0); // returns back to 0
-              motor_calibration_screen1 = -1;
               zoom_current = 0;
               //zoom_current = calibrate(ZOOM, calizoom_left, maxZoom, maxZoom-MOTOR_STEPS);
               zoom_range = maxZoom - zoom_current;
+              //updateScreen(100);
 
               zoom_current = 0; // minimum becomes absolute min pos
               EEPROM.write(1, zoom_range);           
@@ -537,6 +544,30 @@ void loop() {
             }
             //Focus Calibration
             case 1: {
+              //go to focus calibrate bar
+              setCurrentPos(FOCUS, focus_current * MS_STEP);
+              setAccel(FOCUS, CALI_ACCEL);
+
+              // set to maximum right, set motor speed 0 as calibration use default speed not motor speed
+              moveMotor(FOCUS, focus_range, 0);
+              focus_current = focus_range;
+              focus_current = calibrate(FOCUS, califocus_right, MOTOR_STEPS, 0);
+              int maxFocus = focus_current;
+              //updateScreen(100);
+
+              moveMotor(FOCUS, 0, 0); // returns back to 0
+              focus_current = 0;
+              //focus_current = calibrate(FOCUS, califocus_left, maxFocus, maxFocus-MOTOR_STEPS);
+              focus_range = maxFocus - focus_current;
+              //updateScreen(100);
+
+              focus_current = 0; // minimum becomes absolute min pos
+              EEPROM.write(0, focus_range);
+              setCurrentPos(ZOOM, focus_current);
+              EEPROM.write(2, focus_current);
+              EEPROM.commit();
+              motor_calibration_screen1 = -1;
+              //motor_calibration_screen1 = resetScreen(motor_calibration_screen1);
               break;
             }
             //POV Calibration
