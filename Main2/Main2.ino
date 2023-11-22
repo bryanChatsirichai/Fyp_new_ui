@@ -275,7 +275,8 @@ void resetToHomeScreen();
 
 void hotbar(const char title[], int current, int max_range, int current_option=0, bool haveBack=false, int header=-1, int footer=-1, uint16_t color=WHITE, bool updateBar=false);
 int getLeftRight_value(int range, int current, int low_limit, int delay_ms);
-int get_calibration_update();
+int get_camera_calibration_update();
+int get_motor_calibration_update();
 void caliMenu(const char *const string_table[], int current_step, int max_steps, uint16_t color, bool updateBar);
 
 int home_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected, uint16_t color=DEEPPINK);
@@ -446,12 +447,12 @@ void loop() {
                 hotbar(shutter_menu, shutter_time, max_shutter_time, option_selected, true,0,1);
                 while(true){
                   hotbar(shutter_menu, shutter_time, max_shutter_time, option_selected, true, 0, 1, GOLDENROD, true);
-                  int option = get_calibration_update();
+                  int option = get_camera_calibration_update();
                   shutter_time = getLeftRight_value(max_shutter_time, shutter_time,0, 0);
 
                   //go home not set value
                   if(option == 0){
-                    //reset to home inside get_calibration_update();
+                    //reset to home inside get_camera_calibration_update();
                     shutter_time = old_shutter_time;
                     camera_setting_screen = -1;
                     break;
@@ -473,12 +474,12 @@ void loop() {
                hotbar(motor_time_menu, motor_time, motor_time_max, option_selected, true,0,1);
               while(true){
                 hotbar(motor_time_menu, motor_time, motor_time_max, option_selected, true,0,1, GOLDENROD, true);
-                int option = get_calibration_update();
+                int option = get_camera_calibration_update();
                 motor_time = getLeftRight_value(motor_time_max, motor_time,0, 0);
 
                 //go home not set value
                 if(option == 0){
-                  //reset to home inside get_calibration_update();
+                  //reset to home inside get_camera_calibration_update();
                   motor_time = old_motor_time;
                   camera_setting_screen = -1;
                   break;
@@ -509,6 +510,29 @@ void loop() {
 
             //Zoom Calibration
             case 0: {
+              //go to zoom calibrate bar
+              setCurrentPos(ZOOM, zoom_current * MS_STEP);
+              setAccel(ZOOM, CALI_ACCEL);
+
+              // set to maximum right, set motor speed 0 as calibration use default speed not motor speed
+              moveMotor(ZOOM, zoom_range, 0);
+              zoom_current = zoom_range;
+              zoom_current = calibrate(ZOOM, calizoom_right, MOTOR_STEPS, 0);
+              int maxZoom = zoom_current;
+              
+              moveMotor(ZOOM, 0, 0); // returns back to 0
+              motor_calibration_screen1 = -1;
+              zoom_current = 0;
+              //zoom_current = calibrate(ZOOM, calizoom_left, maxZoom, maxZoom-MOTOR_STEPS);
+              zoom_range = maxZoom - zoom_current;
+
+              zoom_current = 0; // minimum becomes absolute min pos
+              EEPROM.write(1, zoom_range);           
+              setCurrentPos(ZOOM, zoom_current);
+              EEPROM.write(3, zoom_current);
+              EEPROM.commit();
+              motor_calibration_screen1 = -1;
+              //motor_calibration_screen1 = resetScreen(motor_calibration_screen1);
               break;
             }
             //Focus Calibration

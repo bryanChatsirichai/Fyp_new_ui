@@ -146,7 +146,7 @@ int getLeftRight_value(int range, int current, int low_limit, int delay_ms) {
 }
 
 
-int get_calibration_update() {
+int get_camera_calibration_update() {
   int s = -1;
   //Go Home menu
   if (digitalRead(A_BUTTON) == LOW) {
@@ -166,25 +166,37 @@ int get_calibration_update() {
   return s;
 }
 
-/* --- Calibrate Screen ---
- String_table will determine if zoom/focus
+int get_motor_calibration_update() {
+  int s = -1;
+  //go back camera_setting_screen
+  if (digitalRead(Y_BUTTON) == LOW) {
+  s = 1;
+  option_selected = 0; //resets options
+  tft.fillScreen(ST77XX_BLACK);//clear screen
+  updateMenu = true;
+  }
+  return s;
+}
+
+/* --- Motor Calibrate Screen ---
 */
  void caliMenu(const char *const string_table[], int current_step, int max_steps, uint16_t color, bool updateBar) {
   if (!updateMenu) {
     return;
   }
   hotbar(NULL, current_step, max_steps, 0, false, false, 1, color, updateBar);
-  tft.setTextSize(1);
-  int i = 0;
-  tft.setCursor(0,0);
-  tft.setTextColor(color);
-  tft.println(string_table[i++]);
-  tft.setCursor(0, 59);
-  tft.setTextColor(WHITE);
-  tft.print(string_table[i++]);
-  tft.setTextColor(DARKGREEN);
-  tft.println(string_table[i++]);
-  tft.setTextColor(WHITE);
-  
+
+  //can add more text in needed...
+  // tft.setTextSize(1);
+  // int i = 0;
+  // tft.setCursor(0,0);
+  // tft.setTextColor(color);
+  // tft.println(string_table[i++]);
+  // tft.setCursor(0, 59);
+  // tft.setTextColor(WHITE);
+  // tft.print(string_table[i++]);
+  // tft.setTextColor(DARKGREEN);
+  // tft.println(string_table[i++]);
+  // tft.setTextColor(WHITE);
   return;
 }
