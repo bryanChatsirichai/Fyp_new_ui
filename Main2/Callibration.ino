@@ -201,3 +201,23 @@ int get_motor_calibration_update() {
   tft.setTextColor(WHITE);
   return;
 }
+
+/* --- Move Motor Screen ---
+ * Similar to cali Menu 
+ */
+void moveMotorMenu(int count, const char *const string_table[], int current_step, int max_steps, uint16_t color, bool updateBar) {
+  if (!updateMenu) return;
+  int i=0;
+  hotbar(NULL, current_step, max_steps, 0, false, 0, 1, color, updateBar);
+  tft.setTextSize(1);
+  tft.setCursor(0,0);
+  tft.setTextColor(color);
+  tft.println(string_table[i]);
+  tft.setTextColor(WHITE);
+  //tft.setCursor(32,140);
+  for (i=1; i<count; i++) {
+    tft.setCursor(32,130 + i*10);
+    tft.println(string_table[i]);
+  }
+  tft.setTextColor(WHITE);
+}

@@ -180,6 +180,13 @@ const char string_cali[] PROGMEM = "Move joystick to extreme";
 const char string_left[] PROGMEM = "  left";
 const char string_right[] PROGMEM = "  right";
 
+const char adjust_zoom[] PROGMEM = "|--- Adjust Zoom ---|";
+const char adjust_focus[] PROGMEM = "|---Adjust Focus ---|";
+const char string_36[] PROGMEM = "Adjust [ZOOM] lens";
+const char string_36_1[] PROGMEM = "Adjust [FOCUS] lens";
+const char string_37[] PROGMEM = "to the desired Image";
+const char string_38[] PROGMEM = "to desired Outcome";
+
 //exposure option
 const char exposure_option_name[] PROGMEM = "|- Exposure -|";
 const char exposure_option_0[] PROGMEM = "Pre";
@@ -264,6 +271,12 @@ const char *const calizoom_right[] PROGMEM = {cali_zoom, string_cali, string_rig
 const char *const califocus_left[] PROGMEM = {cali_focus, string_cali, string_left};
 const char *const califocus_right[] PROGMEM = {cali_focus, string_cali, string_right};
 
+const char *const focus_adjust[] PROGMEM = {adjust_focus, string_36_1, string_37};
+const char *const focus_dist[] PROGMEM = {fm1_2, string_36, string_38};
+
+const char *const zoom_adjust[] PROGMEM = {adjust_zoom, string_36, string_37};
+const char *const zoom_dist[] PROGMEM = {zm1_2, string_36, string_38};
+
 const char *const preset1_menu[] PROGMEM = {preset1_0, preset1_1, preset1_2, preset1_3};
 const char *const preset2_menu[] PROGMEM = {preset2_0};
 
@@ -278,12 +291,14 @@ int getLeftRight_value(int range, int current, int low_limit, int delay_ms);
 int get_camera_calibration_update();
 int get_motor_calibration_update();
 void caliMenu(const char *const string_table[], int current_step, int max_steps, uint16_t color, bool updateBar);
+void moveMotorMenu(int count, const char *const string_table[], int current_step, int max_steps, uint16_t color=WHITE, bool updateBar=false);
 
 void printMoveSteps(int type, const char title[], uint16_t color, int goBack);
 void setAccel(int type, float accel);
 void setCurrentPos(int type, float value);
 
 void moveMotor(int type, int pos_desired, float motor_time = motor_time);
+int chooseDist(int type, int count, const char *const string_table[], bool goBack=false, uint16_t color=WHITE);
 
 int home_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected, uint16_t color=DEEPPINK);
 int get_HomeMenu_Update(int s);
@@ -572,6 +587,22 @@ void loop() {
             }
             //POV Calibration
             case 2: {
+              //go to zoom POV bar
+                //Ideally shd be 0 & minimum becomes absolute min pos
+                //zoom_current = 0;
+                //focus_current = 0;
+                setAccel(ZOOM, CALI_ACCEL);
+                setAccel(FOCUS, CALI_ACCEL);
+
+                zoom_current = chooseDist(ZOOM, 3, zoom_adjust, false, AQUA);
+                EEPROM.write(3, zoom_current);
+                //updateScreen(0);
+                focus_current = chooseDist(FOCUS, 3, focus_adjust, false, DEEPPINK);
+                EEPROM.write(2, focus_current);
+                //updateScreen(0);
+                //Serial.println("pov calibration");
+                motor_calibration_screen1 = resetScreen(motor_calibration_screen1);
+                EEPROM.commit();
               break;
             }
             //Exposure Setting
