@@ -316,7 +316,7 @@ int motor_calibration_menu1_screen(int array_size,const char *menu_name ,const c
 int get_motor_calibration_menu1_update(int s);
 
 void caliMenu(const char *const string_table[], int current_step, int max_steps=200, uint16_t color=WHITE, bool updateBar=false);
-int calibrate(int type, const char *const string_table[], int upper_limit, int lower_limit, uint16_t color=WHITE);
+int calibrate(int type, const char *const string_table[], int upper_limit, int lower_limit, uint16_t color=DEEPPINK);
 
 int exposure_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
 int get_exposure_menu_update(int s);
@@ -538,7 +538,7 @@ void loop() {
               // set to maximum right, set motor speed 0 as calibration use default speed not motor speed
               moveMotor(ZOOM, zoom_range, 0);
               zoom_current = zoom_range;
-              zoom_current = calibrate(ZOOM, calizoom_right, MOTOR_STEPS, 0);
+              zoom_current = calibrate(ZOOM, calizoom_right, MOTOR_STEPS, 0, DEEPPINK);
               int maxZoom = zoom_current;
               //updateScreen(100);
               
@@ -566,7 +566,7 @@ void loop() {
               // set to maximum right, set motor speed 0 as calibration use default speed not motor speed
               moveMotor(FOCUS, focus_range, 0);
               focus_current = focus_range;
-              focus_current = calibrate(FOCUS, califocus_right, MOTOR_STEPS, 0);
+              focus_current = calibrate(FOCUS, califocus_right, MOTOR_STEPS, 0,DEEPPINK);
               int maxFocus = focus_current;
               //updateScreen(100);
 
