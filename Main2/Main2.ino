@@ -163,12 +163,22 @@ const char pm_name[] PROGMEM = "|- Positioning Setting -|";
 const char pm_0[] PROGMEM = "Zoom at the Back";
 const char pm_1[] PROGMEM = "Zoom at the Front";
 
+const char shutter_menu[] PROGMEM = "|- Shutter Time(s) -|";
+const char motor_time_menu[] PROGMEM = "Motor Move Time(s)";
+
 //motor callibration
 const char mc1_name[] PROGMEM = "|- Calibration -|";
 const char mc1_0[] PROGMEM = "Z_Cali";
 const char mc1_1[] PROGMEM = "F_Cali";
 const char mc1_2[] PROGMEM = "POV_Cali";
 const char mc1_3[] PROGMEM = "Exposure";
+
+//clibrating ZF len(s)
+const char cali_zoom[] PROGMEM = "|--Calibrate Zoom --|";
+const char cali_focus[] PROGMEM = "|--Calibrate Focus--|";
+const char string_cali[] PROGMEM = "Move joystick to extreme";
+const char string_left[] PROGMEM = "  left";
+const char string_right[] PROGMEM = "  right";
 
 //exposure option
 const char exposure_option_name[] PROGMEM = "|- Exposure -|";
@@ -248,6 +258,12 @@ const char *const zoomfocus_menu1[] PROGMEM = {zf1_0,zf1_1,zf1_2,zf1_3};
 const char *const zoomfocus_menu2[] PROGMEM = {zf2_0,zf2_1,zf2_2,zf2_3};
 const char *const zoomfocus_menu3[] PROGMEM = {zf3_0,zf3_1};
 
+const char *const calizoom_left[] PROGMEM = {cali_zoom, string_cali, string_left};
+const char *const calizoom_right[] PROGMEM = {cali_zoom, string_cali, string_right};
+
+const char *const califocus_left[] PROGMEM = {cali_focus, string_cali, string_left};
+const char *const califocus_right[] PROGMEM = {cali_focus, string_cali, string_right};
+
 const char *const preset1_menu[] PROGMEM = {preset1_0, preset1_1, preset1_2, preset1_3};
 const char *const preset2_menu[] PROGMEM = {preset2_0};
 
@@ -256,7 +272,8 @@ void initializing_Page();
 void updateScreen(float delay_ms=0);
 int getUpDown(int max_option, int current_option, int delay_ms);
 void resetToHomeScreen();
-int menu(int array_size,const char *menu_header,const char *const string_table[], int option_selected, int footer=2, uint16_t color=DEEPPINK);
+
+void hotbar(const char title[], int current, int max_range, int current_option=0, bool haveBack=false, int header=-1, int footer=-1, uint16_t color=WHITE, bool updateBar=false);
 
 int home_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected, uint16_t color=DEEPPINK);
 int get_HomeMenu_Update(int s);
@@ -272,6 +289,9 @@ int get_positioning_Menu_update(int s);
 
 int motor_calibration_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
 int get_motor_calibration_menu1_update(int s);
+
+void caliMenu(const char *const string_table[], int current_step, int max_steps=200, uint16_t color=WHITE, bool updateBar=false);
+int calibrate(int type, const char *const string_table[], int upper_limit, int lower_limit, uint16_t color=WHITE);
 
 int exposure_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
 int get_exposure_menu_update(int s);
@@ -354,7 +374,7 @@ void setup() {
   // focus_current = EEPROM.read(2);
   // zoom_current = EEPROM.read(3);
   orientation = EEPROM.read(4);
-  // shutter_time = EEPROM.read(5);
+  //shutter_time = EEPROM.read(5);
   // motor_time = EEPROM.read(6);
   exposure_option_set = EEPROM.read(7);
 
@@ -415,6 +435,23 @@ void loop() {
             }
             // Set Shutter Time screen - shutter time of the DSLR camera
             case 1:{
+                //display shutter speed bar (motor calibration).
+                option_selected = 0; //set selected option on shutter menu
+                int max_shutter_time = 40;
+                //hotbar(shutter_menu,cur_shutter_time,max_shutter_time,option_selected,has_back)
+                hotbar(shutter_menu, shutter_time, max_shutter_time, option_selected, true,0,1);
+                // do {
+                // //hotbar(shutter_menu,cur_shutter_time,max_shutter_time,option_selected,has_back,header,footer,color,updatebar)
+                //   hotbar(shutter_menu, shutter_time, max_shutter_time, option_selected, true, 0, 3, GOLDENROD, true);
+                //   option_selected = getUpDown(2, option_selected, 0);
+                //   if (!option_selected) {
+                //     // !0 - true in C, only update when option_selected is at 'option-0'
+                //     shutter_time = getLeftRight(max_shutter_time, shutter_time,0, 0);
+                //   }
+                // } while(!(digitalRead(A_BUTTON) == LOW && option_selected));
+                // EEPROM.write(5, shutter_time);
+                // EEPROM.commit();
+                // camera_setting_screen = resetScreen(camera_setting_screen); //set camera_setting_screen -1
                 break;
             } 
             // set motor movement time -  time needed to execute a sequence

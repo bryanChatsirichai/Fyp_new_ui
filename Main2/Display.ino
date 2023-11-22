@@ -674,56 +674,5 @@ int custome_movements_menu2_screen(int array_size,const char *menu_name ,const c
     return total_num; 
 }
 
-int menu(int array_size,const char *menu_name ,const char *const string_table[], int option_selected, int footer, uint16_t color) {
-  int total_num = array_size;
-  if (!updateMenu) {
-    //updateMenu false
-    return total_num; 
-  }
-  updateMenu = false;
-  tft.setTextSize(1);
-  tft.setCursor(0, 0);
-  tft.setTextColor(color);
-  tft.println(menu_name);
-  tft.setTextColor(WHITE,BLACK);
-  tft.setTextSize(2);
-  int rect_y = 12;
 
-  for (int i=0; i<total_num; i++) {
-    tft.drawRect(0,rect_y,tft.width(),23,WHITE);
-    tft.setCursor(2,rect_y+4);
-    if (i == option_selected) {
-      tft.setTextColor(BLACK,WHITE);
-    } else {
-      tft.setTextColor(WHITE,BLACK);
-    }
-    tft.print(string_table[i]);
-    rect_y = rect_y+23;
-  }
-  tft.setTextColor(WHITE,BLACK);
-
-  switch(footer) {
-    case 1:
-      tft.drawChar(2,130,LEFT_ARROW,WHITE,BLACK,2);
-      tft.drawChar(17,130,RIGHT_ARROW,WHITE,BLACK,2);
-      tft.setCursor(32,134);
-      tft.println(F(": Adjust values"));
-      tft.drawChar(2,145,SELECT,WHITE,BLACK,2);
-      tft.setCursor(17,149);
-      tft.println(F(": Press to set"));
-      break;
-    case 2:
-      tft.drawChar(2,130,UP_ARROW,WHITE,BLACK,2);
-      tft.drawChar(17,130,DOWN_ARROW,WHITE,BLACK,2);
-      tft.setCursor(32,134);
-      tft.println(F(": Navigate"));
-      tft.drawChar(2,145,SELECT,WHITE,BLACK,2);
-      tft.setCursor(17,149);
-      tft.println(F(": Press to set"));
-      break;
-    default:
-    break;
-  }
-  return total_num; 
-}
 
