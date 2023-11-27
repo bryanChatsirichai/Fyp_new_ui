@@ -97,13 +97,13 @@ void goDist(int type, const char title[], int pos_desired, uint16_t color, float
       printMoveSteps(type, title, color, 0); 
   }
 
-
   //move motor depending on exposure_option_set
   switch (exposure_option_set){
     //pre
     case 0:{
       Serial.println("Pre");
       Serial.print("(shutter_time - motor_time) / motor_div = ");
+      Serial.print("remainder_time = ");
       Serial.println((shutter_time - motor_time) / motor_div);
       float remainder_time = (shutter_time - motor_time) / motor_div;
       if(camera_shutter_open == 0){
@@ -187,4 +187,96 @@ void goDist(int type, const char title[], int pos_desired, uint16_t color, float
     }
    updateScreen(0);
   }
+}
+
+void goMultiDist(const char title[], int zoom_desired, int focus_desired, uint16_t color, float motor_time, float motor_div ,bool goBack,bool lastSequence,bool showScreen) {
+  // Serial.print("@goMultiDist motor_time = ");
+  // Serial.println(motor_time);
+
+  int prev_zoom, prev_focus;
+  prev_zoom = zoom_current;
+  prev_focus = focus_current;
+
+  if(showScreen){
+      //start sound
+      play_sound_1();
+      printMoveSteps(3, title, color, 0);
+  }
+  //Serial.println("Both moving to position");
+
+  //move motor depending on exposure_option_set
+  switch (exposure_option_set){
+    //pre
+    case 0:{
+      float remainder_time = (shutter_time - motor_time) / motor_div;
+      if(camera_shutter_open == 0){
+        //open_Shutter();
+        camera_shutter_open = 1;
+      }
+      moveMultiMotor(zoom_desired, focus_desired, motor_time / motor_div);
+      //delay in ms
+      delay(remainder_time * 1000);
+      break;
+    }
+    //split
+    case 1:{
+      float remainder_time = (shutter_time - motor_time) / motor_div;
+      float front_remainder_time = remainder_time / 2;
+      float back_remainder_time = remainder_time / 2;
+      if(camera_shutter_open == 0){
+        //open_Shutter();
+        camera_shutter_open = 1;
+      }
+      //delay in ms
+      delay(front_remainder_time * 1000);
+      moveMultiMotor(zoom_desired, focus_desired, motor_time / motor_div);
+      //delay in ms
+      delay(back_remainder_time * 1000);
+      break;
+    }
+    //after
+    case 2 :{
+      float remainder_time = (shutter_time - motor_time) / motor_div;
+      if(camera_shutter_open == 0){
+        //open_Shutter();
+        camera_shutter_open = 1;
+      }
+      //delay in ms
+      delay(remainder_time * 1000);
+      moveMultiMotor(zoom_desired, focus_desired, motor_time / motor_div);
+      break;
+    }
+    default:{
+      break;
+    }
+    
+  }
+
+  //zoom / focus current postion after moving to desired position
+  zoom_current = zoom_desired;
+  focus_current = focus_desired;
+
+  if(lastSequence){
+    //close_Shutter();
+    if(camera_shutter_open == 1){
+        play_sound_2();
+        camera_shutter_open = 0;
+      }
+    //close shutter(); //nikonTime(1000);
+    updateScreen(100);
+  }
+
+  // returns to original spot
+  if (goBack) {
+    if(showScreen){
+      Serial.println("Both going back to position");
+      printMoveSteps(3, title, color, 1);
+    }
+    moveMultiMotor(prev_zoom, prev_focus,0);
+    //see this got any differentce .....
+    zoom_current = prev_zoom;
+    focus_current = prev_focus;  
+    updateScreen();
+  }
+
 }

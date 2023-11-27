@@ -75,12 +75,12 @@ void moveMotor(int type, int pos_desired, float motor_time) {
   
   int steps_to_move = (pos_desired - pos_current) * MS_STEP;
 
-  Serial.print("Current Position: ");
-  Serial.println(pos_current);
-  Serial.print("pos_desired: ");
-  Serial.println(pos_desired);
-  Serial.print("Steps to move: ");
-  Serial.println(steps_to_move);
+  // Serial.print("Current Position: ");
+  // Serial.println(pos_current);
+  // Serial.print("pos_desired: ");
+  // Serial.println(pos_desired);
+  // Serial.print("Steps to move: ");
+  // Serial.println(steps_to_move);
 
   //camera movement base on motor time
   if (motor_time != 0) {
