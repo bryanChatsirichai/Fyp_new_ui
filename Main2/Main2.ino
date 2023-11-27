@@ -713,6 +713,7 @@ void loop() {
           switch(zoom_movements_menu1){
             //zoom to max 
             case 0:{
+              Serial.println("Zoom to max");
               countdownMenu();
               //return to starting position by default
               goDist(ZOOM, zm1_0, zoom_range, SNOW, motor_time,1,true,true,true);
@@ -721,28 +722,76 @@ void loop() {
             }
             //zoom to min 
             case 1:{
-              break;
+                Serial.println("Zoom to min");
+                countdownMenu();
+                //global motor time pass in by default
+                //return to starting position by default
+                goDist(ZOOM, zm1_1, 0, SNOW, motor_time,1,true,true,true);
+                zoom_movements_menu1 = resetScreen(zoom_movements_menu1);
+                break;
             }
             //zoom to max and back 
             case 2:{
-              break;
+                    Serial.println("Zoom to max and back");                    
+                    // Serial.print("previous_pos");
+                    // Serial.println(previous_pos);
+                    int previous_pos = zoom_current;
+                    countdownMenu();
+                    //going back is now part of motor_time
+                    goDist(ZOOM, zm1_2, zoom_range, SNOW, motor_time,2,false,false,true);
+                    goDist(ZOOM, zm1_2, previous_pos, SNOW, motor_time,2,false,true,false);
+                    zoom_movements_menu1 = resetScreen(zoom_movements_menu1);
+                    break;
             }
             //zoom to min and back
             case 3:{
-              break;
+                    Serial.println("Zoom to min and back");                    
+                    // Serial.print("previous_pos");
+                    // Serial.println(previous_pos);
+                    int previous_pos = zoom_current;
+                    countdownMenu();
+                    //going back is now part of motor_time
+                    goDist(ZOOM, zm1_3, 0, SNOW, motor_time,2,false,false,true);
+                    goDist(ZOOM, zm1_3, previous_pos, SNOW, motor_time,2,false,true,false);
+                    zoom_movements_menu1 = resetScreen(zoom_movements_menu1);
+                    break;
             }
             //zoom_movements_menu2
             case 4: {
-              switch (zoom_movements_menu1) {
+              switch (zoom_movements_menu2) {
                 
                 //zoom to value 
                 case 0:{
-                  break;
+                Serial.println("Zoom to a value");
+                int pos_desired;
+                //choose dist and reset back to starting pos
+                pos_desired = chooseDist(ZOOM, 3, zoom_dist, true, YELLOWGREEN);
+                updateScreen();
+                countdownMenu();
+                //return to starting position by default
+                goDist(ZOOM, zm2_0, pos_desired, YELLOWGREEN, motor_time,1,true,true,true);
+                zoom_movements_menu2 = resetScreen(zoom_movements_menu2);
+                break;
                 }
 
                 //zoom to value and back
                 case 1:{
-                  break;
+                    Serial.println("Zoom to a value and back");
+                    // Serial.print("previous_pos");
+                    // Serial.println(previous_pos);
+                    int pos_desired;
+                    int previous_pos = zoom_current;
+
+                    //choose dist and reset back to starting pos
+                    pos_desired = chooseDist(ZOOM, 3, zoom_dist, true, YELLOWGREEN);
+                    updateScreen(100);
+                    countdownMenu();
+
+                    //going back is now part of motor_time
+                    goDist(ZOOM, zm2_0, pos_desired, SNOW, motor_time,2,false,false,true);
+                    goDist(ZOOM, zm2_1, previous_pos, SNOW, motor_time,2,false,true,false);
+                    zoom_movements_menu2 = resetScreen(zoom_movements_menu2);
+                    break;
                 }
 
                 default:
@@ -770,29 +819,72 @@ void loop() {
           switch(focus_movements_menu1){
             //focus to max 
             case 0:{
-              break;
+                Serial.println("Focus to max");
+                countdownMenu();
+                goDist(FOCUS, fm1_0, focus_range, SNOW,motor_time,1,true,true,true);
+                focus_movements_menu1 = resetScreen(focus_movements_menu1);
+                break;
             }
             //focus to min 
             case 1:{
-              break;
+                Serial.println("Focus to min");
+                countdownMenu();
+                goDist(FOCUS, fm1_1, 0, SNOW,motor_time,1,true,true,true);
+                focus_movements_menu1 = resetScreen(focus_movements_menu1);
+                break;
             }
             //focus to max and back 
             case 2:{
-              break;
+                Serial.println("Focus to max and back");                    
+                // Serial.print("previous_pos");
+                // Serial.println(previous_pos);
+                int previous_pos = focus_current;
+                countdownMenu();
+                //going back is now part of motor_time
+                goDist(FOCUS, fm1_2, focus_range, SNOW, motor_time,2,false,false,true);
+                goDist(FOCUS, fm1_2, previous_pos, SNOW, motor_time,2,false,true,false);
+                focus_movements_menu1 = resetScreen(focus_movements_menu1);
+                break;
             }
             //focus to min and back
             case 3:{
-              break;
+                Serial.println("Focus to min and back");                    
+                // Serial.print("previous_pos");
+                // Serial.println(previous_pos);
+                int previous_pos = focus_current;
+                countdownMenu();
+                //going back is now part of motor_time
+                goDist(FOCUS, fm1_3, 0, SNOW, motor_time,2,false,false,true);
+                goDist(FOCUS, fm1_3, previous_pos, SNOW, motor_time,2,false,true,false);
+                focus_movements_menu1 = resetScreen(focus_movements_menu1);
+                break;
             }
             //focus_movements_menu2
             case 4: {
               switch (focus_movements_menu2) {              
                 //focus to value 
                 case 0:{
+                  Serial.println("Focus to a value");
+                  int pos_desired;
+                  pos_desired = chooseDist(FOCUS, 3, focus_dist, true, YELLOWGREEN);
+                  updateScreen();
+                  countdownMenu();
+                  goDist(FOCUS, fm2_0, pos_desired, YELLOWGREEN,motor_time,1,true,true,true);
+                  focus_movements_menu2 = resetScreen(focus_movements_menu2);
                   break;
                 }
                 //focus to value and back
                 case 1:{
+                  Serial.println("Focus to a value and back");
+                  int pos_desired;
+                  int previous_pos = focus_current;
+                  pos_desired = chooseDist(FOCUS, 3, focus_dist, true, YELLOWGREEN);
+                  updateScreen();
+                  countdownMenu();
+                  //going back is now part of motor_time
+                  goDist(FOCUS, fm2_1, pos_desired, SNOW, motor_time,2,false,false,true);
+                  goDist(FOCUS, fm2_1, previous_pos, SNOW, motor_time,2,false,true,false);
+                  focus_movements_menu2 = resetScreen(focus_movements_menu2);
                   break;
                 }
                 //show focus_movements_menu2

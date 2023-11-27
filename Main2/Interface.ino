@@ -185,6 +185,6 @@ void goDist(int type, const char title[], int pos_desired, uint16_t color, float
     } else { // FOCUS
       focus_current = pos_current;
     }
-   updateScreen(100);
+   updateScreen(0);
   }
 }
