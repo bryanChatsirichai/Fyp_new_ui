@@ -33,6 +33,7 @@ int calibrate(int type, const char *const string_table[], int upper_limit, int l
   return pos_current;
 }
 
+// callibrate pov
 int chooseDist(int type, int count, const char *const string_table[], bool goBack, uint16_t color) {
   int pos_current, upper_limit;
   pos_current = type ? zoom_current : focus_current;
@@ -80,4 +81,110 @@ int chooseDist(int type, int count, const char *const string_table[], bool goBac
   }
   
   return pos_current;
+}
+
+void goDist(int type, const char title[], int pos_desired, uint16_t color, float motor_time, float motor_div,bool goBack, bool lastSequence,bool showScreen) {
+  // Serial.print("@goDist motor_time = ");
+  // Serial.println(motor_time);
+  
+  int pos_current, upper_limit;
+  pos_current = type ? zoom_current : focus_current;
+  upper_limit = type ? zoom_range : focus_range;
+
+  if(showScreen){
+      // start sound
+      play_sound_1();
+      printMoveSteps(type, title, color, 0); 
+  }
+
+
+  //move motor depending on exposure_option_set
+  switch (exposure_option_set){
+    //pre
+    case 0:{
+      Serial.println("Pre");
+      Serial.print("(shutter_time - motor_time) / motor_div = ");
+      Serial.println((shutter_time - motor_time) / motor_div);
+      float remainder_time = (shutter_time - motor_time) / motor_div;
+      if(camera_shutter_open == 0){
+        //open_Shutter();
+        camera_shutter_open = 1;
+      }
+      moveMotor(type, pos_desired, motor_time / motor_div);
+      //delay in ms
+      delay(remainder_time * 1000);
+      break;
+    }
+    //split
+    case 1:{
+      Serial.println("Split");
+      Serial.print("shutter_time - motor_time = ");
+      Serial.println((shutter_time - motor_time) / motor_div);
+      float remainder_time = (shutter_time - motor_time) / motor_div;
+      float front_remainder_time = remainder_time / 2;
+      float back_remainder_time = remainder_time / 2;
+      if(camera_shutter_open == 0){
+        //open_Shutter();
+        camera_shutter_open = 1;
+      }
+      //delay in ms
+      delay(front_remainder_time * 1000);
+      moveMotor(type, pos_desired, motor_time / motor_div);
+      //delay in ms
+      delay(back_remainder_time * 1000);
+      break;
+    }
+    //after
+    case 2 :{
+      Serial.println("After");
+      Serial.print("shutter_time - motor_time = ");
+      Serial.println((shutter_time - motor_time) / motor_div);
+      float remainder_time = (shutter_time - motor_time) / motor_div;
+      if(camera_shutter_open == 0){
+        //open_Shutter();
+        camera_shutter_open = 1;
+      }
+      //delay in ms
+      delay(remainder_time * 1000);
+      moveMotor(type, pos_desired, motor_time / motor_div);
+      break;
+    }
+    default:{
+      break;
+    }
+    
+  }
+
+  //zoom / focus current postion after moving to desired position
+  if (type) { // ZOOM
+    zoom_current = pos_desired;
+  } 
+  else { // FOCUS
+    focus_current = pos_desired;
+  }
+
+  //end sound 
+  if(lastSequence){    
+    //close_Shutter();
+    if(camera_shutter_open == 1){
+        play_sound_2();
+        camera_shutter_open = 0;
+      }
+    updateScreen(100);
+  }
+
+  // returns to original spot, go back acceleration and speed could be faster
+  if (goBack) {
+    if(showScreen){
+      printMoveSteps(type, title, color,1);
+    }
+    moveMotor(type, pos_current, 0);
+    //zoom / focus current postion after moving to desired position
+    if (type) { // ZOOM
+      zoom_current = pos_current;
+    } else { // FOCUS
+      focus_current = pos_current;
+    }
+   updateScreen(100);
+  }
 }

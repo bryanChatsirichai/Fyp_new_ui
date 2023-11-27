@@ -45,8 +45,100 @@ void updateScreen(float delay_ms) {
   updateMenu = true;
 }
 
-// ******** DISPLAY Functions **********
+/* A simple way to print a countdown menu */
+void countdownMenu() {
+  int i=0;
+  tft.setTextSize(3);
+  tft.setCursor(0,0);
+  tft.println(countdown[i]);
+  delay(500);
+  for (i=1; i<4; i++) {
+    tft.setTextSize(4);
+    tft.setCursor(0,30);
+    tft.setTextColor(RED,BLACK);
+    tft.println(countdown[i]);
+    delay(1000);
+  }
+  tft.setTextSize(3);
+  tft.println(countdown[i]);
+  
+  tft.setTextSize(2);
+  tft.setTextColor(WHITE);
+  tft.print("Exposing camera \nfor: ");
+  tft.setTextSize(2);
+  tft.setTextColor(AQUA);
+  
+  tft.setTextColor(AQUA,BLACK);
+  tft.setCursor(50,105);
+  tft.print(shutter_time);
+  tft.print("s  ");
+  delay(1000);
+  tft.setTextColor(WHITE);
+  tft.setTextSize(1);
+  updateScreen();
+}
 
+void printMoveSteps(int type, const char title[], uint16_t color, int movement_display_option) {
+  tft.setTextSize(1);
+  tft.setCursor(0,0);
+  tft.setTextColor(AQUA);
+  tft.print(F("Shutter Time: "));
+  tft.setTextColor(WHITE);
+  tft.println(shutter_time);
+  tft.setTextColor(AQUA);
+  tft.print(F("Motor Time: "));
+  tft.setTextColor(WHITE);
+  tft.println(motor_time);
+  if(type == -1){
+      //nothing
+  }
+  else {
+    //type
+    tft.setTextColor(AQUA, BLACK);
+    tft.print(type ? "Zoom" : "Focus");
+    tft.print(F(" Range: "));
+    tft.setTextColor(WHITE, BLACK);
+    tft.println(type ? zoom_range : focus_range);
+  }
+  tft.println();
+
+  tft.print(title);
+  tft.drawLine(0, 75, tft.width(), 75,WHITE);
+  tft.setCursor(0, 85);
+  tft.setTextColor(WHITE);
+  
+  switch(movement_display_option) {
+    case 0: {
+      tft.println(F("EXECUTING "));
+      tft.setTextColor(LIGHTSKYBLUE, BLACK);
+      tft.print(F("DESIRED "));
+      tft.setTextColor(WHITE, BLACK);
+      tft.println(F("PATTERN"));
+      break;
+    }
+    case 1: {
+      tft.println(F("Returning to "));
+      tft.setTextColor(RED, BLACK);
+      tft.print(F("PREVIOUS "));
+      tft.setTextColor(WHITE, BLACK);
+      tft.println(F("Location"));
+      break;
+    }
+    case 2: {
+      tft.println(F("Moving to "));
+      tft.setTextColor(LIME, BLACK);
+      tft.print(F("STARTING "));
+      tft.setTextColor(WHITE, BLACK);
+      tft.println(F("position"));
+      break;
+    }
+    default: 
+      break;
+  }
+}
+
+
+// ******** DISPLAY pages Functions **********
 int home_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color) {
   int total_num = array_size;
   int max_option = array_size;

@@ -243,6 +243,11 @@ const char preset1_3[] PROGMEM = "SineWave ";
 const char preset2_name[] PROGMEM = "|----- Presets -----|";
 const char preset2_0[] PROGMEM = "ZigZag-pend";
 
+const char counttext_1[] PROGMEM = "Get Ready!";
+const char counttext_2[] PROGMEM = "3";
+const char counttext_3[] PROGMEM = "2";
+const char counttext_4[] PROGMEM = "1";
+const char counttext_5[] PROGMEM = "SNAP!";
 
 /* String Table */
 const char *const home_menu[] PROGMEM = {home_0, home_1,home_2}; //Home_menu table
@@ -280,11 +285,15 @@ const char *const zoom_dist[] PROGMEM = {zm1_2, string_36, string_38};
 const char *const preset1_menu[] PROGMEM = {preset1_0, preset1_1, preset1_2, preset1_3};
 const char *const preset2_menu[] PROGMEM = {preset2_0};
 
+const char *const countdown[] PROGMEM = {counttext_1, counttext_2, counttext_3, counttext_4, counttext_5};
+
+
 // Function Declaration
 void initializing_Page();
 void updateScreen(float delay_ms=0);
 int getUpDown(int max_option, int current_option, int delay_ms);
 void resetToHomeScreen();
+void countdownMenu();
 
 void hotbar(const char title[], int current, int max_range, int current_option=0, bool haveBack=false, int header=-1, int footer=-1, uint16_t color=WHITE, bool updateBar=false);
 int getLeftRight_value(int range, int current, int low_limit, int delay_ms);
@@ -293,12 +302,14 @@ int get_motor_calibration_update();
 void caliMenu(const char *const string_table[], int current_step, int max_steps, uint16_t color, bool updateBar);
 void moveMotorMenu(int count, const char *const string_table[], int current_step, int max_steps, uint16_t color=WHITE, bool updateBar=false);
 
-void printMoveSteps(int type, const char title[], uint16_t color, int goBack);
+void printMoveSteps(int type, const char title[], uint16_t color, int movement_display_option);
 void setAccel(int type, float accel);
 void setCurrentPos(int type, float value);
 
 void moveMotor(int type, int pos_desired, float motor_time = motor_time);
 int chooseDist(int type, int count, const char *const string_table[], bool goBack=false, uint16_t color=WHITE);
+
+void goDist(int type, const char title[], int pos_desired, uint16_t color=WHITE, float motor_time = motor_time,float motor_div = 1,bool goBack=true,bool lastSequence=true,bool showScreen=true);
 
 int home_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected, uint16_t color=DEEPPINK);
 int get_HomeMenu_Update(int s);
@@ -702,6 +713,10 @@ void loop() {
           switch(zoom_movements_menu1){
             //zoom to max 
             case 0:{
+              countdownMenu();
+              //return to starting position by default
+              goDist(ZOOM, zm1_0, zoom_range, SNOW, motor_time,1,true,true,true);
+              zoom_movements_menu1 = resetScreen(zoom_movements_menu1);
               break;
             }
             //zoom to min 
