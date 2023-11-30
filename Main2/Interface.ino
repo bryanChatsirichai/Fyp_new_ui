@@ -107,7 +107,7 @@ void goDist(int type, const char title[], int pos_desired, uint16_t color, float
       Serial.println((shutter_time - motor_time) / motor_div);
       float remainder_time = (shutter_time - motor_time) / motor_div;
       if(camera_shutter_open == 0){
-        //open_Shutter();
+        open_Shutter();
         camera_shutter_open = 1;
       }
       moveMotor(type, pos_desired, motor_time / motor_div);
@@ -124,7 +124,7 @@ void goDist(int type, const char title[], int pos_desired, uint16_t color, float
       float front_remainder_time = remainder_time / 2;
       float back_remainder_time = remainder_time / 2;
       if(camera_shutter_open == 0){
-        //open_Shutter();
+        open_Shutter();
         camera_shutter_open = 1;
       }
       //delay in ms
@@ -141,7 +141,7 @@ void goDist(int type, const char title[], int pos_desired, uint16_t color, float
       Serial.println((shutter_time - motor_time) / motor_div);
       float remainder_time = (shutter_time - motor_time) / motor_div;
       if(camera_shutter_open == 0){
-        //open_Shutter();
+        open_Shutter();
         camera_shutter_open = 1;
       }
       //delay in ms
@@ -165,7 +165,7 @@ void goDist(int type, const char title[], int pos_desired, uint16_t color, float
 
   //end sound 
   if(lastSequence){    
-    //close_Shutter();
+    close_Shutter();
     if(camera_shutter_open == 1){
         play_sound_2();
         camera_shutter_open = 0;
@@ -210,7 +210,7 @@ void goMultiDist(const char title[], int zoom_desired, int focus_desired, uint16
     case 0:{
       float remainder_time = (shutter_time - motor_time) / motor_div;
       if(camera_shutter_open == 0){
-        //open_Shutter();
+        open_Shutter();
         camera_shutter_open = 1;
       }
       moveMultiMotor(zoom_desired, focus_desired, motor_time / motor_div);
@@ -224,7 +224,7 @@ void goMultiDist(const char title[], int zoom_desired, int focus_desired, uint16
       float front_remainder_time = remainder_time / 2;
       float back_remainder_time = remainder_time / 2;
       if(camera_shutter_open == 0){
-        //open_Shutter();
+        open_Shutter();
         camera_shutter_open = 1;
       }
       //delay in ms
@@ -238,7 +238,7 @@ void goMultiDist(const char title[], int zoom_desired, int focus_desired, uint16
     case 2 :{
       float remainder_time = (shutter_time - motor_time) / motor_div;
       if(camera_shutter_open == 0){
-        //open_Shutter();
+        open_Shutter();
         camera_shutter_open = 1;
       }
       //delay in ms
@@ -257,7 +257,7 @@ void goMultiDist(const char title[], int zoom_desired, int focus_desired, uint16
   focus_current = focus_desired;
 
   if(lastSequence){
-    //close_Shutter();
+    close_Shutter();
     if(camera_shutter_open == 1){
         play_sound_2();
         camera_shutter_open = 0;

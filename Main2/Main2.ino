@@ -49,8 +49,8 @@
 #define TX 4
 
 //control camera shutter  - may need change FOCUS_CAMERA GPIO PIN
-#define FOCUS_CAMERA 21
-#define SHUTTER_CAMERA 22
+#define FOCUS_CAMERA 21 //26
+#define SHUTTER_CAMERA 22 //27
 
 /* Colour Strings */
 #define WHITE     0xFFFF
@@ -365,6 +365,36 @@ int get_custom_movements_menu1_update(int s);
 int custome_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
 int get_custom_movements_menu2_update(int s);
 
+void open_Shutter();
+void close_Shutter();
+
+
+void open_Shutter() { // Controls the shutter of a Nikon camera
+  Serial.println("Open");
+  digitalWrite(FOCUS_CAMERA, HIGH);  
+  digitalWrite(SHUTTER_CAMERA, HIGH);
+  delay(150);
+  digitalWrite(FOCUS_CAMERA, LOW);
+  digitalWrite(SHUTTER_CAMERA, LOW);
+  delay(150);
+  digitalWrite(FOCUS_CAMERA, HIGH);  
+  digitalWrite(SHUTTER_CAMERA, HIGH);
+  delay(1000);
+}
+void close_Shutter() { // Controls the shutter of a Nikon camera
+  Serial.println("Close");
+  digitalWrite(FOCUS_CAMERA, HIGH);  
+  digitalWrite(SHUTTER_CAMERA, HIGH);
+  delay(150);
+  digitalWrite(FOCUS_CAMERA, LOW);
+  digitalWrite(SHUTTER_CAMERA, LOW);
+  delay(150);
+  digitalWrite(FOCUS_CAMERA, HIGH);  
+  digitalWrite(SHUTTER_CAMERA, HIGH);
+  delay(1000);
+}
+
+
 void setup() {
   // put your setup code here, to run once:
   
@@ -376,11 +406,11 @@ void setup() {
   SoftwareSerial.begin(9600);
 
   //camera shutter and focus for capturing pictures 
-  // pinMode(FOCUS_CAMERA, OUTPUT);
-  // pinMode(SHUTTER_CAMERA, OUTPUT);
-  // digitalWrite(FOCUS_CAMERA, HIGH);  
-  // digitalWrite(SHUTTER_CAMERA, HIGH);
-  // delay(150);
+  pinMode(FOCUS_CAMERA, OUTPUT);
+  pinMode(SHUTTER_CAMERA, OUTPUT);
+  digitalWrite(FOCUS_CAMERA, HIGH);  
+  digitalWrite(SHUTTER_CAMERA, HIGH);
+  delay(150);
 
   // ***** Joystick and Buttons *****
   pinMode(UP_BUTTON, INPUT_PULLUP);
