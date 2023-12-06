@@ -106,6 +106,7 @@ int configuration_screen = -1;
 int camera_setting_screen = -1;
 int camera_positioning_screen = -1;
 int motor_calibration_screen1 = -1;
+int options_menu1 = -1;
 //int motor_calibration_screen2 = -1;
 int exposure_option_screen = -1;
 int action_screen_1 = -1;
@@ -144,7 +145,9 @@ const char home_2[] PROGMEM = "Actions - Custom";
 const char mm_configuration_header[] PROGMEM = "|- Configuration Menu -|";
 const char mm_configuration_0[] PROGMEM = "Camera Settings";
 const char mm_configuration_1[] PROGMEM = "Motor Calibration";
-const char mm_configuration_2[] PROGMEM = "RESET all values";
+const char mm_configuration_2[] PROGMEM = "Options";
+
+
 
 ////main_menu2 options focus on actions,
 const char mm_action1_header[] PROGMEM = "|- Action Menu-1 -|";
@@ -154,9 +157,9 @@ const char mm_action1_2[] PROGMEM = "ZoomFocus Movements";
 
 /////Calibration/////
 const char cs_name[] PROGMEM = "|- Camera Settings -|";
-const char cs_0[] PROGMEM = "Zoom/Focus Position";
-const char cs_1[] PROGMEM = "Shutter Time"; //Camera Shutter Time, Shutter Speed
-const char cs_2[] PROGMEM = "Motor Movement Time";
+const char cs_0[] PROGMEM = "Shutter Time"; //Camera Shutter Time, Shutter Speed
+const char cs_1[] PROGMEM = "Motor Movement Time";
+//const char cs_0[] PROGMEM = "Zoom/Focus Position";
 
 //position orientation 
 const char pm_name[] PROGMEM = "|- Positioning Setting -|";
@@ -171,7 +174,14 @@ const char mc1_name[] PROGMEM = "|- Calibration -|";
 const char mc1_0[] PROGMEM = "Z_Cali";
 const char mc1_1[] PROGMEM = "F_Cali";
 const char mc1_2[] PROGMEM = "POV_Cali";
-const char mc1_3[] PROGMEM = "Exposure";
+
+
+//options page
+const char option_name[] PROGMEM = "|- Options -|";
+const char option_0[] PROGMEM = "Switch Z/F";
+const char option_1[] PROGMEM = "Exposure";
+const char option_2[] PROGMEM = "RESET ALL";
+
 
 //clibrating ZF len(s)
 const char cali_zoom[] PROGMEM = "|--Calibrate Zoom --|";
@@ -254,11 +264,11 @@ const char *const home_menu[] PROGMEM = {home_0, home_1,home_2}; //Home_menu tab
 const char *const main_menu_1[] PROGMEM = {mm_configuration_0, mm_configuration_1, mm_configuration_2}; //main_menu1 table
 const char *const main_menu_2[] PROGMEM = {mm_action1_0, mm_action1_1, mm_action1_2}; //main_menu2 table
 
-const char *const camera_settings_menu[] PROGMEM = {cs_0, cs_1, cs_2};
+const char *const camera_settings_menu[] PROGMEM = {cs_0, cs_1};
 const char *const positioning_menu[] PROGMEM = {pm_0,pm_1};
-const char *const motor_calibration_menu1[] PROGMEM {mc1_0, mc1_1, mc1_2, mc1_3};
+const char *const motor_calibration_menu1[] PROGMEM {mc1_0, mc1_1, mc1_2};
+const char *const options_menu[] PROGMEM {option_0, option_1,option_2};
 const char *const exposure_option_menu[] PROGMEM {exposure_option_0, exposure_option_1,exposure_option_2};
-
 
 const char *const zoom_menu1[] PROGMEM = {zm1_0,zm1_1,zm1_2,zm1_3};
 const char *const zoom_menu2[] PROGMEM = {zm2_0,zm2_1};
@@ -328,6 +338,9 @@ int get_positioning_Menu_update(int s);
 
 int motor_calibration_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
 int get_motor_calibration_menu1_update(int s);
+
+int options_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+int get_options_menu1_update(int s);
 
 void caliMenu(const char *const string_table[], int current_step, int max_steps=200, uint16_t color=WHITE, bool updateBar=false);
 int calibrate(int type, const char *const string_table[], int upper_limit, int lower_limit, uint16_t color=DEEPPINK);
@@ -468,42 +481,8 @@ void loop() {
         //camera_setting
         case 0: {
           switch (camera_setting_screen) {
-            // Zoom-Focus position screen
-            case 0: {
-              switch (camera_positioning_screen) {
-                // zoom at the back
-                case 0:{
-                  //Serial.println("zoom at the back");
-                  orientation = 0;
-                  EEPROM.write(4,orientation);
-                  EEPROM.commit();
-                  camera_positioning_screen = -1;
-                  //go back to prev screen after selection
-                  camera_setting_screen = -1;
-                  break;
-                }
-                // zoom at the front
-                case 1:{
-                  //Serial.println("zoom at the front");
-                  orientation = 1;
-                  EEPROM.write(4,orientation);
-                  EEPROM.commit();
-                  camera_positioning_screen = -1;
-                  //go back to prev screen after selection
-                  camera_setting_screen = -1;
-                  break;                
-                }
-                // show [positioning settings menu]
-                default: 
-                  // max_option = positioning_menu_screen(2,pm_name ,positioning_menu, option_selected);
-                  positioning_menu_screen(2,pm_name ,positioning_menu, option_selected,DEEPPINK);
-                  camera_positioning_screen = get_positioning_Menu_update(camera_positioning_screen);
-                  break;
-              }      
-              break;
-            }
             // Set Shutter Time screen - shutter time of the DSLR camera
-            case 1:{
+            case 0:{
                 //display shutter speed bar (motor calibration).
                 option_selected = 0; //set selected option on shutter menu
                 int max_shutter_time = 40;
@@ -532,7 +511,7 @@ void loop() {
                 break;
             } 
             // set motor movement time -  time needed to execute a sequence
-            case 2: {
+            case 1: {
               option_selected = 0; //set selected option on shutter menu
               int motor_time_max = 40;
               int old_motor_time = motor_time;
@@ -563,7 +542,7 @@ void loop() {
             //show [camera settings menu]
             default:
               // max_option = cameraSetting_menu_screen(3,cs_name ,camera_settings_menu, option_selected,DEEPPINK);
-              cameraSetting_menu_screen(3,cs_name ,camera_settings_menu, option_selected,DEEPPINK);
+              cameraSetting_menu_screen(2,cs_name ,camera_settings_menu, option_selected,DEEPPINK);
               camera_setting_screen = get_CameraSetting_Menu_update(camera_setting_screen);
               break;
           }
@@ -649,15 +628,71 @@ void loop() {
                 EEPROM.commit();
               break;
             }
+            // case 3: {
+            //   break;
+            // }
+
+            // motor_calibration_menu2 if needed
+            // case 4:{
+            //   break;
+            // }
+
+            //Show motor_calibration_menu1
+            default:
+              //max_option = motor_calibration_menu1_screen(3,mc1_name,motor_calibration_menu1, option_selected,DEEPPINK);
+              motor_calibration_menu1_screen(3,mc1_name,motor_calibration_menu1, option_selected,DEEPPINK);
+              motor_calibration_screen1 = get_motor_calibration_menu1_update(motor_calibration_screen1);
+              break;
+          }
+          break;
+        }
+        //options screen
+        case 2: {
+          switch(options_menu1){
+            //Switch Z/F
+            //Zoom-Focus position screen
+            case 0: {
+              switch (camera_positioning_screen) {
+                // zoom at the back
+                case 0:{
+                  //Serial.println("zoom at the back");
+                  orientation = 0;
+                  EEPROM.write(4,orientation);
+                  EEPROM.commit();
+                  camera_positioning_screen = -1;
+                  //go back to prev screen after selection
+                  options_menu1 = -1;
+                  break;
+                }
+                // zoom at the front
+                case 1:{
+                  //Serial.println("zoom at the front");
+                  orientation = 1;
+                  EEPROM.write(4,orientation);
+                  EEPROM.commit();
+                  camera_positioning_screen = -1;
+                  //go back to prev screen after selection
+                  options_menu1 = -1;
+                  break;                
+                }
+                // show [positioning settings menu]
+                default: 
+                  // max_option = positioning_menu_screen(2,pm_name ,positioning_menu, option_selected);
+                  positioning_menu_screen(2,pm_name ,positioning_menu, option_selected,DEEPPINK);
+                  camera_positioning_screen = get_positioning_Menu_update(camera_positioning_screen);
+                  break;
+              }      
+              break;
+            }
             //Exposure Setting
-            case 3: {
+            case 1: {
                   switch(exposure_option_screen){
                     //pre
                     case 0:{
                       exposure_option_set = 0;
                       exposure_option_screen = -1;
                       //go back to prev screen after selection
-                      motor_calibration_screen1 = -1;
+                      options_menu1 = -1;
                       EEPROM.write(7, exposure_option_set);
                       EEPROM.commit();
                       break;
@@ -667,7 +702,7 @@ void loop() {
                       exposure_option_set = 1;
                       exposure_option_screen = -1;
                       //go back to prev screen after selection
-                      motor_calibration_screen1 = -1;
+                      options_menu1 = -1;
                       EEPROM.write(7, exposure_option_set);
                       EEPROM.commit();
                       break;
@@ -677,54 +712,48 @@ void loop() {
                       exposure_option_set = 2;
                       exposure_option_screen = -1;
                       //go back to prev screen after selection
-                      motor_calibration_screen1 = -1;
+                      options_menu1 = -1;
                       EEPROM.write(7, exposure_option_set);
                       EEPROM.commit();
                       break;
                     }
                     default:
-                    //max_option = (3,exposure_option_name,exposure_option_menu, option_selected,DEEPPINK);  
-                    exposure_menu_screen(3,exposure_option_name,exposure_option_menu, option_selected,DEEPPINK);
-                    exposure_option_screen = get_exposure_menu_update(exposure_option_screen);
-                    break;
+                      //max_option = (3,exposure_option_name,exposure_option_menu, option_selected,DEEPPINK);  
+                      exposure_menu_screen(3,exposure_option_name,exposure_option_menu, option_selected,DEEPPINK);
+                      exposure_option_screen = get_exposure_menu_update(exposure_option_screen);
+                      break;
                   }
               break;
             }
-
-            // motor_calibration_menu2 if needed
-            // case 4:{
-            //   break;
-            // }
-
-            //Show motor_calibration_menu1
-            default:
-              //max_option = motor_calibration_menu1_screen(4,mc1_name,motor_calibration_menu1, option_selected,DEEPPINK);
-              motor_calibration_menu1_screen(4,mc1_name,motor_calibration_menu1, option_selected,DEEPPINK);
-              motor_calibration_screen1 = get_motor_calibration_menu1_update(motor_calibration_screen1);
+            //reser all
+            case 2:{
+              EEPROM.write(0,0);
+              EEPROM.write(1,0);
+              EEPROM.write(2,0);
+              EEPROM.write(3,0);
+              EEPROM.write(4,0);
+              EEPROM.write(5,0);
+              EEPROM.write(6,0);                 
+              EEPROM.write(7,0);
+              focus_range = 0;
+              zoom_range = 0;
+              focus_current = 0;
+              zoom_current = 0;
+              orientation = 0;
+              shutter_time = 0;
+              motor_time = 0;
+              exposure_option_set = 0;
+              EEPROM.commit();
+              // options_menu1 = resetScreen(options_menu1);
+              options_menu1 = -1;
               break;
+            }
+            default:
+              //max_option = options_menu1_screen(3,mc1_name,motor_calibration_menu1, option_selected,DEEPPINK);
+              options_menu1_screen(3,option_name,options_menu, option_selected,DEEPPINK);
+              options_menu1 = get_options_menu1_update(options_menu1);
+              break; 
           }
-          break;
-        }
-        //reset all setting
-        case 2: {
-          EEPROM.write(0,0);
-          EEPROM.write(1,0);
-          EEPROM.write(2,0);
-          EEPROM.write(3,0);
-          EEPROM.write(4,0);
-          EEPROM.write(5,0);
-          EEPROM.write(6,0);                 
-          EEPROM.write(7,0);
-          focus_range = 0;
-          zoom_range = 0;
-          focus_current = 0;
-          zoom_current = 0;
-          orientation = 0;
-          shutter_time = 0;
-          motor_time = 0;
-          exposure_option_set = 0;
-          EEPROM.commit();
-          configuration_screen = resetScreen(configuration_screen);
           break;
         }
         
