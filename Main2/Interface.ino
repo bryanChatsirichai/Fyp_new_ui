@@ -99,7 +99,7 @@ void goDist(int type, const char title[], int pos_desired, uint16_t color, float
 
   //move motor depending on exposure_option_set
   switch (exposure_option_set){
-    //pre
+    //pre, delay then move
     case 0:{
       Serial.println("Pre");
       Serial.print("(shutter_time - motor_time) / motor_div = ");
@@ -110,9 +110,9 @@ void goDist(int type, const char title[], int pos_desired, uint16_t color, float
         open_Shutter();
         camera_shutter_open = 1;
       }
-      moveMotor(type, pos_desired, motor_time / motor_div);
       //delay in ms
       delay(remainder_time * 1000);
+      moveMotor(type, pos_desired, motor_time / motor_div);
       break;
     }
     //split
@@ -134,7 +134,7 @@ void goDist(int type, const char title[], int pos_desired, uint16_t color, float
       delay(back_remainder_time * 1000);
       break;
     }
-    //after
+    //after, move then delay
     case 2 :{
       Serial.println("After");
       Serial.print("shutter_time - motor_time = ");
@@ -144,9 +144,9 @@ void goDist(int type, const char title[], int pos_desired, uint16_t color, float
         open_Shutter();
         camera_shutter_open = 1;
       }
+      moveMotor(type, pos_desired, motor_time / motor_div);
       //delay in ms
       delay(remainder_time * 1000);
-      moveMotor(type, pos_desired, motor_time / motor_div);
       break;
     }
     default:{
@@ -206,16 +206,16 @@ void goMultiDist(const char title[], int zoom_desired, int focus_desired, uint16
 
   //move motor depending on exposure_option_set
   switch (exposure_option_set){
-    //pre
+    //pre, delay then move
     case 0:{
       float remainder_time = (shutter_time - motor_time) / motor_div;
       if(camera_shutter_open == 0){
         open_Shutter();
         camera_shutter_open = 1;
       }
-      moveMultiMotor(zoom_desired, focus_desired, motor_time / motor_div);
       //delay in ms
       delay(remainder_time * 1000);
+      moveMultiMotor(zoom_desired, focus_desired, motor_time / motor_div);
       break;
     }
     //split
@@ -234,16 +234,16 @@ void goMultiDist(const char title[], int zoom_desired, int focus_desired, uint16
       delay(back_remainder_time * 1000);
       break;
     }
-    //after
+    //after, move then delay
     case 2 :{
       float remainder_time = (shutter_time - motor_time) / motor_div;
       if(camera_shutter_open == 0){
         open_Shutter();
         camera_shutter_open = 1;
       }
+      moveMultiMotor(zoom_desired, focus_desired, motor_time / motor_div);
       //delay in ms
       delay(remainder_time * 1000);
-      moveMultiMotor(zoom_desired, focus_desired, motor_time / motor_div);
       break;
     }
     default:{
