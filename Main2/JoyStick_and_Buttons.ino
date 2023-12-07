@@ -202,13 +202,13 @@ int get_options_menu1_update(int s){
     tft.fillScreen(ST77XX_BLACK);//clear screen
     updateMenu = true;
   }
-  // if (digitalRead(X_BUTTON) == LOW) {
-  //   //update 
-  //   s = 2;
-  //   option_selected = 0; //resets options
-  //   tft.fillScreen(ST77XX_BLACK);//clear screen
-  //   updateMenu = true;
-  // }
+  if (digitalRead(X_BUTTON) == LOW) {
+    //update 
+    s = 2;
+    option_selected = 0; //resets options
+    tft.fillScreen(ST77XX_BLACK);//clear screen
+    updateMenu = true;
+  }
   // if (digitalRead(Y_BUTTON) == LOW) {
   //   //update 
   //   s = 3;

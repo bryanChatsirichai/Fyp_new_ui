@@ -249,6 +249,18 @@ int cameraSetting_menu_screen(int array_size,const char *menu_name ,const char *
     }
   }
 
+
+  // tft.setCursor(0,45);
+  // tft.setTextColor(AQUA);
+  // tft.print(F("Front: "));
+  // tft.setTextColor(WHITE,BLACK);
+  // tft.print(orientation ? "Zoom " : "Focus");
+  // tft.setCursor(0,55);
+  // tft.setTextColor(AQUA);
+  // tft.print(F("Rear: "));
+  // tft.setTextColor(WHITE,BLACK);
+  // tft.print(orientation ? "Focus" : "Zoom ");
+
   tft.setTextColor(WHITE,BLACK);
   tft.setTextSize(2);
   tft.setCursor(130, 25);
@@ -315,47 +327,38 @@ int motor_calibration_menu1_screen(int array_size,const char *menu_name ,const c
 
     tft.setCursor(0,15);
     tft.setTextColor(AQUA);
-    tft.print(F("Excess:"));
-    tft.setTextColor(WHITE);
-    switch (excess_option_set) {
-      //pre
-      case 0:{
-        tft.print("Pre");
-        break;
-      }
-      //split
-      case 1:{
-        tft.print("Split");
-        break;
-      }
-      //after
-      case 2:{
-        tft.print("After");
-        break;
-      }
-    }
+    tft.print(F("Front: "));
+    tft.setTextColor(WHITE,BLACK);
+    tft.print(orientation ? "Zoom " : "Focus");
+    tft.setCursor(0,25);
+    tft.setTextColor(AQUA);
+    tft.print(F("Rear: "));
+    tft.setTextColor(WHITE,BLACK);
+    tft.print(orientation ? "Focus" : "Zoom ");
 
-    tft.setCursor(0, 25);
+    tft.setCursor(0, 35);
     tft.setTextColor(AQUA);
     tft.print(F("Z_Range: "));
     tft.setTextColor(WHITE);
-    tft.print(zoom_range);
-    tft.setCursor(0,35);
+    tft.print(zoom_range);  
+    tft.setCursor(0,45);
     tft.setTextColor(AQUA);
     tft.print(F("F_Range: "));
     tft.setTextColor(WHITE);
     tft.println(focus_range);
 
-    tft.setCursor(0, 45);
+
+    tft.setCursor(0, 55);
     tft.setTextColor(AQUA);
     tft.print(F("Z_Current: "));
     tft.setTextColor(WHITE);
     tft.print(zoom_current);
-    tft.setCursor(0,55);
+    tft.setCursor(0,65);
     tft.setTextColor(AQUA);
     tft.print(F("F_Current: "));
     tft.setTextColor(WHITE);
-    tft.println(focus_current);
+    tft.println(focus_current);  
+
 
     //joystick icon only show arrows if can press them to go next page
     //tft.drawChar(12,60,UP_ARROW,WHITE,BLACK,2);
@@ -389,7 +392,6 @@ int options_menu1_screen(int array_size,const char *menu_name ,const char *const
       //updateMenu false
       return total_num; 
     }
-
     updateMenu = false;
     tft.setTextSize(1);
     tft.setCursor(0, 0);

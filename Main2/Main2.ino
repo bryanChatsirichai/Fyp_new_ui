@@ -179,7 +179,8 @@ const char mc1_2[] PROGMEM = "POV_Cali";
 //options page
 const char option_name[] PROGMEM = "|- Options -|";
 const char option_0[] PROGMEM = "Switch Z/F";
-const char option_1[] PROGMEM = "RESET ALL";
+const char option_1[] PROGMEM = "RESET Cam";
+const char option_2[] PROGMEM = "RESET Cali";
 
 //clibrating ZF len(s)
 const char cali_zoom[] PROGMEM = "|--Calibrate Zoom --|";
@@ -265,7 +266,7 @@ const char *const main_menu_2[] PROGMEM = {mm_action1_0, mm_action1_1, mm_action
 const char *const camera_settings_menu[] PROGMEM = {cs_0, cs_1, cs_2};
 const char *const positioning_menu[] PROGMEM = {pm_0,pm_1};
 const char *const motor_calibration_menu1[] PROGMEM {mc1_0, mc1_1, mc1_2};
-const char *const options_menu[] PROGMEM {option_0, option_1};
+const char *const options_menu[] PROGMEM {option_0, option_1,option_2};
 const char *const excess_option_menu[] PROGMEM {excess_option_0, excess_option_1,excess_option_2};
 
 const char *const zoom_menu1[] PROGMEM = {zm1_0,zm1_1,zm1_2,zm1_3};
@@ -775,21 +776,11 @@ void loop() {
               }      
               break;
             }
-            //reset all
+            //reset camera setting
             case 1:{
-              EEPROM.write(0,0);
-              EEPROM.write(1,0);
-              EEPROM.write(2,0);
-              EEPROM.write(3,0);
-              EEPROM.write(4,0);
               EEPROM.write(5,0);
               EEPROM.write(6,0);                 
               EEPROM.write(7,0);
-              focus_range = 0;
-              zoom_range = 0;
-              focus_current = 0;
-              zoom_current = 0;
-              orientation = 0;
               shutter_time = 0;
               motor_time = 0;
               excess_option_set = 0;
@@ -798,9 +789,26 @@ void loop() {
               options_menu1 = -1;
               break;
             }
+            //reset calibration
+            case 2:{
+              EEPROM.write(0,0);
+              EEPROM.write(1,0);
+              EEPROM.write(2,0);
+              EEPROM.write(3,0);
+              EEPROM.write(4,0);
+              focus_range = 0;
+              zoom_range = 0;
+              focus_current = 0;
+              zoom_current = 0;
+              orientation = 0;
+              EEPROM.commit();
+              // options_menu1 = resetScreen(options_menu1);
+              options_menu1 = -1;
+              break;
+            }
             default:
-              //max_option = options_menu1_screen(2,mc1_name,motor_calibration_menu1, option_selected,DEEPPINK);
-              options_menu1_screen(2,option_name,options_menu, option_selected,DEEPPINK);
+              //max_option = options_menu1_screen(3,mc1_name,motor_calibration_menu1, option_selected,DEEPPINK);
+              options_menu1_screen(3,option_name,options_menu, option_selected,DEEPPINK);
               options_menu1 = get_options_menu1_update(options_menu1);
               break; 
           }
