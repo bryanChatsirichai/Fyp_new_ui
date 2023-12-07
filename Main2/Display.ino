@@ -137,6 +137,8 @@ void printMoveSteps(int type, const char title[], uint16_t color, int movement_d
   }
 }
 
+int symbol_padding = 40;
+int symbol_size = 20;
 
 // ******** DISPLAY pages Functions **********
 int home_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color) {
@@ -154,14 +156,24 @@ int home_menu_screen(int array_size,const char *menu_name ,const char *const str
   tft.setTextColor(WHITE,BLACK);
   tft.setTextSize(2);
   tft.setCursor(130, 25);
-  tft.println("Home - *");
+  //tft.println("Home - *");
+
+  //symbol
+  tft.print("Home");
+  tft.drawChar(tft.width()- symbol_size,25,RIGHT_ARROW,LIME,BLACK,2);
+  
   int rect_y = 67;
 
   for (int i=0; i<total_num; i++) {
+    //tft.drawRect(0,rect_y,tft.width()-symbol_padding,35,WHITE);
     tft.drawRect(0,rect_y,tft.width(),35,WHITE);
     tft.setCursor(2,rect_y+10);
     tft.setTextColor(WHITE,BLACK);
     tft.print(string_table[i]);
+
+    //symbol
+    tft.drawChar(tft.width() - symbol_size,rect_y+10,RIGHT_ARROW,LIME,BLACK,2);
+
     rect_y = rect_y+55;
   }
   tft.setTextColor(WHITE,BLACK);
@@ -185,15 +197,24 @@ int configuration_menu_screen(int array_size,const char *menu_name ,const char *
   tft.setTextColor(WHITE,BLACK);
   tft.setTextSize(2);
   tft.setCursor(130, 25);
-  tft.println("Home - *");
+  //tft.println("Home - *");
+
+  //symbol
+  tft.print("Home");
+  tft.drawChar(tft.width()- symbol_size,25,RIGHT_ARROW,LIME,BLACK,2);
   int rect_y = 67;
 
   for (int i=0; i<total_num; i++) {
+    //tft.drawRect(0,rect_y,tft.width()-symbol_padding,35,WHITE);
     tft.drawRect(0,rect_y,tft.width(),35,WHITE);
     tft.setCursor(2,rect_y+10);
 
     tft.setTextColor(WHITE,BLACK);
     tft.print(string_table[i]);
+
+    //symbol
+    tft.drawChar(tft.width() - symbol_size,rect_y+10,RIGHT_ARROW,LIME,BLACK,2);
+
     rect_y = rect_y+55;
   }
   tft.setTextColor(WHITE,BLACK);
@@ -249,22 +270,15 @@ int cameraSetting_menu_screen(int array_size,const char *menu_name ,const char *
     }
   }
 
-
-  // tft.setCursor(0,45);
-  // tft.setTextColor(AQUA);
-  // tft.print(F("Front: "));
-  // tft.setTextColor(WHITE,BLACK);
-  // tft.print(orientation ? "Zoom " : "Focus");
-  // tft.setCursor(0,55);
-  // tft.setTextColor(AQUA);
-  // tft.print(F("Rear: "));
-  // tft.setTextColor(WHITE,BLACK);
-  // tft.print(orientation ? "Focus" : "Zoom ");
-
   tft.setTextColor(WHITE,BLACK);
   tft.setTextSize(2);
   tft.setCursor(130, 25);
-  tft.println("Home - *");
+  //tft.println("Home - *");
+
+  //symbol
+  tft.print("Home");
+  tft.drawChar(tft.width()- symbol_size,25,RIGHT_ARROW,LIME,BLACK,2);
+
   int rect_y = 67;
 
   for (int i=0; i<total_num; i++) {
@@ -273,6 +287,9 @@ int cameraSetting_menu_screen(int array_size,const char *menu_name ,const char *
 
     tft.setTextColor(WHITE,BLACK);
     tft.print(string_table[i]);
+
+    //symbol
+    tft.drawChar(tft.width() - symbol_size,rect_y+10,RIGHT_ARROW,LIME,BLACK,2);
     rect_y = rect_y+55;
   }
   tft.setTextColor(WHITE,BLACK);
@@ -295,15 +312,22 @@ int positioning_menu_screen(int array_size,const char *menu_name ,const char *co
     tft.setTextColor(WHITE,BLACK);
     tft.setTextSize(2);
     tft.setCursor(130, 25);
-    tft.println("Home - *");
+    //tft.println("Home - *");
+    //symbol
+    tft.print("Home");
+    tft.drawChar(tft.width()- symbol_size,25,RIGHT_ARROW,LIME,BLACK,2);
     int rect_y = 67;
 
     for (int i=0; i<total_num; i++) {
+      //tft.drawRect(0,rect_y,tft.width()-symbol_padding,35,WHITE);
       tft.drawRect(0,rect_y,tft.width(),35,WHITE);
       tft.setCursor(2,rect_y+10);
 
       tft.setTextColor(WHITE,BLACK);
       tft.print(string_table[i]);
+      
+      //symbol
+      tft.drawChar(tft.width() - symbol_size,rect_y+10,RIGHT_ARROW,LIME,BLACK,2);
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
@@ -380,7 +404,16 @@ int motor_calibration_menu1_screen(int array_size,const char *menu_name ,const c
       tft.print(string_table[i]);
       rect_y = rect_y+55;
     }
-    tft.setTextColor(WHITE,BLACK);
+
+    //instruction(s)
+    tft.setTextColor(AQUA);
+    tft.setTextSize(1);
+    tft.setCursor(0, 180);
+    //tft.setTextColor(WHITE,BLACK);
+    tft.println("Calibrate");
+    tft.println("Motor(s)");
+    tft.println("before");
+    tft.print("setting pov.");
     //maybe don't need  
     return total_num; 
 }
@@ -480,6 +513,10 @@ int options_menu1_screen(int array_size,const char *menu_name ,const char *const
   }
 
 
+
+
+
+
 int excess_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
     int total_num = array_size;
     int max_option = array_size;
@@ -495,15 +532,22 @@ int excess_menu_screen(int array_size,const char *menu_name ,const char *const s
     tft.setTextColor(WHITE,BLACK);
     tft.setTextSize(2);
     tft.setCursor(130, 25);
-    tft.println("Home - *");
+    //tft.println("Home - *");
+    //symbol
+    tft.print("Home");
+    tft.drawChar(tft.width()- symbol_size,25,RIGHT_ARROW,LIME,BLACK,2);
     int rect_y = 67;
 
     for (int i=0; i<total_num; i++) {
+      //tft.drawRect(0,rect_y,tft.width()-symbol_padding,35,WHITE);
       tft.drawRect(0,rect_y,tft.width(),35,WHITE);
       tft.setCursor(2,rect_y+10);
 
       tft.setTextColor(WHITE,BLACK);
       tft.print(string_table[i]);
+      
+      //symbol
+      tft.drawChar(tft.width() - symbol_size,rect_y+10,RIGHT_ARROW,LIME,BLACK,2);
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
@@ -526,15 +570,22 @@ int action_menu1_screen(int array_size,const char *menu_name ,const char *const 
     tft.setTextColor(WHITE,BLACK);
     tft.setTextSize(2);
     tft.setCursor(130, 25);
-    tft.println("Home - *");
+    //tft.println("Home - *");
+    //symbol
+    tft.print("Home");
+    tft.drawChar(tft.width()- symbol_size,25,RIGHT_ARROW,LIME,BLACK,2);
     int rect_y = 67;
 
     for (int i=0; i<total_num; i++) {
+      //tft.drawRect(0,rect_y,tft.width()-symbol_padding,35,WHITE);
       tft.drawRect(0,rect_y,tft.width(),35,WHITE);
       tft.setCursor(2,rect_y+10);
 
       tft.setTextColor(WHITE,BLACK);
       tft.print(string_table[i]);
+      
+      //symbol
+      tft.drawChar(tft.width() - symbol_size,rect_y+10,RIGHT_ARROW,LIME,BLACK,2);
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
@@ -569,10 +620,13 @@ int zoom_movements_menu1_screen(int array_size,const char *menu_name ,const char
     int rect_y = 12;
 
     for (int i=0; i<total_num; i++) {
-      tft.drawRect(75,rect_y,tft.width()-75,35,WHITE);
+      tft.drawRect(75,rect_y,tft.width()-75,35,WHITE);      
       tft.setCursor(82,rect_y+10);
       tft.setTextColor(WHITE,BLACK);
       tft.print(string_table[i]);
+
+      //symbol
+      tft.drawChar(tft.width() - symbol_size,rect_y+10,RIGHT_ARROW,LIME,BLACK,2);
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
@@ -611,6 +665,9 @@ int zoom_movements_menu2_screen(int array_size,const char *menu_name ,const char
       tft.setCursor(82,rect_y+10);
       tft.setTextColor(WHITE,BLACK);
       tft.print(string_table[i]);
+
+      //symbol
+      tft.drawChar(tft.width() - symbol_size,rect_y+10,RIGHT_ARROW,LIME,BLACK,2);
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
@@ -649,6 +706,9 @@ int focus_movements_menu1_screen(int array_size,const char *menu_name ,const cha
       tft.setCursor(82,rect_y+10);
       tft.setTextColor(WHITE,BLACK);
       tft.print(string_table[i]);
+      
+      //symbol
+      tft.drawChar(tft.width() - symbol_size,rect_y+10,RIGHT_ARROW,LIME,BLACK,2);
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
@@ -687,6 +747,8 @@ int focus_movements_menu2_screen(int array_size,const char *menu_name ,const cha
       tft.setCursor(82,rect_y+10);
       tft.setTextColor(WHITE,BLACK);
       tft.print(string_table[i]);
+      //symbol
+      tft.drawChar(tft.width() - symbol_size,rect_y+10,RIGHT_ARROW,LIME,BLACK,2);
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
@@ -725,6 +787,9 @@ int zoomfocus_movements_menu1_screen(int array_size,const char *menu_name ,const
       tft.setCursor(82,rect_y+10);
       tft.setTextColor(WHITE,BLACK);
       tft.print(string_table[i]);
+      
+      //symbol
+      tft.drawChar(tft.width() - symbol_size,rect_y+10,RIGHT_ARROW,LIME,BLACK,2);
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
@@ -765,6 +830,8 @@ int zoomfocus_movements_menu2_screen(int array_size,const char *menu_name ,const
       tft.setCursor(82,rect_y+10);
       tft.setTextColor(WHITE,BLACK);
       tft.print(string_table[i]);
+      //symbol
+      tft.drawChar(tft.width() - symbol_size,rect_y+10,RIGHT_ARROW,LIME,BLACK,2);
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
@@ -803,6 +870,8 @@ int zoomfocus_movements_menu3_screen(int array_size,const char *menu_name ,const
       tft.setCursor(82,rect_y+10);
       tft.setTextColor(WHITE,BLACK);
       tft.print(string_table[i]);
+      //symbol
+      tft.drawChar(tft.width() - symbol_size,rect_y+10,RIGHT_ARROW,LIME,BLACK,2);
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
@@ -875,10 +944,13 @@ int custome_movements_menu2_screen(int array_size,const char *menu_name ,const c
     int rect_y = 12;
 
     for (int i=0; i<total_num; i++) {
+      //tft.drawRect(75,rect_y,tft.width()-symbol_padding,35,WHITE);
       tft.drawRect(75,rect_y,tft.width()-75,35,WHITE);
       tft.setCursor(82,rect_y+10);
       tft.setTextColor(WHITE,BLACK);
       tft.print(string_table[i]);
+      //symbol
+      tft.drawChar(tft.width() - symbol_size,rect_y+10,RIGHT_ARROW,LIME,BLACK,2);
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);

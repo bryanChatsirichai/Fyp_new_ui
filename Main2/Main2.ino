@@ -137,9 +137,9 @@ SoftwareSerial SoftwareSerial(RX,TX); // RX, TX
 
 //home_screen options focus on configuration,
 const char home_header[] PROGMEM = "|- Home Menu -|";
-const char home_0[] PROGMEM = "Camera Callibration";
-const char home_1[] PROGMEM = "Actions - Z/F";
-const char home_2[] PROGMEM = "Actions - Custom";
+const char home_0[] PROGMEM = "Camera Config";
+const char home_1[] PROGMEM = "Actions-Z/F";
+const char home_2[] PROGMEM = "Actions-Pattern";
 
 //main_menu1 options focus on configuration,
 const char mm_configuration_header[] PROGMEM = "|- Configuration Menu -|";
@@ -151,14 +151,14 @@ const char mm_configuration_2[] PROGMEM = "Options";
 
 ////main_menu2 options focus on actions,
 const char mm_action1_header[] PROGMEM = "|- Action Menu-1 -|";
-const char mm_action1_0[] PROGMEM = "Zoom Movements";
-const char mm_action1_1[] PROGMEM = "Focus Movements";
-const char mm_action1_2[] PROGMEM = "ZoomFocus Movements";
+const char mm_action1_0[] PROGMEM = "Z-Movements";
+const char mm_action1_1[] PROGMEM = "F-Movements";
+const char mm_action1_2[] PROGMEM = "Z/F-Movements";
 
 /////Calibration/////
 const char cs_name[] PROGMEM = "|- Camera Settings -|";
 const char cs_0[] PROGMEM = "Shutter Time"; //Camera Shutter Time, Shutter Speed
-const char cs_1[] PROGMEM = "Motor Movement Time";
+const char cs_1[] PROGMEM = "Motor Time";
 const char cs_2[] PROGMEM = "Excess";
 
 //position orientation 
@@ -204,36 +204,36 @@ const char excess_option_2[] PROGMEM = "After";
 
 //Zoom page1
 const char zm1_name[] PROGMEM = "|- Zoom Movements -|";
-const char zm1_0[] PROGMEM = "Zoom Max";
-const char zm1_1[] PROGMEM = "Zoom Min";
-const char zm1_2[] PROGMEM = "Zoom Max&B";
-const char zm1_3[] PROGMEM = "Zoom Min&B";
+const char zm1_0[] PROGMEM = "Max";
+const char zm1_1[] PROGMEM = "Min";
+const char zm1_2[] PROGMEM = "Max&Back";
+const char zm1_3[] PROGMEM = "Min&Back";
 //Zoom page2
 const char zm2_name[] PROGMEM = "|- Zoom Movements -|";
-const char zm2_0[] PROGMEM = "Zoom to Value";
-const char zm2_1[] PROGMEM = "Zoom Value&B";
+const char zm2_0[] PROGMEM = "Value";
+const char zm2_1[] PROGMEM = "Value&Back";
 
 //Focus page1
 const char fm1_name[] PROGMEM = "|- Focus Movements -|";
-const char fm1_0[] PROGMEM = "Focus Max";
-const char fm1_1[] PROGMEM = "Focus Min";
-const char fm1_2[] PROGMEM = "Focus Max&B";
-const char fm1_3[] PROGMEM = "Focus Min&B";
+const char fm1_0[] PROGMEM = "Max";
+const char fm1_1[] PROGMEM = "Min";
+const char fm1_2[] PROGMEM = "Max&Back";
+const char fm1_3[] PROGMEM = "Min&Back";
 //Focus page2
 const char fm2_name[] PROGMEM = "|- Focus Movements -|";
-const char fm2_0[] PROGMEM = "Focus Value";
-const char fm2_1[] PROGMEM = "Focus Value&B";
+const char fm2_0[] PROGMEM = "Value";
+const char fm2_1[] PROGMEM = "Value&Back";
 
 //Zoom_Focus page1
 const char zf1_name[] PROGMEM = "|- Zoom&Focous Movements -|";
-const char zf1_0[] PROGMEM = "Z[MAX]F[MAX]";
-const char zf1_1[] PROGMEM = "Z[MIN]F[MIN]";
-const char zf1_2[] PROGMEM = "Z[MAX]F[MIN]";
-const char zf1_3[] PROGMEM = "Z[Min]F[MAX]";
+const char zf1_0[] PROGMEM = "ZF_Max";
+const char zf1_1[] PROGMEM = "ZF_Min";
+const char zf1_2[] PROGMEM = "Zmax_Fmin";
+const char zf1_3[] PROGMEM = "Zmin_Fmax";
 //Zoom_Focus page2
 const char zf2_name[] PROGMEM = "|- Zoom&Focous Movements -|";
-const char zf2_0[] PROGMEM = "ZF[MAX]&B";
-const char zf2_1[] PROGMEM = "ZF[MIN]&B";
+const char zf2_0[] PROGMEM = "ZF_Max&B";
+const char zf2_1[] PROGMEM = "ZF_Min&B";
 const char zf2_2[] PROGMEM = "Zmax_Fmin&B";
 const char zf2_3[] PROGMEM = "Zmin_Fmax&B";
 //Zoom_Focus page3
@@ -250,7 +250,7 @@ const char preset1_3[] PROGMEM = "SineWave ";
 
 //presets page2
 const char preset2_name[] PROGMEM = "|----- Presets -----|";
-const char preset2_0[] PROGMEM = "ZigZag-pend";
+const char preset2_0[] PROGMEM = ".....";
 
 const char counttext_1[] PROGMEM = "Get Ready!";
 const char counttext_2[] PROGMEM = "3";
@@ -601,51 +601,30 @@ void loop() {
                 setCurrentPos(ZOOM, zoom_current * MS_STEP);
             
                 // set to minimum left
-                int minZoom = calibrate(ZOOM, calizoom_left, 50, -50, AQUA);
+                int minZoom = calibrate(ZOOM, calizoom_left, 0, -MOTOR_STEPS, AQUA);
                 setCurrentPos(ZOOM, 0); // set to 0
                 zoom_current = 0;
                 //updateScreen(100);
                 
                 // set to maximum right
                 int maxZoom = calibrate(ZOOM, calizoom_right, MOTOR_STEPS, 0, AQUA);
-                moveMotor(ZOOM, 0,0); // returns back to 0
+                //moveMotor(ZOOM, 0,0); // returns back to 0
                 zoom_current = 0;
                 //zoom_range = maxZoom - minZoom;
                 zoom_range = maxZoom - zoom_current;
                 //updateScreen(100);
                 EEPROM.write(1, zoom_range);  
-            
+
+                //move and set zoom current to be the midlle of the minMax(range)
+                int zoom_middle = zoom_range / 2;
+                zoom_current = zoom_middle;
+                moveMotor(ZOOM, zoom_middle,0);
+
                 //minimum becomes absolute min pos
                 EEPROM.write(3, zoom_current);
                 EEPROM.commit();
                 motor_calibration_screen1 = -1;
                 break;
-
-              // //go to zoom calibrate bar
-              // setCurrentPos(ZOOM, zoom_current * MS_STEP);
-              // setAccel(ZOOM, CALI_ACCEL);
-
-              // // set to maximum right, set motor speed 0 as calibration use default speed not motor speed
-              // moveMotor(ZOOM, zoom_range, 0);
-              // zoom_current = zoom_range;
-              // zoom_current = calibrate(ZOOM, calizoom_right, MOTOR_STEPS, 0, DEEPPINK);
-              // int maxZoom = zoom_current;
-              // //updateScreen(100);
-              
-              // moveMotor(ZOOM, 0, 0); // returns back to 0
-              // zoom_current = 0;
-              // //zoom_current = calibrate(ZOOM, calizoom_left, maxZoom, maxZoom-MOTOR_STEPS);
-              // zoom_range = maxZoom - zoom_current;
-              // //updateScreen(100);
-
-              // zoom_current = 0; // minimum becomes absolute min pos
-              // EEPROM.write(1, zoom_range);           
-              // setCurrentPos(ZOOM, zoom_current);
-              // EEPROM.write(3, zoom_current);
-              // EEPROM.commit();
-              // motor_calibration_screen1 = -1;
-              // //motor_calibration_screen1 = resetScreen(motor_calibration_screen1);
-              // break;
             }
             //Focus Calibration
             case 1: {
@@ -656,50 +635,30 @@ void loop() {
               setCurrentPos(FOCUS, focus_current * MS_STEP);
           
               // set to minimum left
-              int minFocus = calibrate(FOCUS, califocus_left, 50, -50, DEEPPINK);
+              int minFocus = calibrate(FOCUS, califocus_left, 0, -MOTOR_STEPS, DEEPPINK);
               setCurrentPos(FOCUS, 0); // set to 0
               focus_current = 0;
               //updateScreen(100);
           
               // set to maximum right
               int maxFocus = calibrate(FOCUS, califocus_right, MOTOR_STEPS, 0, DEEPPINK);
-              moveMotor(FOCUS, 0,0); // returns back to 0
+              // moveMotor(FOCUS, 0,0); // returns back to 0
               focus_current = 0;
               //focus_range = maxFocus - minFocus;
               focus_range =  maxFocus - focus_current;
               //updateScreen(100);
               EEPROM.write(0, focus_range);
+
+              //move and set focus current to be the midlle of the minMax(range)
+              int focus_middle = focus_range / 2;
+              focus_current = focus_middle;
+              moveMotor(FOCUS, focus_middle,0);
           
               // minimum becomes absolute min pos
               EEPROM.write(2, focus_current);
               EEPROM.commit();
               motor_calibration_screen1 = -1;
               break;
-              //go to focus calibrate bar
-              // setCurrentPos(FOCUS, focus_current * MS_STEP);
-              // setAccel(FOCUS, CALI_ACCEL);
-
-              // // set to maximum right, set motor speed 0 as calibration use default speed not motor speed
-              // moveMotor(FOCUS, focus_range, 0);
-              // focus_current = focus_range;
-              // focus_current = calibrate(FOCUS, califocus_right, MOTOR_STEPS, 0,DEEPPINK);
-              // int maxFocus = focus_current;
-              // //updateScreen(100);
-
-              // moveMotor(FOCUS, 0, 0); // returns back to 0
-              // focus_current = 0;
-              // //focus_current = calibrate(FOCUS, califocus_left, maxFocus, maxFocus-MOTOR_STEPS);
-              // focus_range = maxFocus - focus_current;
-              // //updateScreen(100);
-
-              // focus_current = 0; // minimum becomes absolute min pos
-              // EEPROM.write(0, focus_range);
-              // setCurrentPos(ZOOM, focus_current);
-              // EEPROM.write(2, focus_current);
-              // EEPROM.commit();
-              // motor_calibration_screen1 = -1;
-              // //motor_calibration_screen1 = resetScreen(motor_calibration_screen1);
-              // break;
             }
             //POV Calibration
             case 2: {
