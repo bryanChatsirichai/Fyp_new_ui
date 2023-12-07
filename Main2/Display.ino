@@ -16,7 +16,7 @@ void resetToHomeScreen(){
   camera_positioning_screen = -1;
   motor_calibration_screen1 = -1;
   //motor_calibration_screen2 = -1;
-  exposure_option_screen = -1;
+  excess_option_screen = -1;
   action_screen_1 = -1;
   zoom_movements_menu1 = -1;
   zoom_movements_menu2 = -1;
@@ -227,6 +227,28 @@ int cameraSetting_menu_screen(int array_size,const char *menu_name ,const char *
   tft.setTextColor(WHITE);
   tft.println(motor_time);
 
+  tft.setCursor(0,35);
+  tft.setTextColor(AQUA);
+  tft.print(F("Excess: "));
+  tft.setTextColor(WHITE);
+  switch (excess_option_set) {
+    //pre
+    case 0:{
+      tft.print("Pre");
+      break;
+    }
+    //split
+    case 1:{
+      tft.print("Split");
+      break;
+    }
+    //after
+    case 2:{
+      tft.print("After");
+      break;
+    }
+  }
+
   tft.setTextColor(WHITE,BLACK);
   tft.setTextSize(2);
   tft.setCursor(130, 25);
@@ -293,9 +315,9 @@ int motor_calibration_menu1_screen(int array_size,const char *menu_name ,const c
 
     tft.setCursor(0,15);
     tft.setTextColor(AQUA);
-    tft.print(F("Exposure:"));
+    tft.print(F("Excess:"));
     tft.setTextColor(WHITE);
-    switch (exposure_option_set) {
+    switch (excess_option_set) {
       //pre
       case 0:{
         tft.print("Pre");
@@ -376,9 +398,9 @@ int options_menu1_screen(int array_size,const char *menu_name ,const char *const
 
     tft.setCursor(0,15);
     tft.setTextColor(AQUA);
-    tft.print(F("Exposure:"));
+    tft.print(F("Excess:"));
     tft.setTextColor(WHITE);
-    switch (exposure_option_set) {
+    switch (excess_option_set) {
       //pre
       case 0:{
         tft.print("Pre");
@@ -456,7 +478,7 @@ int options_menu1_screen(int array_size,const char *menu_name ,const char *const
   }
 
 
-int exposure_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+int excess_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
     int total_num = array_size;
     int max_option = array_size;
     if (!updateMenu) {

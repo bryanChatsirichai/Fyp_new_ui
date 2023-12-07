@@ -93,7 +93,7 @@ int focus_current = 0;
 int orientation = 0;    
 int shutter_time = 0;
 int motor_time = 0;   
-int exposure_option_set = 0; //default
+int excess_option_set = 0; //default
 int camera_shutter_open = 0; //default 0 is not open
 
 
@@ -108,7 +108,7 @@ int camera_positioning_screen = -1;
 int motor_calibration_screen1 = -1;
 int options_menu1 = -1;
 //int motor_calibration_screen2 = -1;
-int exposure_option_screen = -1;
+int excess_option_screen = -1;
 int action_screen_1 = -1;
 int zoom_movements_menu1 = -1;
 int zoom_movements_menu2 = -1;
@@ -195,11 +195,11 @@ const char string_36_1[] PROGMEM = "Adjust [FOCUS] lens";
 const char string_37[] PROGMEM = "to the desired Image";
 const char string_38[] PROGMEM = "to desired Outcome";
 
-//exposure option
-const char exposure_option_name[] PROGMEM = "|- Exposure -|";
-const char exposure_option_0[] PROGMEM = "Pre";
-const char exposure_option_1[] PROGMEM = "Split";
-const char exposure_option_2[] PROGMEM = "After";
+//excess option
+const char excess_option_name[] PROGMEM = "|- Excess -|";
+const char excess_option_0[] PROGMEM = "Pre";
+const char excess_option_1[] PROGMEM = "Split";
+const char excess_option_2[] PROGMEM = "After";
 
 //Zoom page1
 const char zm1_name[] PROGMEM = "|- Zoom Movements -|";
@@ -266,7 +266,7 @@ const char *const camera_settings_menu[] PROGMEM = {cs_0, cs_1, cs_2};
 const char *const positioning_menu[] PROGMEM = {pm_0,pm_1};
 const char *const motor_calibration_menu1[] PROGMEM {mc1_0, mc1_1, mc1_2};
 const char *const options_menu[] PROGMEM {option_0, option_1};
-const char *const exposure_option_menu[] PROGMEM {exposure_option_0, exposure_option_1,exposure_option_2};
+const char *const excess_option_menu[] PROGMEM {excess_option_0, excess_option_1,excess_option_2};
 
 const char *const zoom_menu1[] PROGMEM = {zm1_0,zm1_1,zm1_2,zm1_3};
 const char *const zoom_menu2[] PROGMEM = {zm2_0,zm2_1};
@@ -343,8 +343,8 @@ int get_options_menu1_update(int s);
 void caliMenu(const char *const string_table[], int current_step, int max_steps=200, uint16_t color=WHITE, bool updateBar=false);
 int calibrate(int type, const char *const string_table[], int upper_limit, int lower_limit, uint16_t color=DEEPPINK);
 
-int exposure_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
-int get_exposure_menu_update(int s);
+int excess_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+int get_excess_menu_update(int s);
 
 int action_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
 int get_Action_screen_1_Menu_update(int s);
@@ -456,7 +456,7 @@ void setup() {
   orientation = EEPROM.read(4);
   shutter_time = EEPROM.read(5);
   motor_time = EEPROM.read(6);
-  exposure_option_set = EEPROM.read(7);
+  excess_option_set = EEPROM.read(7);
 
   // ***** Default Values *****
   // if empty (==255), setting default values to 0
@@ -537,43 +537,43 @@ void loop() {
               }
               break;
             }
-            //Exposure Setting
+            //Excess Setting
             case 2: {
-                  switch(exposure_option_screen){
+                  switch(excess_option_screen){
                     //pre
                     case 0:{
-                      exposure_option_set = 0;
-                      exposure_option_screen = -1;
+                      excess_option_set = 0;
+                      excess_option_screen = -1;
                       //go back to prev screen after selection
                       camera_setting_screen = -1;
-                      EEPROM.write(7, exposure_option_set);
+                      EEPROM.write(7, excess_option_set);
                       EEPROM.commit();
                       break;
                     }
                     //split
                     case 1:{
-                      exposure_option_set = 1;
-                      exposure_option_screen = -1;
+                      excess_option_set = 1;
+                      excess_option_screen = -1;
                       //go back to prev screen after selection
                       camera_setting_screen = -1;
-                      EEPROM.write(7, exposure_option_set);
+                      EEPROM.write(7, excess_option_set);
                       EEPROM.commit();
                       break;
                     }
                     //after
                     case 2:{
-                      exposure_option_set = 2;
-                      exposure_option_screen = -1;
+                      excess_option_set = 2;
+                      excess_option_screen = -1;
                       //go back to prev screen after selection
                       camera_setting_screen = -1;
-                      EEPROM.write(7, exposure_option_set);
+                      EEPROM.write(7, excess_option_set);
                       EEPROM.commit();
                       break;
                     }
                     default:
-                      //max_option = (3,exposure_option_name,exposure_option_menu, option_selected,DEEPPINK);  
-                      exposure_menu_screen(3,exposure_option_name,exposure_option_menu, option_selected,DEEPPINK);
-                      exposure_option_screen = get_exposure_menu_update(exposure_option_screen);
+                      //max_option = excess_menu_screen(3,excess_option_name,excess_option_menu, option_selected,DEEPPINK);
+                      excess_menu_screen(3,excess_option_name,excess_option_menu, option_selected,DEEPPINK);
+                      excess_option_screen = get_excess_menu_update(excess_option_screen);
                       break;
                   }
               break;
@@ -792,7 +792,7 @@ void loop() {
               orientation = 0;
               shutter_time = 0;
               motor_time = 0;
-              exposure_option_set = 0;
+              excess_option_set = 0;
               EEPROM.commit();
               // options_menu1 = resetScreen(options_menu1);
               options_menu1 = -1;

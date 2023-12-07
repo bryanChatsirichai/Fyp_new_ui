@@ -220,7 +220,7 @@ int get_options_menu1_update(int s){
 }
 
 
-int get_exposure_menu_update(int s){
+int get_excess_menu_update(int s){
   //Go Home menu
   if (digitalRead(A_BUTTON) == LOW) {
     resetToHomeScreen();

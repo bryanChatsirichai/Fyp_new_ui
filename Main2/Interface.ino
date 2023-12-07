@@ -97,8 +97,8 @@ void goDist(int type, const char title[], int pos_desired, uint16_t color, float
       printMoveSteps(type, title, color, 0); 
   }
 
-  //move motor depending on exposure_option_set
-  switch (exposure_option_set){
+  //move motor depending on excess_option_set
+  switch (excess_option_set){
     //pre, delay then move
     case 0:{
       Serial.println("Pre");
@@ -204,8 +204,8 @@ void goMultiDist(const char title[], int zoom_desired, int focus_desired, uint16
   }
   //Serial.println("Both moving to position");
 
-  //move motor depending on exposure_option_set
-  switch (exposure_option_set){
+  //move motor depending on excess_option_set
+  switch (excess_option_set){
     //pre, delay then move
     case 0:{
       float remainder_time = (shutter_time - motor_time) / motor_div;
