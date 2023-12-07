@@ -159,7 +159,7 @@ const char mm_action1_2[] PROGMEM = "ZoomFocus Movements";
 const char cs_name[] PROGMEM = "|- Camera Settings -|";
 const char cs_0[] PROGMEM = "Shutter Time"; //Camera Shutter Time, Shutter Speed
 const char cs_1[] PROGMEM = "Motor Movement Time";
-//const char cs_0[] PROGMEM = "Zoom/Focus Position";
+const char cs_2[] PROGMEM = "Excess";
 
 //position orientation 
 const char pm_name[] PROGMEM = "|- Positioning Setting -|";
@@ -179,9 +179,7 @@ const char mc1_2[] PROGMEM = "POV_Cali";
 //options page
 const char option_name[] PROGMEM = "|- Options -|";
 const char option_0[] PROGMEM = "Switch Z/F";
-const char option_1[] PROGMEM = "Exposure";
-const char option_2[] PROGMEM = "RESET ALL";
-
+const char option_1[] PROGMEM = "RESET ALL";
 
 //clibrating ZF len(s)
 const char cali_zoom[] PROGMEM = "|--Calibrate Zoom --|";
@@ -264,10 +262,10 @@ const char *const home_menu[] PROGMEM = {home_0, home_1,home_2}; //Home_menu tab
 const char *const main_menu_1[] PROGMEM = {mm_configuration_0, mm_configuration_1, mm_configuration_2}; //main_menu1 table
 const char *const main_menu_2[] PROGMEM = {mm_action1_0, mm_action1_1, mm_action1_2}; //main_menu2 table
 
-const char *const camera_settings_menu[] PROGMEM = {cs_0, cs_1};
+const char *const camera_settings_menu[] PROGMEM = {cs_0, cs_1, cs_2};
 const char *const positioning_menu[] PROGMEM = {pm_0,pm_1};
 const char *const motor_calibration_menu1[] PROGMEM {mc1_0, mc1_1, mc1_2};
-const char *const options_menu[] PROGMEM {option_0, option_1,option_2};
+const char *const options_menu[] PROGMEM {option_0, option_1};
 const char *const exposure_option_menu[] PROGMEM {exposure_option_0, exposure_option_1,exposure_option_2};
 
 const char *const zoom_menu1[] PROGMEM = {zm1_0,zm1_1,zm1_2,zm1_3};
@@ -466,7 +464,7 @@ void setup() {
   // to be implemented when finalise...
 
   //Show ICM APP 'loading page'
-  //initializing_Page();
+  initializing_Page();
 
 
 }
@@ -539,10 +537,51 @@ void loop() {
               }
               break;
             }
+            //Exposure Setting
+            case 2: {
+                  switch(exposure_option_screen){
+                    //pre
+                    case 0:{
+                      exposure_option_set = 0;
+                      exposure_option_screen = -1;
+                      //go back to prev screen after selection
+                      camera_setting_screen = -1;
+                      EEPROM.write(7, exposure_option_set);
+                      EEPROM.commit();
+                      break;
+                    }
+                    //split
+                    case 1:{
+                      exposure_option_set = 1;
+                      exposure_option_screen = -1;
+                      //go back to prev screen after selection
+                      camera_setting_screen = -1;
+                      EEPROM.write(7, exposure_option_set);
+                      EEPROM.commit();
+                      break;
+                    }
+                    //after
+                    case 2:{
+                      exposure_option_set = 2;
+                      exposure_option_screen = -1;
+                      //go back to prev screen after selection
+                      camera_setting_screen = -1;
+                      EEPROM.write(7, exposure_option_set);
+                      EEPROM.commit();
+                      break;
+                    }
+                    default:
+                      //max_option = (3,exposure_option_name,exposure_option_menu, option_selected,DEEPPINK);  
+                      exposure_menu_screen(3,exposure_option_name,exposure_option_menu, option_selected,DEEPPINK);
+                      exposure_option_screen = get_exposure_menu_update(exposure_option_screen);
+                      break;
+                  }
+              break;
+            }
             //show [camera settings menu]
             default:
               // max_option = cameraSetting_menu_screen(3,cs_name ,camera_settings_menu, option_selected,DEEPPINK);
-              cameraSetting_menu_screen(2,cs_name ,camera_settings_menu, option_selected,DEEPPINK);
+              cameraSetting_menu_screen(3,cs_name ,camera_settings_menu, option_selected,DEEPPINK);
               camera_setting_screen = get_CameraSetting_Menu_update(camera_setting_screen);
               break;
           }
@@ -702,8 +741,7 @@ void loop() {
         //options screen
         case 2: {
           switch(options_menu1){
-            //Switch Z/F
-            //Zoom-Focus position screen
+            //Switch Z/F, Zoom-Focus position screen
             case 0: {
               switch (camera_positioning_screen) {
                 // zoom at the back
@@ -737,49 +775,8 @@ void loop() {
               }      
               break;
             }
-            //Exposure Setting
-            case 1: {
-                  switch(exposure_option_screen){
-                    //pre
-                    case 0:{
-                      exposure_option_set = 0;
-                      exposure_option_screen = -1;
-                      //go back to prev screen after selection
-                      options_menu1 = -1;
-                      EEPROM.write(7, exposure_option_set);
-                      EEPROM.commit();
-                      break;
-                    }
-                    //split
-                    case 1:{
-                      exposure_option_set = 1;
-                      exposure_option_screen = -1;
-                      //go back to prev screen after selection
-                      options_menu1 = -1;
-                      EEPROM.write(7, exposure_option_set);
-                      EEPROM.commit();
-                      break;
-                    }
-                    //after
-                    case 2:{
-                      exposure_option_set = 2;
-                      exposure_option_screen = -1;
-                      //go back to prev screen after selection
-                      options_menu1 = -1;
-                      EEPROM.write(7, exposure_option_set);
-                      EEPROM.commit();
-                      break;
-                    }
-                    default:
-                      //max_option = (3,exposure_option_name,exposure_option_menu, option_selected,DEEPPINK);  
-                      exposure_menu_screen(3,exposure_option_name,exposure_option_menu, option_selected,DEEPPINK);
-                      exposure_option_screen = get_exposure_menu_update(exposure_option_screen);
-                      break;
-                  }
-              break;
-            }
-            //reser all
-            case 2:{
+            //reset all
+            case 1:{
               EEPROM.write(0,0);
               EEPROM.write(1,0);
               EEPROM.write(2,0);
@@ -802,8 +799,8 @@ void loop() {
               break;
             }
             default:
-              //max_option = options_menu1_screen(3,mc1_name,motor_calibration_menu1, option_selected,DEEPPINK);
-              options_menu1_screen(3,option_name,options_menu, option_selected,DEEPPINK);
+              //max_option = options_menu1_screen(2,mc1_name,motor_calibration_menu1, option_selected,DEEPPINK);
+              options_menu1_screen(2,option_name,options_menu, option_selected,DEEPPINK);
               options_menu1 = get_options_menu1_update(options_menu1);
               break; 
           }

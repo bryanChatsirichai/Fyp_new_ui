@@ -227,17 +227,6 @@ int cameraSetting_menu_screen(int array_size,const char *menu_name ,const char *
   tft.setTextColor(WHITE);
   tft.println(motor_time);
 
-  // tft.setCursor(0,35);
-  // tft.setTextColor(AQUA);
-  // tft.print(F("Front Motor: "));
-  // tft.setTextColor(WHITE,BLACK);
-  // tft.print(orientation ? "Zoom " : "Focus");
-  // tft.setCursor(0,45);
-  // tft.setTextColor(AQUA);
-  // tft.print(F("Rear Motor: "));
-  // tft.setTextColor(WHITE,BLACK);
-  // tft.print(orientation ? "Focus" : "Zoom ");
-
   tft.setTextColor(WHITE,BLACK);
   tft.setTextSize(2);
   tft.setCursor(130, 25);
