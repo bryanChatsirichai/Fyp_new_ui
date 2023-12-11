@@ -190,9 +190,12 @@ const char option_2[] PROGMEM = "RESET Cali";
 //clibrating ZF len(s)
 const char cali_zoom[] PROGMEM = "|--Calibrate Zoom --|";
 const char cali_focus[] PROGMEM = "|--Calibrate Focus--|";
-const char string_cali[] PROGMEM = "Move joystick to extreme";
-const char string_left[] PROGMEM = "  left";
-const char string_right[] PROGMEM = "  right";
+const char string_cali[] PROGMEM = "Move joystick to set";
+const char string_left[] PROGMEM = "  Min";
+const char string_right[] PROGMEM = "  Max";
+// const char string_cali[] PROGMEM = "Move joystick to extreme";
+// const char string_left[] PROGMEM = "  left";
+// const char string_right[] PROGMEM = "  right";
 
 const char adjust_zoom[] PROGMEM = "|--- Adjust Zoom ---|";
 const char adjust_focus[] PROGMEM = "|---Adjust Focus ---|";
@@ -606,13 +609,14 @@ void loop() {
                 setCurrentPos(ZOOM, zoom_current * MS_STEP);
             
                 // set to minimum left
-                int minZoom = calibrate(ZOOM, calizoom_left, 0, -MOTOR_STEPS, AQUA);
+                //int minZoom = calibrate(ZOOM, calizoom_left, 0, -MOTOR_STEPS, DEEPPINK);
+                int minZoom = calibrate(ZOOM, calizoom_left, MOTOR_STEPS, -MOTOR_STEPS, DEEPPINK);
                 setCurrentPos(ZOOM, 0); // set to 0
                 zoom_current = 0;
                 //updateScreen(100);
                 
                 // set to maximum right
-                int maxZoom = calibrate(ZOOM, calizoom_right, MOTOR_STEPS, 0, AQUA);
+                int maxZoom = calibrate(ZOOM, calizoom_right, MOTOR_STEPS, 0, DEEPPINK);
                 //moveMotor(ZOOM, 0,0); // returns back to 0
                 zoom_current = 0;
                 //zoom_range = maxZoom - minZoom;
@@ -640,7 +644,8 @@ void loop() {
               setCurrentPos(FOCUS, focus_current * MS_STEP);
           
               // set to minimum left
-              int minFocus = calibrate(FOCUS, califocus_left, 0, -MOTOR_STEPS, DEEPPINK);
+              //int minFocus = calibrate(FOCUS, califocus_left, 0, -MOTOR_STEPS, DEEPPINK);
+              int minFocus = calibrate(FOCUS, califocus_left, MOTOR_STEPS, -MOTOR_STEPS, DEEPPINK);
               setCurrentPos(FOCUS, 0); // set to 0
               focus_current = 0;
               //updateScreen(100);

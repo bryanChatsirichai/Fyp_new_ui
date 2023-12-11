@@ -18,8 +18,8 @@ void hotbar(const char title[], int current, int max_range, int current_option, 
   tft.println();
   tft.setTextColor(WHITE);
   tft.setCursor(0, 65);
-  tft.print(F("Max Range: "));
-  tft.println(max_range);
+  // tft.print(F("Max Range: "));
+  // tft.println(max_range);
 
   option_selected ? tft.setTextColor(BLACK,WHITE) : tft.setTextColor(WHITE,BLACK);
   if (haveBack) {
@@ -154,7 +154,7 @@ int get_motor_calibration_update() {
   }
   hotbar(NULL, current_step, max_steps, 0, false, false, 1, color, updateBar);
 
-  //can add more text in needed...
+  //can add more text in needed... (show the text below the hotbar)
   tft.setTextSize(1);
   int i = 0;
   tft.setCursor(0,0);
