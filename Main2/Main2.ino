@@ -190,6 +190,8 @@ const char option_2[] PROGMEM = "RESET Cali";
 //clibrating ZF len(s)
 const char cali_zoom[] PROGMEM = "|--Calibrate Zoom --|";
 const char cali_focus[] PROGMEM = "|--Calibrate Focus--|";
+const char string_cali_initial_position[] PROGMEM = "Initial Position (zero)";
+const char string_cali_final_position[] PROGMEM = "Final Position (max)";
 const char string_cali[] PROGMEM = "Move joystick to set";
 const char string_left[] PROGMEM = "  Min";
 const char string_right[] PROGMEM = "  Max";
@@ -287,11 +289,11 @@ const char *const zoomfocus_menu1[] PROGMEM = {zf1_0,zf1_1,zf1_2,zf1_3};
 const char *const zoomfocus_menu2[] PROGMEM = {zf2_0,zf2_1,zf2_2,zf2_3};
 const char *const zoomfocus_menu3[] PROGMEM = {zf3_0,zf3_1};
 
-const char *const calizoom_left[] PROGMEM = {cali_zoom, string_cali, string_left};
-const char *const calizoom_right[] PROGMEM = {cali_zoom, string_cali, string_right};
+const char *const calizoom_left[] PROGMEM = {cali_zoom, string_cali_initial_position, string_cali, string_left};
+const char *const calizoom_right[] PROGMEM = {cali_zoom, string_cali_final_position, string_cali, string_right};
 
-const char *const califocus_left[] PROGMEM = {cali_focus, string_cali, string_left};
-const char *const califocus_right[] PROGMEM = {cali_focus, string_cali, string_right};
+const char *const califocus_left[] PROGMEM = {cali_focus, string_cali_initial_position, string_cali, string_left};
+const char *const califocus_right[] PROGMEM = {cali_focus, string_cali_final_position, string_cali, string_right};
 
 const char *const focus_adjust[] PROGMEM = {adjust_focus, string_36_1, string_37};
 const char *const focus_dist[] PROGMEM = {fm1_2, string_36, string_38};
@@ -679,7 +681,7 @@ void loop() {
                 setAccel(ZOOM, CALI_ACCEL);
                 setAccel(FOCUS, CALI_ACCEL);
 
-                zoom_current = chooseDist(ZOOM, 3, zoom_adjust, false, AQUA);
+                zoom_current = chooseDist(ZOOM, 3, zoom_adjust, false, DEEPPINK);
                 EEPROM.write(3, zoom_current);
                 //updateScreen(0);
                 focus_current = chooseDist(FOCUS, 3, focus_adjust, false, DEEPPINK);

@@ -8,16 +8,18 @@ void hotbar(const char title[], int current, int max_range, int current_option, 
   tft.setCursor(0, 0);
   int rect_y = 95;
 
-  option_selected ? tft.setTextColor(WHITE,BLACK) : tft.setTextColor(BLACK,WHITE);
+  // option_selected ? tft.setTextColor(WHITE,BLACK) : tft.setTextColor(BLACK,WHITE);
+  // title but for shutter-time and motor-time,  cali title settle in caliMenu
   if (title != NULL) {
+    tft.setTextColor(DEEPPINK);
     tft.setTextSize(1);
     tft.print(title);
   }
   //
-  tft.setTextSize(2);
-  tft.println();
-  tft.setTextColor(WHITE);
-  tft.setCursor(0, 65);
+  // tft.setTextSize(2);
+  // tft.println();
+  // tft.setTextColor(WHITE);
+  // tft.setCursor(0, 65);
   // tft.print(F("Max Range: "));
   // tft.println(max_range);
 
@@ -154,13 +156,21 @@ int get_motor_calibration_update() {
   }
   hotbar(NULL, current_step, max_steps, 0, false, false, 1, color, updateBar);
 
-  //can add more text in needed... (show the text below the hotbar)
+  
   tft.setTextSize(1);
   int i = 0;
+
+  //title
   tft.setCursor(0,0);
   tft.setTextColor(color);
   tft.println(string_table[i++]);
-                   
+
+  //just above the hot bar to show setting initial or maximum
+  tft.setCursor(2,60);
+  tft.setTextColor(AQUA);
+  tft.println(string_table[i++]);
+
+  //can add more text in needed... (show the text below the hotbar)              
   tft.setCursor(32,140);
   //tft.setCursor(0, 59);
   tft.setTextColor(WHITE);
