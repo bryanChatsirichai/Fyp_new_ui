@@ -991,11 +991,9 @@ void loop() {
               focus_movements_menu1 = get_zoom_movements_menu1_update(focus_movements_menu1);
           }
           break;
-        }
-        
+        }      
         //zoom-focus movement menu
         case 2: {
-
           switch (zoom_focus_movements_menu1) {
             //Z[MAX] F[MAX]
             case 0: {
