@@ -154,16 +154,16 @@ int home_menu_screen(int array_size,const char *menu_name ,const char *const str
   tft.setTextColor(color);
   tft.println(menu_name);
   tft.setTextColor(WHITE,BLACK);
-  tft.setTextSize(2);
-  tft.setCursor(130, 25);
-  //tft.println("Home - *");
 
-  //symbol
+  //home
+  tft.setTextSize(2);
+  tft.setCursor(2, 25);
   tft.print("Home");
+  tft.drawRect(0,12,tft.width(),35,WHITE);
   tft.drawChar(tft.width()- symbol_size,25,RIGHT_ARROW,LIME,BLACK,2);
   
+  //other options
   int rect_y = 67;
-
   for (int i=0; i<total_num; i++) {
     //tft.drawRect(0,rect_y,tft.width()-symbol_padding,35,WHITE);
     tft.drawRect(0,rect_y,tft.width(),35,WHITE);
@@ -173,11 +173,9 @@ int home_menu_screen(int array_size,const char *menu_name ,const char *const str
 
     //symbol
     tft.drawChar(tft.width() - symbol_size,rect_y+10,RIGHT_ARROW,LIME,BLACK,2);
-
     rect_y = rect_y+55;
   }
   tft.setTextColor(WHITE,BLACK);
-
   //maybe don't need  
   return total_num; 
 }
@@ -195,15 +193,15 @@ int configuration_menu_screen(int array_size,const char *menu_name ,const char *
   tft.setTextColor(color);
   tft.println(menu_name);
   tft.setTextColor(WHITE,BLACK);
+  //home
   tft.setTextSize(2);
-  tft.setCursor(130, 25);
-  //tft.println("Home - *");
-
-  //symbol
+  tft.setCursor(2, 25);
   tft.print("Home");
+  tft.drawRect(0,12,tft.width(),35,WHITE);
   tft.drawChar(tft.width()- symbol_size,25,RIGHT_ARROW,LIME,BLACK,2);
+  
+  //other options
   int rect_y = 67;
-
   for (int i=0; i<total_num; i++) {
     //tft.drawRect(0,rect_y,tft.width()-symbol_padding,35,WHITE);
     tft.drawRect(0,rect_y,tft.width(),35,WHITE);
