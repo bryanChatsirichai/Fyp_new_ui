@@ -6,43 +6,7 @@ void hotbar(const char title[], int current, int max_range, int current_option, 
   
   int divs = (tft.width()-30)/(float)max_range * abs(current);
   tft.setCursor(0, 0);
-  int rect_y = 80;
-
-  /*
-  // add if needed
-  if (header != 0) {
-    if (!updateBar) {
-      tft.setTextColor(AQUA);
-      tft.print(F("Shutter Speed: "));
-      tft.setTextColor(WHITE);
-      tft.print(shutter_speed);
-      switch (header) {
-        case 1: {
-          tft.setTextColor(AQUA);
-          tft.print(F("Front Motor: "));
-          tft.setTextColor(WHITE);
-          tft.println(orientation ? "Zoom" : "Focus");
-          tft.setTextColor(AQUA);
-          tft.print(F("Rear Motor: "));
-          tft.setTextColor(WHITE);
-          tft.println(orientation ? "Focus" : "Zoom");
-        }
-        case 2: {
-          tft.setTextColor(AQUA);
-          tft.print(F("Focus Range: "));
-          tft.setTextColor(WHITE);
-          tft.println(focus_range);
-          tft.setTextColor(AQUA);
-          tft.print(F("Zoom Range: "));
-          tft.setTextColor(WHITE);
-          tft.println(zoom_range);
-        }
-      }
-      tft.println(); 
-    }
-    rect_y =75;
-  }
-  */
+  int rect_y = 95;
 
   option_selected ? tft.setTextColor(WHITE,BLACK) : tft.setTextColor(BLACK,WHITE);
   if (title != NULL) {
@@ -50,31 +14,36 @@ void hotbar(const char title[], int current, int max_range, int current_option, 
     tft.print(title);
   }
   //
-  
   tft.setTextSize(2);
   tft.println();
   tft.setTextColor(WHITE);
-  tft.setCursor(0, 50);
+  tft.setCursor(0, 65);
   tft.print(F("Max Range: "));
   tft.println(max_range);
 
-  tft.setCursor(10, rect_y + 30);
   option_selected ? tft.setTextColor(BLACK,WHITE) : tft.setTextColor(WHITE,BLACK);
   if (haveBack) {
     //page has back button
     tft.setTextColor(WHITE,BLACK);
     tft.setTextSize(2);
-    tft.setCursor(160, 25);
-    //tft.println("Home - *");
-    tft.println(F("[Home]"));
+    // tft.setCursor(140, 25);
+    // tft.println(F("[Home]"));
+    // tft.drawChar(tft.width()-160,25,RIGHT_ARROW,LIME,BLACK,2);
+    tft.setCursor(132, 26);
+    tft.print("Home");
+    tft.drawRect(127,18,tft.width()-127,30,WHITE);
+    tft.drawChar(tft.width()- symbol_size,26,RIGHT_ARROW,LIME,BLACK,2);
   }
 
   //comfirm buttom
   tft.setTextColor(WHITE,BLACK);
   tft.setTextSize(2);
-  tft.setCursor(170, 200);
-  //tft.println("Home - *");
-  tft.println(F("[Set]"));
+  // tft.setCursor(170, 200);
+  // tft.println(F("[Set]"));
+  tft.setCursor(162, 201);
+  tft.print("Set");
+  tft.drawRect(157,193,tft.width()-157,30,WHITE);
+  tft.drawChar(tft.width()- symbol_size,201,RIGHT_ARROW,LIME,BLACK,2);
 
   /* Draw Hotbar */
   tft.drawRect(0,rect_y,tft.width()-26,14,WHITE);
@@ -89,9 +58,9 @@ void hotbar(const char title[], int current, int max_range, int current_option, 
     tft.setTextSize(1);
     switch(footer) {
       case 1:
-        tft.drawChar(2,110,LEFT_ARROW,WHITE,BLACK,2);
-        tft.drawChar(17,110,RIGHT_ARROW,WHITE,BLACK,2);
-        tft.setCursor(32,120);
+        tft.drawChar(2,120,LEFT_ARROW,WHITE,BLACK,2);
+        tft.drawChar(17,120,RIGHT_ARROW,WHITE,BLACK,2);
+        tft.setCursor(32,130);
         tft.println(F(": Adjust values"));
         // tft.drawChar(2,105,SELECT,WHITE,BLACK,2);
         // tft.setCursor(17,109);

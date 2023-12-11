@@ -120,6 +120,11 @@ int zoom_focus_movements_menu3 = -1;
 int fixed_paterns_menu1 = -1;
 int fixed_paterns_menu2 = -1;
 
+//symbol setting for display,calibration,interface ui etc,...
+int symbol_padding = 40;
+int symbol_size = 20;
+
+
 /* Motor Objects*/
 AccelStepper front_motor(AccelStepper::DRIVER, front_STEP, front_DIR);
 AccelStepper rear_motor(AccelStepper::DRIVER, rear_STEP, rear_DIR);
