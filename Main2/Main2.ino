@@ -119,6 +119,7 @@ int zoom_focus_movements_menu3 = -1;
 int fixed_paterns_menu1 = -1;
 int fixed_paterns_menu2 = -1;
 
+
 //shutter_time
 int max_shutter_time = 60;
 
@@ -472,6 +473,12 @@ void setup() {
   motor_time = EEPROM.read(6);
   excess_option_set = EEPROM.read(7);
 
+  //set back last know position after on/off
+  setAccel(ZOOM, CALI_ACCEL);
+  setAccel(FOCUS, CALI_ACCEL);
+  setCurrentPos(ZOOM, zoom_current * MS_STEP);
+  setCurrentPos(FOCUS, focus_current * MS_STEP);
+
   // ***** Default Values *****
   // if empty (==255), setting default values to 0
   // for current positions -> Move the motor to stored current 
@@ -672,12 +679,10 @@ void loop() {
             }
             //POV Calibration
             case 2: {
-              //go to zoom POV bar
-                //Ideally shd be 0 & minimum becomes absolute min pos
-                //zoom_current = 0;
-                //focus_current = 0;
                 setAccel(ZOOM, CALI_ACCEL);
                 setAccel(FOCUS, CALI_ACCEL);
+                setCurrentPos(ZOOM, zoom_current * MS_STEP);
+                setCurrentPos(FOCUS, focus_current * MS_STEP);
 
                 zoom_current = chooseDist(ZOOM, 3, zoom_adjust, false, DEEPPINK);
                 EEPROM.write(3, zoom_current);
