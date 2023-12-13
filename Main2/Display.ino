@@ -502,14 +502,19 @@ int options_menu1_screen(int array_size,const char *menu_name ,const char *const
     tft.println(focus_range);
 
 
-    //joystick icon only show arrows if can press them to go next page
-    //tft.drawChar(12,60,UP_ARROW,WHITE,BLACK,2);
-    tft.drawChar(12,100,SELECT,WHITE,BLACK,2);
-    tft.setCursor(30, 100);
-    tft.println("- Home");
-    //tft.drawChar(12,140,DOWN_ARROW,WHITE,BLACK,2);
-    // tft.setCursor(30, 140);
-    // tft.println("- Next");
+    //joystick icon only show arrows if can press them to go next/prev page
+    //box to seaperate controls (may need edit dimensionsin future depending on headers if needed)
+    //tft.drawRect(2,50,60,122,WHITE); //(rest of the boxes use this)
+    tft.drawRect(2,90,60,82,WHITE);
+    //tft.drawChar(8,60,UP_ARROW,WHITE,BLACK,2);
+    //tft.setCursor(26, 60);
+    //tft.println("-Back");
+    tft.drawChar(8,100,SELECT,WHITE,BLACK,2);
+    tft.setCursor(26, 100);
+    tft.println("-Home");
+    //tft.drawChar(8,140,DOWN_ARROW,WHITE,BLACK,2);
+    //tft.setCursor(26, 140);
+    //tft.println("-Next");
 
     tft.setTextColor(WHITE,BLACK);
     tft.setTextSize(2);
@@ -625,14 +630,18 @@ int zoom_movements_menu1_screen(int array_size,const char *menu_name ,const char
     tft.setTextColor(color);
     tft.println(menu_name);
 
-    //joystick icon only show arrows if can press them to go next page
-    // tft.drawChar(12,60,UP_ARROW,WHITE,BLACK,2);
-    tft.drawChar(12,100,SELECT,WHITE,BLACK,2);
-    tft.setCursor(30, 100);
-    tft.println("- Home");
-    tft.drawChar(12,140,DOWN_ARROW,WHITE,BLACK,2);
-    tft.setCursor(30, 140);
-    tft.println("- Next");
+    //joystick icon only show arrows if can press them to go next/prev page
+    //box to seaperate controls
+    tft.drawRect(2,50,60,122,WHITE);
+    //tft.drawChar(8,60,UP_ARROW,WHITE,BLACK,2);
+    //tft.setCursor(26, 60);
+    //tft.println("-Back");
+    tft.drawChar(8,100,SELECT,WHITE,BLACK,2);
+    tft.setCursor(26, 100);
+    tft.println("-Home");
+    tft.drawChar(8,140,DOWN_ARROW,WHITE,BLACK,2);
+    tft.setCursor(26, 140);
+    tft.println("-Next");
 
     tft.setTextColor(WHITE,BLACK);
     tft.setTextSize(2);
@@ -666,14 +675,18 @@ int zoom_movements_menu2_screen(int array_size,const char *menu_name ,const char
     tft.setTextColor(color);
     tft.println(menu_name);
 
-    //joystick icon only show arrows if can press them to go next page
-    tft.drawChar(12,60,UP_ARROW,WHITE,BLACK,2);
-    tft.setCursor(30, 60);
-    tft.println("- Back");
-    tft.drawChar(12,100,SELECT,WHITE,BLACK,2);
-    tft.setCursor(30, 100);
-    tft.println("- Home");
-    //tft.drawChar(12,140,DOWN_ARROW,WHITE,BLACK,2);
+    //joystick icon only show arrows if can press them to go next/prev page
+    //box to seaperate controls
+    tft.drawRect(2,50,60,122,WHITE);
+    tft.drawChar(8,60,UP_ARROW,WHITE,BLACK,2);
+    tft.setCursor(26, 60);
+    tft.println("-Back");
+    tft.drawChar(8,100,SELECT,WHITE,BLACK,2);
+    tft.setCursor(26, 100);
+    tft.println("-Home");
+    //tft.drawChar(8,140,DOWN_ARROW,WHITE,BLACK,2);
+    //tft.setCursor(26, 140);
+    //tft.println("-Next");
 
     tft.setTextColor(WHITE,BLACK);
     tft.setTextSize(2);
@@ -707,14 +720,18 @@ int focus_movements_menu1_screen(int array_size,const char *menu_name ,const cha
     tft.setTextColor(color);
     tft.println(menu_name);
 
-    //joystick icon only show arrows if can press them to go next page
-    // tft.drawChar(12,60,UP_ARROW,WHITE,BLACK,2);
-    tft.drawChar(12,100,SELECT,WHITE,BLACK,2);
-    tft.setCursor(30, 100);
-    tft.println("- Home");
-    tft.drawChar(12,140,DOWN_ARROW,WHITE,BLACK,2);
-    tft.setCursor(30, 140);
-    tft.println("- Next");
+    //joystick icon only show arrows if can press them to go next/prev page
+    //box to seaperate controls
+    tft.drawRect(2,50,60,122,WHITE);
+    //tft.drawChar(8,60,UP_ARROW,WHITE,BLACK,2);
+    //tft.setCursor(26, 60);
+    //tft.println("-Back");
+    tft.drawChar(8,100,SELECT,WHITE,BLACK,2);
+    tft.setCursor(26, 100);
+    tft.println("-Home");
+    tft.drawChar(8,140,DOWN_ARROW,WHITE,BLACK,2);
+    tft.setCursor(26, 140);
+    tft.println("-Next");
 
     tft.setTextColor(WHITE,BLACK);
     tft.setTextSize(2);
@@ -748,14 +765,18 @@ int focus_movements_menu2_screen(int array_size,const char *menu_name ,const cha
     tft.setTextColor(color);
     tft.println(menu_name);
 
-    //joystick icon only show arrows if can press them to go next page
-    tft.drawChar(12,60,UP_ARROW,WHITE,BLACK,2);
-    tft.setCursor(30, 60);
-    tft.println("- Back");
-    tft.drawChar(12,100,SELECT,WHITE,BLACK,2);
-    tft.setCursor(30, 100);
-    tft.println("- Home");
-    //tft.drawChar(12,140,DOWN_ARROW,WHITE,BLACK,2);
+    //joystick icon only show arrows if can press them to go next/prev page
+    //box to seaperate controls
+    tft.drawRect(2,50,60,122,WHITE);
+    tft.drawChar(8,60,UP_ARROW,WHITE,BLACK,2);
+    tft.setCursor(26, 60);
+    tft.println("-Back");
+    tft.drawChar(8,100,SELECT,WHITE,BLACK,2);
+    tft.setCursor(26, 100);
+    tft.println("-Home");
+    //tft.drawChar(8,140,DOWN_ARROW,WHITE,BLACK,2);
+    //tft.setCursor(26, 140);
+    //tft.println("-Next");
 
     tft.setTextColor(WHITE,BLACK);
     tft.setTextSize(2);
@@ -788,14 +809,18 @@ int zoomfocus_movements_menu1_screen(int array_size,const char *menu_name ,const
     tft.setTextColor(color);
     tft.println(menu_name);
 
-    //joystick icon only show arrows if can press them to go next page
-    // tft.drawChar(12,60,UP_ARROW,WHITE,BLACK,2);
-    tft.drawChar(12,100,SELECT,WHITE,BLACK,2);
-    tft.setCursor(30, 100);
-    tft.println("- Home");
-    tft.drawChar(12,140,DOWN_ARROW,WHITE,BLACK,2);
-    tft.setCursor(30, 140);
-    tft.println("- Next");
+    //joystick icon only show arrows if can press them to go next/prev page
+    //box to seaperate controls
+    tft.drawRect(2,50,60,122,WHITE);
+    //tft.drawChar(8,60,UP_ARROW,WHITE,BLACK,2);
+    //tft.setCursor(26, 60);
+    //tft.println("-Back");
+    tft.drawChar(8,100,SELECT,WHITE,BLACK,2);
+    tft.setCursor(26, 100);
+    tft.println("-Home");
+    tft.drawChar(8,140,DOWN_ARROW,WHITE,BLACK,2);
+    tft.setCursor(26, 140);
+    tft.println("-Next");
 
     tft.setTextColor(WHITE,BLACK);
     tft.setTextSize(2);
@@ -829,16 +854,18 @@ int zoomfocus_movements_menu2_screen(int array_size,const char *menu_name ,const
     tft.setTextColor(color);
     tft.println(menu_name);
 
-    //joystick icon only show arrows if can press them to go next page
-    tft.drawChar(12,60,UP_ARROW,WHITE,BLACK,2);
-    tft.setCursor(30, 60);
-    tft.println("- Back");
-    tft.drawChar(12,100,SELECT,WHITE,BLACK,2);
-    tft.setCursor(30, 100);
-    tft.println("- Home");
-    tft.drawChar(12,140,DOWN_ARROW,WHITE,BLACK,2);
-    tft.setCursor(30, 140);
-    tft.println("- Next");
+    //joystick icon only show arrows if can press them to go next/prev page
+    //box to seaperate controls
+    tft.drawRect(2,50,60,122,WHITE);
+    tft.drawChar(8,60,UP_ARROW,WHITE,BLACK,2);
+    tft.setCursor(26, 60);
+    tft.println("-Back");
+    tft.drawChar(8,100,SELECT,WHITE,BLACK,2);
+    tft.setCursor(26, 100);
+    tft.println("-Home");
+    tft.drawChar(8,140,DOWN_ARROW,WHITE,BLACK,2);
+    tft.setCursor(26, 140);
+    tft.println("-Next");
 
     tft.setTextColor(WHITE,BLACK);
     tft.setTextSize(2);
@@ -872,13 +899,17 @@ int zoomfocus_movements_menu3_screen(int array_size,const char *menu_name ,const
     tft.println(menu_name);
 
     //joystick icon only show arrows if can press them to go next/prev page
-    tft.drawChar(12,60,UP_ARROW,WHITE,BLACK,2);
-    tft.setCursor(30, 60);
-    tft.println("- Back");
-    tft.drawChar(12,100,SELECT,WHITE,BLACK,2);
-    tft.setCursor(30, 100);
-    tft.println("- Home");
-    //tft.drawChar(12,140,DOWN_ARROW,WHITE,BLACK,2);
+    //box to seaperate controls
+    tft.drawRect(2,50,60,122,WHITE);
+    tft.drawChar(8,60,UP_ARROW,WHITE,BLACK,2);
+    tft.setCursor(26, 60);
+    tft.println("-Back");
+    tft.drawChar(8,100,SELECT,WHITE,BLACK,2);
+    tft.setCursor(26, 100);
+    tft.println("-Home");
+    //tft.drawChar(8,140,DOWN_ARROW,WHITE,BLACK,2);
+    //tft.setCursor(26, 140);
+    //tft.println("-Next");
 
     tft.setTextColor(WHITE,BLACK);
     tft.setTextSize(2);
@@ -912,23 +943,30 @@ int custome_movements_menu1_screen(int array_size,const char *menu_name ,const c
     tft.println(menu_name);
 
     //joystick icon only show arrows if can press them to go next page
-    // tft.drawChar(12,60,UP_ARROW,WHITE,BLACK,2);
-    tft.drawChar(12,100,SELECT,WHITE,BLACK,2);
-    tft.setCursor(30, 100);
-    tft.println("- Home");
-    tft.drawChar(12,140,DOWN_ARROW,WHITE,BLACK,2);
-    tft.setCursor(30, 140);
-    tft.println("- Next");
+    //box to seaperate controls
+    tft.drawRect(2,50,60,122,WHITE);
+    //tft.drawChar(8,60,UP_ARROW,WHITE,BLACK,2);
+    //tft.setCursor(26, 60);
+    //tft.println("-Back");
+    tft.drawChar(8,100,SELECT,WHITE,BLACK,2);
+    tft.setCursor(26, 100);
+    tft.println("-Home");
+    tft.drawChar(8,140,DOWN_ARROW,WHITE,BLACK,2);
+    tft.setCursor(26, 140);
+    tft.println("-Next");
 
     tft.setTextColor(WHITE,BLACK);
     tft.setTextSize(2);
     int rect_y = 12;
 
     for (int i=0; i<total_num; i++) {
+      //tft.drawRect(75,rect_y,tft.width()-symbol_padding,35,WHITE);
       tft.drawRect(75,rect_y,tft.width()-75,35,WHITE);
       tft.setCursor(82,rect_y+10);
       tft.setTextColor(WHITE,BLACK);
       tft.print(string_table[i]);
+      //symbol
+      tft.drawChar(tft.width() - symbol_size,rect_y+10,RIGHT_ARROW,LIME,BLACK,2);
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
@@ -950,13 +988,17 @@ int custome_movements_menu2_screen(int array_size,const char *menu_name ,const c
     tft.println(menu_name);
 
     //joystick icon only show arrows if can press them to go next/prev page
-    tft.drawChar(12,60,UP_ARROW,WHITE,BLACK,2);
-    tft.setCursor(30, 60);
-    tft.println("- Back");
-    tft.drawChar(12,100,SELECT,WHITE,BLACK,2);
-    tft.setCursor(30, 100);
-    tft.println("- Home");
-    //tft.drawChar(12,140,DOWN_ARROW,WHITE,BLACK,2);
+    //box to seaperate controls
+    tft.drawRect(2,50,60,122,WHITE);
+    tft.drawChar(8,60,UP_ARROW,WHITE,BLACK,2);
+    tft.setCursor(26, 60);
+    tft.println("-Back");
+    tft.drawChar(8,100,SELECT,WHITE,BLACK,2);
+    tft.setCursor(26, 100);
+    tft.println("-Home");
+    //tft.drawChar(8,140,DOWN_ARROW,WHITE,BLACK,2);
+    //tft.setCursor(26, 140);
+    //tft.println("-Next");
 
     tft.setTextColor(WHITE,BLACK);
     tft.setTextSize(2);

@@ -120,6 +120,9 @@ int zoom_focus_movements_menu3 = -1;
 int fixed_paterns_menu1 = -1;
 int fixed_paterns_menu2 = -1;
 
+//shutter_time
+int max_shutter_time = 40;
+
 //symbol setting for display,calibration,interface ui etc,...
 int symbol_padding = 40;
 int symbol_size = 20;
@@ -162,9 +165,9 @@ const char mm_action1_2[] PROGMEM = "Z/F-Movements";
 
 /////Calibration/////
 const char cs_name[] PROGMEM = "|- Camera Settings -|";
-const char cs_0[] PROGMEM = "Shutter Time"; //Camera Shutter Time, Shutter Speed
-const char cs_1[] PROGMEM = "Motor Time";
-const char cs_2[] PROGMEM = "Excess";
+const char cs_0[] PROGMEM = "1-Shutter Time"; //Camera Shutter Time, Shutter Speed
+const char cs_1[] PROGMEM = "2-Motor Time";
+const char cs_2[] PROGMEM = "3-Excess";
 
 //position orientation 
 const char pm_name[] PROGMEM = "|- Positioning Setting -|";
@@ -494,7 +497,7 @@ void loop() {
             case 0:{
                 //display shutter speed bar (motor calibration).
                 option_selected = 0; //set selected option on shutter menu
-                int max_shutter_time = 40;
+                // int max_shutter_time = 40;
                 int old_shutter_time = shutter_time; //if go_home before setting
                 //hotbar(shutter_menu,cur_shutter_time,max_shutter_time,option_selected,has_back)
                 hotbar(shutter_menu, shutter_time, max_shutter_time, option_selected, true,0,1);
@@ -522,7 +525,7 @@ void loop() {
             // set motor movement time -  time needed to execute a sequence
             case 1: {
               option_selected = 0; //set selected option on shutter menu
-              int motor_time_max = 40;
+              int motor_time_max = shutter_time;
               int old_motor_time = motor_time;
                hotbar(motor_time_menu, motor_time, motor_time_max, option_selected, true,0,1);
               while(true){
@@ -1197,7 +1200,6 @@ void loop() {
 
     //Action Custom
     case 2:{
-
       switch (fixed_paterns_menu1) {
         // Bokeh Effect (S: Focus Max, Zoom Current. F: Focus Current, Zoom Widest)
         case 0: {
