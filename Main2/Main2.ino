@@ -98,9 +98,7 @@ int camera_shutter_open = 0; //default 0 is not open
 
 
 // Global Variables
-int option_selected = 0;
 int updateMenu = true;
-
 int max_option = 0;
 int home_screen = -1;
 int configuration_screen = -1;
@@ -122,7 +120,7 @@ int fixed_paterns_menu1 = -1;
 int fixed_paterns_menu2 = -1;
 
 //shutter_time
-int max_shutter_time = 40;
+int max_shutter_time = 60;
 
 //symbol setting for display,calibration,interface ui etc,...
 int symbol_padding = 40;

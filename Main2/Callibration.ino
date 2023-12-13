@@ -120,14 +120,12 @@ int get_camera_calibration_update() {
   if (digitalRead(A_BUTTON) == LOW) {
     resetToHomeScreen();
     s = 0;
-    option_selected = 0; //resets options
     updateMenu = true;
   }
 
   //go back camera_setting_screen
   if (digitalRead(Y_BUTTON) == LOW) {
   s = 1;
-  option_selected = 0; //resets options
   tft.fillScreen(ST77XX_BLACK);//clear screen
   updateMenu = true;
   }
@@ -139,7 +137,6 @@ int get_motor_calibration_update() {
   //go back camera_setting_screen
   if (digitalRead(Y_BUTTON) == LOW) {
   s = 1;
-  option_selected = 0; //resets options
   tft.fillScreen(ST77XX_BLACK);//clear screen
   updateMenu = true;
   }
