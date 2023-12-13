@@ -1,4 +1,4 @@
-void hotbar(const char title[], int current, int max_range, int current_option, bool haveBack, int header, int footer, uint16_t color, bool updateBar) {
+void hotbar(const char title[], int current, int max_range, bool haveBack, int header, int footer, uint16_t color, bool updateBar) {
   if (!updateMenu) {
     return;
   }
@@ -8,7 +8,6 @@ void hotbar(const char title[], int current, int max_range, int current_option, 
   tft.setCursor(0, 0);
   int rect_y = 95;
 
-  // option_selected ? tft.setTextColor(WHITE,BLACK) : tft.setTextColor(BLACK,WHITE);
   // title but for shutter-time and motor-time,  cali title settle in caliMenu
   if (title != NULL) {
     tft.setTextColor(DEEPPINK);
@@ -23,7 +22,6 @@ void hotbar(const char title[], int current, int max_range, int current_option, 
   // tft.print(F("Max Range: "));
   // tft.println(max_range);
 
-  option_selected ? tft.setTextColor(BLACK,WHITE) : tft.setTextColor(WHITE,BLACK);
   if (haveBack) {
     //page has back button
     tft.setTextColor(WHITE,BLACK);
@@ -154,7 +152,7 @@ int get_motor_calibration_update() {
   if (!updateMenu) {
     return;
   }
-  hotbar(NULL, current_step, max_steps, 0, false, false, 1, color, updateBar);
+  hotbar(NULL, current_step, max_steps, false, false, 1, color, updateBar);
 
   
   tft.setTextSize(1);
@@ -187,7 +185,7 @@ int get_motor_calibration_update() {
 void moveMotorMenu(int count, const char *const string_table[], int current_step, int max_steps, uint16_t color, bool updateBar) {
   if (!updateMenu) return;
   int i=0;
-  hotbar(NULL, current_step, max_steps, 0, false, 0, 1, color, updateBar);
+  hotbar(NULL, current_step, max_steps, false, 0, 1, color, updateBar);
   tft.setTextSize(1);
   tft.setCursor(0,0);
   tft.setTextColor(color);

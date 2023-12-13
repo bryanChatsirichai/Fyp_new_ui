@@ -98,9 +98,10 @@ int camera_shutter_open = 0; //default 0 is not open
 
 
 // Global Variables
-int max_option = 0;
 int option_selected = 0;
 int updateMenu = true;
+
+int max_option = 0;
 int home_screen = -1;
 int configuration_screen = -1;
 int camera_setting_screen = -1;
@@ -317,11 +318,12 @@ int getUpDown(int max_option, int current_option, int delay_ms);
 void resetToHomeScreen();
 void countdownMenu();
 
-void hotbar(const char title[], int current, int max_range, int current_option=0, bool haveBack=false, int header=-1, int footer=-1, uint16_t color=WHITE, bool updateBar=false);
+void hotbar(const char title[], int current, int max_range, bool haveBack=false, int header=-1, int footer=-1, uint16_t color=WHITE, bool updateBar=false);
 int getLeftRight_value(int range, int current, int low_limit, int delay_ms);
 int get_camera_calibration_update();
 int get_motor_calibration_update();
-void caliMenu(const char *const string_table[], int current_step, int max_steps, uint16_t color, bool updateBar);
+
+//void caliMenu(const char *const string_table[], int current_step, int max_steps, uint16_t color, bool updateBar);
 void moveMotorMenu(int count, const char *const string_table[], int current_step, int max_steps, uint16_t color=WHITE, bool updateBar=false);
 
 void printMoveSteps(int type, const char title[], uint16_t color, int movement_display_option);
@@ -336,58 +338,58 @@ void moveMultiMotor(int zoom_value, int focus_value, float motor_time = motor_ti
 void goMultiDist(const char title[], int zoom_desired, int focus_desired, uint16_t color=WHITE, float motor_time = motor_time, float motor_div = 1,bool goBack=true,bool lastSequence=true,bool showScreen=true);
 
 
-int home_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected, uint16_t color=DEEPPINK);
+void home_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], uint16_t color=DEEPPINK);
 int get_HomeMenu_Update(int s);
 
-int configuration_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void configuration_menu_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_Configuration_Menu_Update(int s);
 
-int cameraSetting_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void cameraSetting_menu_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_CameraSetting_Menu_update(int s);
 
-int positioning_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void positioning_menu_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_positioning_Menu_update(int s);
 
-int motor_calibration_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void motor_calibration_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_motor_calibration_menu1_update(int s);
 
-int options_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void options_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_options_menu1_update(int s);
 
 void caliMenu(const char *const string_table[], int current_step, int max_steps=200, uint16_t color=WHITE, bool updateBar=false);
 int calibrate(int type, const char *const string_table[], int upper_limit, int lower_limit, uint16_t color=DEEPPINK);
 
-int excess_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void excess_menu_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_excess_menu_update(int s);
 
-int action_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void action_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_Action_screen_1_Menu_update(int s);
 
-int zoom_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void zoom_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_zoom_movements_menu1_update(int s);
 
-int zoom_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void zoom_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_zoom_movements_menu2_update(int s);
 
-int focus_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void focus_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_focus_movements_menu1_update(int s);
 
-int focus_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void focus_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_focus_movements_menu2_update(int s);
 
-int zoomfocus_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void zoomfocus_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_zoomfocus_movements_menu1_update(int s);
 
-int zoomfocus_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void zoomfocus_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_zoomfocus_movements_menu2_update(int s);
 
-int zoomfocus_movements_menu3_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void zoomfocus_movements_menu3_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_zoomfocus_movements_menu3_update(int s);
 
-int custome_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void custome_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], uint16_t color=DEEPPINK);
 int get_custom_movements_menu1_update(int s);
 
-int custome_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void custome_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[], uint16_t color=DEEPPINK);
 int get_custom_movements_menu2_update(int s);
 
 void open_Shutter();
@@ -395,7 +397,7 @@ void close_Shutter();
 
 
 void open_Shutter() { // Controls the shutter of a Nikon camera
-  Serial.println("Open");
+  //Serial.println("Open");
   digitalWrite(FOCUS_CAMERA, HIGH);  
   digitalWrite(SHUTTER_CAMERA, HIGH);
   delay(150);
@@ -407,7 +409,7 @@ void open_Shutter() { // Controls the shutter of a Nikon camera
   delay(1000);
 }
 void close_Shutter() { // Controls the shutter of a Nikon camera
-  Serial.println("Close");
+  //Serial.println("Close");
   digitalWrite(FOCUS_CAMERA, HIGH);  
   digitalWrite(SHUTTER_CAMERA, HIGH);
   delay(150);
@@ -496,13 +498,11 @@ void loop() {
             // Set Shutter Time screen - shutter time of the DSLR camera
             case 0:{
                 //display shutter speed bar (motor calibration).
-                option_selected = 0; //set selected option on shutter menu
                 // int max_shutter_time = 40;
                 int old_shutter_time = shutter_time; //if go_home before setting
-                //hotbar(shutter_menu,cur_shutter_time,max_shutter_time,option_selected,has_back)
-                hotbar(shutter_menu, shutter_time, max_shutter_time, option_selected, true,0,1);
+                hotbar(shutter_menu, shutter_time, max_shutter_time, true,0,1);
                 while(true){
-                  hotbar(shutter_menu, shutter_time, max_shutter_time, option_selected, true, 0, 1, GOLDENROD, true);
+                  hotbar(shutter_menu, shutter_time, max_shutter_time, true, 0, 1, GOLDENROD, true);
                   int option = get_camera_calibration_update();
                   shutter_time = getLeftRight_value(max_shutter_time, shutter_time,0, 0);
 
@@ -524,12 +524,11 @@ void loop() {
             } 
             // set motor movement time -  time needed to execute a sequence
             case 1: {
-              option_selected = 0; //set selected option on shutter menu
               int motor_time_max = shutter_time;
               int old_motor_time = motor_time;
-               hotbar(motor_time_menu, motor_time, motor_time_max, option_selected, true,0,1);
+               hotbar(motor_time_menu, motor_time, motor_time_max, true,0,1);
               while(true){
-                hotbar(motor_time_menu, motor_time, motor_time_max, option_selected, true,0,1, GOLDENROD, true);
+                hotbar(motor_time_menu, motor_time, motor_time_max, true,0,1, GOLDENROD, true);
                 int option = get_camera_calibration_update();
                 motor_time = getLeftRight_value(motor_time_max, motor_time,0, 0);
 
@@ -585,8 +584,7 @@ void loop() {
                       break;
                     }
                     default:
-                      //max_option = excess_menu_screen(3,excess_option_name,excess_option_menu, option_selected,DEEPPINK);
-                      excess_menu_screen(3,excess_option_name,excess_option_menu, option_selected,DEEPPINK);
+                      excess_menu_screen(3,excess_option_name,excess_option_menu,DEEPPINK);
                       excess_option_screen = get_excess_menu_update(excess_option_screen);
                       break;
                   }
@@ -594,8 +592,7 @@ void loop() {
             }
             //show [camera settings menu]
             default:
-              // max_option = cameraSetting_menu_screen(3,cs_name ,camera_settings_menu, option_selected,DEEPPINK);
-              cameraSetting_menu_screen(3,cs_name ,camera_settings_menu, option_selected,DEEPPINK);
+              cameraSetting_menu_screen(3,cs_name ,camera_settings_menu,DEEPPINK);
               camera_setting_screen = get_CameraSetting_Menu_update(camera_setting_screen);
               break;
           }
@@ -706,8 +703,7 @@ void loop() {
 
             //Show motor_calibration_menu1
             default:
-              //max_option = motor_calibration_menu1_screen(3,mc1_name,motor_calibration_menu1, option_selected,DEEPPINK);
-              motor_calibration_menu1_screen(3,mc1_name,motor_calibration_menu1, option_selected,DEEPPINK);
+              motor_calibration_menu1_screen(3,mc1_name,motor_calibration_menu1,DEEPPINK);
               motor_calibration_screen1 = get_motor_calibration_menu1_update(motor_calibration_screen1);
               break;
           }
@@ -743,8 +739,7 @@ void loop() {
                 }
                 // show [positioning settings menu]
                 default: 
-                  // max_option = positioning_menu_screen(2,pm_name ,positioning_menu, option_selected);
-                  positioning_menu_screen(2,pm_name ,positioning_menu, option_selected,DEEPPINK);
+                  positioning_menu_screen(2,pm_name ,positioning_menu,DEEPPINK);
                   camera_positioning_screen = get_positioning_Menu_update(camera_positioning_screen);
                   break;
               }      
@@ -781,8 +776,7 @@ void loop() {
               break;
             }
             default:
-              //max_option = options_menu1_screen(3,mc1_name,motor_calibration_menu1, option_selected,DEEPPINK);
-              options_menu1_screen(3,option_name,options_menu, option_selected,DEEPPINK);
+              options_menu1_screen(3,option_name,options_menu,DEEPPINK);
               options_menu1 = get_options_menu1_update(options_menu1);
               break; 
           }
@@ -791,8 +785,7 @@ void loop() {
         
         //Show configuation_menu
         default:
-          //max_option = configuration_menu_screen(3,mm_configuration_header,main_menu_1, option_selected,DEEPPINK);  
-          configuration_menu_screen(3,mm_configuration_header,main_menu_1, option_selected,DEEPPINK);  
+          configuration_menu_screen(3,mm_configuration_header,main_menu_1,DEEPPINK);  
           configuration_screen = get_Configuration_Menu_Update(configuration_screen);
           break;
       }
@@ -889,8 +882,7 @@ void loop() {
                 }
 
                 default:
-                   //max_option = zoom_movements_menu2_screen(2,zm2_name ,zoom_menu2, option_selected,DEEPPINK);
-                   zoom_movements_menu2_screen(2,zm2_name ,zoom_menu2, option_selected,DEEPPINK);
+                   zoom_movements_menu2_screen(2,zm2_name ,zoom_menu2,DEEPPINK);
                    zoom_movements_menu2 = get_zoom_movements_menu2_update(zoom_movements_menu2);
                    if(zoom_movements_menu2 == -2){
                     zoom_movements_menu1 = -1;
@@ -902,8 +894,7 @@ void loop() {
             }
 
             default:
-              //max_option = zoom_movements_menu1_screen(4,zm1_name ,zoom_menu1, option_selected,DEEPPINK)
-              zoom_movements_menu1_screen(4,zm1_name ,zoom_menu1, option_selected,DEEPPINK);
+              zoom_movements_menu1_screen(4,zm1_name ,zoom_menu1,DEEPPINK);
               zoom_movements_menu1 = get_zoom_movements_menu1_update(zoom_movements_menu1);
           }
           break;
@@ -983,8 +974,7 @@ void loop() {
                 }
                 //show focus_movements_menu2
                 default:
-                   //max_option = focus_movements_menu2_screen(2,zm2_name ,zoom_menu2, option_selected,DEEPPINK);
-                   focus_movements_menu2_screen(2,fm2_name ,focus_menu2, option_selected,DEEPPINK);
+                   focus_movements_menu2_screen(2,fm2_name ,focus_menu2,DEEPPINK);
                    focus_movements_menu2 = get_zoom_movements_menu2_update(focus_movements_menu2);
                    if(focus_movements_menu2 == -2){
                     focus_movements_menu1 = -1;
@@ -996,8 +986,7 @@ void loop() {
             }
             //show focus_movements_menu1
             default:
-              //max_option = focus_movements_menu1_screen(4,fm1_name ,focus_menu1, option_selected,DEEPPINK)
-              focus_movements_menu1_screen(4,fm1_name ,focus_menu1, option_selected,DEEPPINK);
+              focus_movements_menu1_screen(4,fm1_name ,focus_menu1,DEEPPINK);
               focus_movements_menu1 = get_zoom_movements_menu1_update(focus_movements_menu1);
           }
           break;
@@ -1155,8 +1144,7 @@ void loop() {
                     }
                     //show zoom_focus_page3
                     default:
-                      //  max_option = zoomfocus_movements_menu3_screen(2, zf3_name,zoomfocus_menu3,option_selected,DEEPPINK);
-                      zoomfocus_movements_menu3_screen(2, zf3_name,zoomfocus_menu3,option_selected,DEEPPINK);
+                      zoomfocus_movements_menu3_screen(2, zf3_name,zoomfocus_menu3,DEEPPINK);
                       zoom_focus_movements_menu3 = get_zoomfocus_movements_menu3_update(zoom_focus_movements_menu3);
                       if(zoom_focus_movements_menu3 == -2){
                           zoom_focus_movements_menu2 = -1;
@@ -1169,8 +1157,7 @@ void loop() {
 
               //show zoom_focus_page2
               default:
-                // max_option = zoomfocus_movements_menu2_screen(4, zf2_name ,zoomfocus_menu2, option_selected,DEEPPINK);
-                zoomfocus_movements_menu2_screen(4, zf2_name ,zoomfocus_menu2, option_selected,DEEPPINK);
+                zoomfocus_movements_menu2_screen(4, zf2_name ,zoomfocus_menu2,DEEPPINK);
                 zoom_focus_movements_menu2 = get_zoomfocus_movements_menu2_update(zoom_focus_movements_menu2);
                 if(zoom_focus_movements_menu2 == -2){
                     zoom_focus_movements_menu1 = -1;
@@ -1182,16 +1169,14 @@ void loop() {
             }
             //show zoom_focus_page1
             default:
-              // max_option = zoomfocus_movements_menu1_screen(4, zf1_name ,zoomfocus_menu1, option_selected,DEEPPINK);
-              zoomfocus_movements_menu1_screen(4, zf1_name ,zoomfocus_menu1, option_selected,DEEPPINK);
+              zoomfocus_movements_menu1_screen(4, zf1_name ,zoomfocus_menu1,DEEPPINK);
               zoom_focus_movements_menu1 = get_zoomfocus_movements_menu1_update(zoom_focus_movements_menu1);
               break;
           }
           break;
         }
         default:
-          // max_option = action_menu1_screen(3,mm_action1_header,main_menu_2,option_selected,DEEPPINK);
-          action_menu1_screen(3,mm_action1_header,main_menu_2,option_selected,DEEPPINK);
+          action_menu1_screen(3,mm_action1_header,main_menu_2,DEEPPINK);
           action_screen_1 = get_Action_screen_1_Menu_update(action_screen_1);
           break;
       }
@@ -1298,8 +1283,7 @@ void loop() {
             
             //show fixed_paterns_menu2
             default:
-              //max_option = custome_movements_menu1_screen(1, preset2_name, preset2_menu, option_selected,DEEPPINK);
-              custome_movements_menu2_screen(1, preset2_name, preset2_menu, option_selected,DEEPPINK);
+              custome_movements_menu2_screen(1, preset2_name, preset2_menu,DEEPPINK);
               fixed_paterns_menu2 = get_custom_movements_menu2_update(fixed_paterns_menu2);
               if(fixed_paterns_menu2 == -2){
                     fixed_paterns_menu1 = -1;
@@ -1312,8 +1296,7 @@ void loop() {
 
         //show fixed_paterns_menu1
         default:
-          // max_option = custome_movements_menu1_screen(4, preset1_name, preset1_menu, option_selected,DEEPPINK);
-          custome_movements_menu1_screen(4, preset1_name, preset1_menu, option_selected,DEEPPINK);
+          custome_movements_menu1_screen(4, preset1_name, preset1_menu,DEEPPINK);
           fixed_paterns_menu1 = get_custom_movements_menu1_update(fixed_paterns_menu1);
           break;
       }
@@ -1322,11 +1305,9 @@ void loop() {
 
     //Home page
     default:
-        //max_option = home_menu_screen(3,home_header,home_menu, option_selected,DEEPPINK);  
-        home_menu_screen(3,home_header,home_menu, option_selected,DEEPPINK);  
+        home_menu_screen(3,home_header,home_menu,DEEPPINK);  
         home_screen = get_HomeMenu_Update(home_screen);
         break;
   }
-  //option_selected = getUpDown(max_option, option_selected, 0);
 
 }

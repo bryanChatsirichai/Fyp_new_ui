@@ -33,8 +33,6 @@ void resetToHomeScreen(){
 int resetScreen(int s) {
   tft.fillScreen(ST77XX_BLACK);//clear screen
   s = -1;
-  updateMenu = true;
-  option_selected = 0;
   return s;
 }
 
@@ -42,7 +40,6 @@ int resetScreen(int s) {
 void updateScreen(float delay_ms) {
   delay(delay_ms);
   tft.fillScreen(ST77XX_BLACK);//clear screen
-  updateMenu = true;
 }
 
 /* A simple way to print a countdown menu */
@@ -139,14 +136,9 @@ void printMoveSteps(int type, const char title[], uint16_t color, int movement_d
 
 
 // ******** DISPLAY pages Functions **********
-int home_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color) {
+void home_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], uint16_t color) {
   int total_num = array_size;
-  int max_option = array_size;
-  if (!updateMenu) {
-    //updateMenu false
-    return total_num; 
-  }
-  updateMenu = false;
+
   tft.setTextSize(1);
   tft.setCursor(0, 0);
   tft.setTextColor(color);
@@ -172,19 +164,12 @@ int home_menu_screen(int array_size,const char *menu_name ,const char *const str
     tft.drawChar(tft.width() - symbol_size,rect_y+10,RIGHT_ARROW,LIME,BLACK,2);
     rect_y = rect_y+55;
   }
-  tft.setTextColor(WHITE,BLACK);
-  //maybe don't need  
-  return total_num; 
+  tft.setTextColor(WHITE,BLACK); 
 }
 
-int configuration_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void configuration_menu_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
   int total_num = array_size;
-  int max_option = array_size;
-  if (!updateMenu) {
-    //updateMenu false
-    return total_num; 
-  }
-  updateMenu = false;
+
   tft.setTextSize(1);
   tft.setCursor(0, 0);
   tft.setTextColor(color);
@@ -213,20 +198,11 @@ int configuration_menu_screen(int array_size,const char *menu_name ,const char *
     rect_y = rect_y+55;
   }
   tft.setTextColor(WHITE,BLACK);
-  //maybe don't need  
-  return total_num; 
 }
 
-int cameraSetting_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void cameraSetting_menu_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
   int total_num = array_size;
-  int max_option = array_size;
-  if (!updateMenu) {
-    //updateMenu false
-    return total_num; 
-  }
-  updateMenu = false;
-  
-  
+
   tft.setTextSize(1);
   tft.setCursor(0, 0);
   tft.setTextColor(color);
@@ -286,18 +262,11 @@ int cameraSetting_menu_screen(int array_size,const char *menu_name ,const char *
     rect_y = rect_y+55;
   }
   tft.setTextColor(WHITE,BLACK);
-  //maybe don't need  
-  return total_num; 
 }
 
-int positioning_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void positioning_menu_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
     int total_num = array_size;
-    int max_option = array_size;
-    if (!updateMenu) {
-      //updateMenu false
-      return total_num; 
-    }
-    updateMenu = false;
+
     tft.setTextSize(1);
     tft.setCursor(0, 0);
     tft.setTextColor(color);
@@ -324,19 +293,11 @@ int positioning_menu_screen(int array_size,const char *menu_name ,const char *co
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
-    //maybe don't need  
-    return total_num; 
 }
 
-int motor_calibration_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void motor_calibration_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
     int total_num = array_size;
-    int max_option = array_size;
-    if (!updateMenu) {
-      //updateMenu false
-      return total_num; 
-    }
 
-    updateMenu = false;
     tft.setTextSize(1);
     tft.setCursor(0, 0);
     tft.setTextColor(color);
@@ -429,18 +390,12 @@ int motor_calibration_menu1_screen(int array_size,const char *menu_name ,const c
     tft.println("Motor(s)");
     tft.println("before");
     tft.print("setting pov.");
-    //maybe don't need  
-    return total_num; 
+
 }
 
-int options_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void options_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
     int total_num = array_size;
-    int max_option = array_size;
-    if (!updateMenu) {
-      //updateMenu false
-      return total_num; 
-    }
-    updateMenu = false;
+
     tft.setTextSize(1);
     tft.setCursor(0, 0);
     tft.setTextColor(color);
@@ -528,8 +483,7 @@ int options_menu1_screen(int array_size,const char *menu_name ,const char *const
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
-    //maybe don't need  
-    return total_num; 
+
   }
 
 
@@ -537,14 +491,9 @@ int options_menu1_screen(int array_size,const char *menu_name ,const char *const
 
 
 
-int excess_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void excess_menu_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
     int total_num = array_size;
-    int max_option = array_size;
-    if (!updateMenu) {
-      //updateMenu false
-      return total_num; 
-    }
-    updateMenu = false;
+
     tft.setTextSize(1);
     tft.setCursor(0, 0);
     tft.setTextColor(color);
@@ -574,18 +523,12 @@ int excess_menu_screen(int array_size,const char *menu_name ,const char *const s
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
-    //maybe don't need  
-    return total_num; 
+
 }
 
-int action_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void action_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
     int total_num = array_size;
-    int max_option = array_size;
-    if (!updateMenu) {
-      //updateMenu false
-      return total_num; 
-    }
-    updateMenu = false;
+
     tft.setTextSize(1);
     tft.setCursor(0, 0);
     tft.setTextColor(color);
@@ -613,18 +556,12 @@ int action_menu1_screen(int array_size,const char *menu_name ,const char *const 
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
-    //maybe don't need  
-    return total_num; 
+
 }
 
-int zoom_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void zoom_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
     int total_num = array_size;
-    int max_option = array_size;
-    if (!updateMenu) {
-      //updateMenu false
-      return total_num; 
-    }
-    updateMenu = false;
+
     tft.setTextSize(1);
     tft.setCursor(0, 0);
     tft.setTextColor(color);
@@ -658,18 +595,12 @@ int zoom_movements_menu1_screen(int array_size,const char *menu_name ,const char
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
-    //maybe don't need  
-    return total_num; 
+
 }
 
-int zoom_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void zoom_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
     int total_num = array_size;
-    int max_option = array_size;
-    if (!updateMenu) {
-      //updateMenu false
-      return total_num; 
-    }
-    updateMenu = false;
+
     tft.setTextSize(1);
     tft.setCursor(0, 0);
     tft.setTextColor(color);
@@ -703,18 +634,12 @@ int zoom_movements_menu2_screen(int array_size,const char *menu_name ,const char
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
-    //maybe don't need  
-    return total_num; 
+
 }
 
-int focus_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void focus_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
     int total_num = array_size;
-    int max_option = array_size;
-    if (!updateMenu) {
-      //updateMenu false
-      return total_num; 
-    }
-    updateMenu = false;
+
     tft.setTextSize(1);
     tft.setCursor(0, 0);
     tft.setTextColor(color);
@@ -748,18 +673,12 @@ int focus_movements_menu1_screen(int array_size,const char *menu_name ,const cha
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
-    //maybe don't need  
-    return total_num; 
+
 }
 
-int focus_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void focus_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
     int total_num = array_size;
-    int max_option = array_size;
-    if (!updateMenu) {
-      //updateMenu false
-      return total_num; 
-    }
-    updateMenu = false;
+
     tft.setTextSize(1);
     tft.setCursor(0, 0);
     tft.setTextColor(color);
@@ -792,18 +711,12 @@ int focus_movements_menu2_screen(int array_size,const char *menu_name ,const cha
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
-    //maybe don't need  
-    return total_num; 
+
 }
 
-int zoomfocus_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void zoomfocus_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
     int total_num = array_size;
-    int max_option = array_size;
-    if (!updateMenu) {
-      //updateMenu false
-      return total_num; 
-    }
-    updateMenu = false;
+
     tft.setTextSize(1);
     tft.setCursor(0, 0);
     tft.setTextColor(color);
@@ -837,18 +750,12 @@ int zoomfocus_movements_menu1_screen(int array_size,const char *menu_name ,const
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
-    //maybe don't need  
-    return total_num; 
+
 }
 
-int zoomfocus_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void zoomfocus_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
     int total_num = array_size;
-    int max_option = array_size;
-    if (!updateMenu) {
-      //updateMenu false
-      return total_num; 
-    }
-    updateMenu = false;
+
     tft.setTextSize(1);
     tft.setCursor(0, 0);
     tft.setTextColor(color);
@@ -881,18 +788,12 @@ int zoomfocus_movements_menu2_screen(int array_size,const char *menu_name ,const
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
-    //maybe don't need  
-    return total_num; 
+
 }
 
-int zoomfocus_movements_menu3_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void zoomfocus_movements_menu3_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
     int total_num = array_size;
-    int max_option = array_size;
-    if (!updateMenu) {
-      //updateMenu false
-      return total_num; 
-    }
-    updateMenu = false;
+
     tft.setTextSize(1);
     tft.setCursor(0, 0);
     tft.setTextColor(color);
@@ -925,18 +826,13 @@ int zoomfocus_movements_menu3_screen(int array_size,const char *menu_name ,const
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
-    //maybe don't need  
-    return total_num; 
+
 }
 
-int custome_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void custome_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
     int total_num = array_size;
     int max_option = array_size;
-    if (!updateMenu) {
-      //updateMenu false
-      return total_num; 
-    }
-    updateMenu = false;
+
     tft.setTextSize(1);
     tft.setCursor(0, 0);
     tft.setTextColor(color);
@@ -970,18 +866,13 @@ int custome_movements_menu1_screen(int array_size,const char *menu_name ,const c
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
-    //maybe don't need  
-    return total_num; 
+
 }
 
-int custome_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void custome_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
     int total_num = array_size;
     int max_option = array_size;
-    if (!updateMenu) {
-      //updateMenu false
-      return total_num; 
-    }
-    updateMenu = false;
+
     tft.setTextSize(1);
     tft.setCursor(0, 0);
     tft.setTextColor(color);
@@ -1015,8 +906,7 @@ int custome_movements_menu2_screen(int array_size,const char *menu_name ,const c
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
-    //maybe don't need  
-    return total_num; 
+
 }
 
 
