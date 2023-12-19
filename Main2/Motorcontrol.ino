@@ -51,8 +51,8 @@ long toMS(float seconds) {
  */
 
 void moveMotor(int type, int pos_desired, float motor_time) {
-  Serial.print("@moveMotor motor_time = ");
-  Serial.println(motor_time);
+  // Serial.print("@moveMotor motor_time = ");
+  // Serial.println(motor_time);
   // zoom_range, focus_range, zoom_current, focus_current, 
   // zoom_min, focus_min, motor_time
   AccelStepper *stepper;
@@ -65,9 +65,6 @@ void moveMotor(int type, int pos_desired, float motor_time) {
     // 0 = false  ,1 = true
     stepper = orientation ? &front_motor : &rear_motor;
     pos_current = zoom_current;
-    // testing
-    //reverse = orientation ? true : false;
-    //
   } else { // FOCUS
     stepper = orientation ? &rear_motor : &front_motor;
     pos_current = focus_current;
@@ -118,9 +115,6 @@ void moveMotor(int type, int pos_desired, float motor_time) {
   //delay(shutter_spd);
   while (stepper->distanceToGo() != 0) {
     stepper->run();
-    // if(shutter_spd != 0) {
-    //   delay(toMS((float)shutter_spd/abs(steps_to_move)));
-    // }
   }
 
   //zoom / focus current postion after moving to desired position
@@ -145,12 +139,36 @@ void setAccel(int type, float accel) {
 void setCurrentPos(int type, float value) {
   AccelStepper *stepper;
   if (type) {
-    stepper = orientation ? &front_motor : &rear_motor;
-  } else {
-    stepper = orientation ? &rear_motor : &front_motor;
+    Serial.println("zoom");
+    if(orientation){
+      Serial.println("front_motor");
+      stepper = &front_motor;
+      stepper->setCurrentPosition(-value);
+    }
+    else{
+      Serial.println("rear_motor");
+      stepper = &rear_motor;
+      stepper->setCurrentPosition(value);
+    }
+    //stepper = orientation ? &front_motor : &rear_motor;
+  } 
+  else {
+    Serial.println("focus");
+    if(orientation){
+      Serial.println("rear_motor");
+      stepper = &rear_motor;
+      stepper->setCurrentPosition(value);
+    }
+    else{
+      Serial.println("front_motor");
+      stepper = &front_motor;
+      stepper->setCurrentPosition(-value);
+    }  
+    //stepper = orientation ? &rear_motor : &front_motor;
   }
-
-  stepper->setCurrentPosition(value);
+  // stepper->setCurrentPosition(value);
+  // Serial.println(stepper->currentPosition());
+  // delay(2000);
 }
 
 /*

@@ -644,53 +644,51 @@ void loop() {
             }
             //Focus Calibration
             case 1: {
-              focus_current = 0;
-              // moveMotor(FOCUS, focus_current);
-              // setCurrentPos(FOCUS, 0,0);
-              setAccel(FOCUS, CALI_ACCEL);
-              setCurrentPos(FOCUS, focus_current * MS_STEP);
-          
-              // set to minimum left
-              //int minFocus = calibrate(FOCUS, califocus_left, 0, -MOTOR_STEPS, DEEPPINK);
-              int minFocus = calibrate(FOCUS, califocus_left, MOTOR_STEPS, -MOTOR_STEPS, DEEPPINK);
-              setCurrentPos(FOCUS, 0); // set to 0
-              focus_current = 0;
-              //updateScreen(100);
-          
-              // set to maximum right
-              int maxFocus = calibrate(FOCUS, califocus_right, MOTOR_STEPS, 0, DEEPPINK);
-              // moveMotor(FOCUS, 0,0); // returns back to 0
-              focus_current = 0;
-              //focus_range = maxFocus - minFocus;
-              focus_range =  maxFocus - focus_current;
-              //updateScreen(100);
-              EEPROM.write(0, focus_range);
+                focus_current = 0;
+                //moveMotor(FOCUS, focus_current * MS_STEP);
+                //setCurrentPos(FOCUS, 0);
+                setAccel(FOCUS, CALI_ACCEL);
+                setCurrentPos(FOCUS, focus_current * MS_STEP);
+            
+                // set to minimum left
+                //int minFocus = calibrate(FOCUS, califocus_left, 0, -MOTOR_STEPS, DEEPPINK);
+                int minFocus = calibrate(FOCUS, califocus_left, MOTOR_STEPS, -MOTOR_STEPS, DEEPPINK);
+                setCurrentPos(FOCUS, 0); // set to 0
+                focus_current = 0;
+                //updateScreen(100);
+                
+                // set to maximum right
+                int maxFocus = calibrate(FOCUS, califocus_right, MOTOR_STEPS, 0, DEEPPINK);
+                //moveMotor(FOCUS, 0,0); // returns back to 0
+                focus_current = 0;
+                //focus_range = maxFocus - minFocus;
+                focus_range = maxFocus - focus_current;
+                //updateScreen(100);
+                EEPROM.write(0, focus_range);  
 
-              //move and set focus current to be the midlle of the minMax(range)
-              int focus_middle = focus_range / 2;
-              focus_current = focus_middle;
-              moveMotor(FOCUS, focus_middle,0);
-          
-              // minimum becomes absolute min pos
-              EEPROM.write(2, focus_current);
-              EEPROM.commit();
-              motor_calibration_screen1 = -1;
-              break;
+                //move and set focyus current to be the midlle of the minMax(range)
+                int focus_middle = focus_range / 2;
+                focus_current = focus_middle;
+                moveMotor(FOCUS, focus_middle,0);
+
+                //minimum becomes absolute min pos
+                EEPROM.write(2, focus_current);
+                EEPROM.commit();
+                motor_calibration_screen1 = -1;
+                break;
             }
             //POV Calibration
             case 2: {
                 setAccel(ZOOM, CALI_ACCEL);
-                setAccel(FOCUS, CALI_ACCEL);
                 setCurrentPos(ZOOM, zoom_current * MS_STEP);
-                setCurrentPos(FOCUS, focus_current * MS_STEP);
-
                 zoom_current = chooseDist(ZOOM, 3, zoom_adjust, false, DEEPPINK);
                 EEPROM.write(3, zoom_current);
-                //updateScreen(0);
+
+                setAccel(FOCUS, CALI_ACCEL);
+                setCurrentPos(FOCUS, focus_current * MS_STEP);
                 focus_current = chooseDist(FOCUS, 3, focus_adjust, false, DEEPPINK);
                 EEPROM.write(2, focus_current);
-                //updateScreen(0);
-                //Serial.println("pov calibration");
+                
                 motor_calibration_screen1 = resetScreen(motor_calibration_screen1);
                 EEPROM.commit();
               break;
