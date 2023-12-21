@@ -170,7 +170,7 @@ void goDist(int type, const char title[], int pos_desired, uint16_t color, float
         play_sound_2();
         camera_shutter_open = 0;
       }
-    updateScreen(100);
+    updateScreen(0);
   }
 
   // returns to original spot, go back acceleration and speed could be faster

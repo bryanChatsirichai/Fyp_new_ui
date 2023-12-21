@@ -83,12 +83,12 @@ void moveMotor(int type, int pos_desired, float motor_time) {
   if (motor_time != 0) {
     Serial.print("steps_to_move");
     Serial.println(steps_to_move);
-    delay(100);
+    //delay(100);
     //stepper->setAcceleration(calcAccel(abs(steps_to_move), (float)motor_time));
 
     //try
-    stepper->setMaxSpeed(steps_to_move / motor_time);
     stepper->setAcceleration(steps_to_move / motor_time);
+    stepper->setMaxSpeed(steps_to_move / motor_time);
   }
   else{
     //motor time pass in as 0 use default config

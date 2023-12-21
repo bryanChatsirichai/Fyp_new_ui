@@ -257,13 +257,15 @@ const char zf3_1[] PROGMEM = "ZF Value&B";
 //presets page1
 const char preset1_name[] PROGMEM = "|----- Presets -----|";
 const char preset1_0[] PROGMEM = "Bokeh";
-const char preset1_1[] PROGMEM = "Firework";
-const char preset1_2[] PROGMEM = "ZoomBlur";
-const char preset1_3[] PROGMEM = "SineWave ";
+const char preset1_1[] PROGMEM = "Firework-F";
+const char preset1_2[] PROGMEM = "Firework-ZF";
+const char preset1_3[] PROGMEM = "Z-Blur-min";
 
 //presets page2
 const char preset2_name[] PROGMEM = "|----- Presets -----|";
-const char preset2_0[] PROGMEM = ".....";
+const char preset2_0[] PROGMEM = "Z-Blur-max";
+const char preset2_1[] PROGMEM = "SinWave-1";
+const char preset2_2[] PROGMEM = "SinWave-2";
 
 const char counttext_1[] PROGMEM = "Get Ready!";
 const char counttext_2[] PROGMEM = "3";
@@ -305,7 +307,7 @@ const char *const zoom_adjust[] PROGMEM = {adjust_zoom, string_36, string_37};
 const char *const zoom_dist[] PROGMEM = {zm1_2, string_36, string_38};
 
 const char *const preset1_menu[] PROGMEM = {preset1_0, preset1_1, preset1_2, preset1_3};
-const char *const preset2_menu[] PROGMEM = {preset2_0};
+const char *const preset2_menu[] PROGMEM = {preset2_0,preset2_1,preset2_2};
 
 const char *const countdown[] PROGMEM = {counttext_1, counttext_2, counttext_3, counttext_4, counttext_5};
 
@@ -1187,104 +1189,157 @@ void loop() {
     //Action Custom
     case 2:{
       switch (fixed_paterns_menu1) {
-        // Bokeh Effect (S: Focus Max, Zoom Current. F: Focus Current, Zoom Widest)
+        // Bokeh Effect - changing focus to minimum from pov
+        //(S: Focus Max, Zoom Current. F: Focus Current, Zoom Widest)
         case 0: {
-          Serial.println("Bokeh Effect");
-          int previous_pos = focus_current;
-          // setting lens to starting position
-          printMoveSteps(-1, preset1_0, CADETBLUE, 2); 
-          //moving motor, haven start pattern yet so use default motor speed
-          moveMotor(FOCUS, focus_range, 0);
-          focus_current = focus_range;
-          //start pattern sequence
-          updateScreen(100);
+          //Serial.println("Bokeh Effect");
           countdownMenu();
-          goDist(FOCUS, preset1_0, previous_pos, VIOLET, motor_time,2,false,false,true);
-          goDist(ZOOM, preset1_0, 0, VIOLET, motor_time,2,true,true,false);
+          goDist(FOCUS, preset1_0, 0, SNOW,motor_time,1,true,true,true);
           fixed_paterns_menu1 = resetScreen(fixed_paterns_menu1);
+          // =============================================
+          // setting lens to starting position (old version)
+          // int previous_pos = focus_current;
+          // printMoveSteps(-1, preset1_0, CADETBLUE, 2); 
+          // moving motor, haven start pattern yet so use default motor speed
+          // moveMotor(FOCUS, focus_range, 0);
+          // focus_current = focus_range;
+          // start pattern sequence
+          // updateScreen(100);
+          // countdownMenu();
+          // goDist(FOCUS, preset1_0, previous_pos, VIOLET, motor_time,2,false,false,true);
+          // goDist(ZOOM, preset1_0, 0, VIOLET, motor_time,2,true,true,false);
+          // fixed_paterns_menu1 = resetScreen(fixed_paterns_menu1);
           break;
         }
-        //Firework Effect (Focus Max, then min, then return to original)
+        //Firework-F same as bokeh(Focus Max, then min, then return to original)
         case 1: {
-          Serial.println("Firework Effect");
-          int previous_pos = focus_current;
-          // setting lens to starting position
-          printMoveSteps(-1, preset1_1, CADETBLUE, 2);
-          //moving motor, haven start pattern yet so use default motor speed 
-          moveMotor(FOCUS, focus_range,0);
-          focus_current = focus_range;
-          updateScreen(100);
+          Serial.println("Firework-F");
           countdownMenu();
+          goDist(FOCUS, preset1_1, 0, SNOW,motor_time,1,true,true,true);
+          fixed_paterns_menu1 = resetScreen(fixed_paterns_menu1);
+          //===================================
+          // int previous_pos = focus_current;
+          // setting lens to starting position
+          // printMoveSteps(-1, preset1_1, CADETBLUE, 2);
+          // moving motor, haven start pattern yet so use default motor speed 
+          // moveMotor(FOCUS, focus_range,0);
+          // focus_current = focus_range;
+          // updateScreen(100);
+          // countdownMenu();
           // goDist(FOCUS, preset1_1, 0, AZURE, ((float)3/4)*motor_time, false,false,true);
           // goDist(FOCUS, preset1_1, previous_pos, AZURE, ((float)1/4)*motor_time,false,true,false);
-          goDist(FOCUS, preset1_1, 0, AZURE, motor_time, 1.33,false,false,true);
-          goDist(FOCUS, preset1_1, previous_pos, AZURE,motor_time,4,false,true,false);
-          fixed_paterns_menu1 = resetScreen(fixed_paterns_menu1);
+          // goDist(FOCUS, preset1_1, 0, AZURE, motor_time, 1.33,false,false,true);
+          // goDist(FOCUS, preset1_1, previous_pos, AZURE,motor_time,4,false,true,false);
+          // fixed_paterns_menu1 = resetScreen(fixed_paterns_menu1);
           break;
         }
-        // Zoom Blur Effect (Focus & Zoom Max then back to original)
-        // Is going back to original part of motor time or not?
+        // Firework-ZF Effect, zoom the wide(min), focus to min at the same time === ZF-min
         case 2: {
-          Serial.println("ZoomBlur Effect");
-          int previous_zoom_pos = zoom_current;
-          int previous_focus_pos = focus_current;
-          // setting lens to starting position
-          printMoveSteps(-1, preset1_2, CADETBLUE, 2); // setting lens to starting position
-          //asume going back part of motor time
-          updateScreen(100);
+          Serial.println("Firework-ZF");
           countdownMenu();
-          goMultiDist(preset1_2, zoom_range, focus_range, VIOLET, motor_time,2, false, false,true);
-          goMultiDist(preset1_2, previous_zoom_pos, previous_focus_pos, VIOLET, motor_time,2, false, true,false);
+          goMultiDist(preset1_2, 0, 0, AZURE,motor_time,1,true,true,true);
           fixed_paterns_menu1 = resetScreen(fixed_paterns_menu1);
+          //================================
+          // int previous_pos = zoom_current;
+          // // setting lens to starting position
+          // printMoveSteps(-1, preset1_2, CADETBLUE, 2);
+          // moving motor, haven start pattern yet so use default motor speed 
+          // moveMotor(ZOOM, focus_range,0);
+          // zoom_current = zoom_range;
+          // updateScreen(100);
+          // countdownMenu();
+          // goDist(ZOOM, preset1_2, 0, AZURE, ((float)3/4)*motor_time, false,false,true);
+          // goDist(ZOOM, preset1_2, previous_pos, AZURE, ((float)1/4)*motor_time,false,true,false);
+          // goDist(ZOOM, preset1_2, 0, AZURE, motor_time, 1.33,false,false,true);
+          // goDist(ZOOM, preset1_2, previous_pos, AZURE,motor_time,4,false,true,false);
+          // fixed_paterns_menu1 = resetScreen(fixed_paterns_menu1);
           break;
         }
-        //Sine Wave Effect
+        //ZoomBlur min === zoom to min
         case 3: {
-          Serial.println("Sine Wave Effect");
-          int previous_zoom = zoom_current;
-          int previous_focus = focus_current;
-          // Serial.print("zoom_current");
-          // Serial.println(zoom_current);
-          // Serial.print("zoom_current");
-          // Serial.println(zoom_current);
+          Serial.println("ZoomBlur min");
           countdownMenu();
-          // goDist(ZOOM, preset2_0, zoom_range, CORAL, motor_time/4, false,false,true);
-          // goDist(FOCUS, preset2_0, focus_range, CORAL, motor_time/4, false,false,false);
-          // goDist(ZOOM, preset2_0, 0, CORAL, motor_time/4,false,false,false);
-          // goDist(FOCUS, preset2_0, 0, CORAL, motor_time/4,false,true,false);
-          goDist(ZOOM, preset2_0, zoom_range, CORAL, motor_time,4, false,false,true);
-          goDist(FOCUS, preset2_0, focus_range, CORAL, motor_time,4, false,false,false);
-          goDist(ZOOM, preset2_0, 0, CORAL, motor_time,4,false,false,false);
-          goDist(FOCUS, preset2_0, 0, CORAL, motor_time,4,false,true,false);
-          //end of pattern
-          
-          // return to initial position
-          updateScreen(100);
-          printMoveSteps(1, preset2_0, CADETBLUE, 1); 
-          // Serial.print("previous_zoom");
-          // Serial.println(previous_zoom);
-          // Serial.print("previous_focus");
-          // Serial.println(previous_focus);
-          moveMultiMotor(previous_zoom,previous_focus,0);
-          updateScreen(100);
-          zoom_current = previous_zoom;
-          focus_current = previous_focus;
+          //global motor time pass in by default
+          //return to starting position by default
+          goDist(ZOOM, preset1_3, 0, SNOW, motor_time,1,true,true,true);
           fixed_paterns_menu1 = resetScreen(fixed_paterns_menu1);
+          //========================================
+          // int previous_zoom_pos = zoom_current;
+          // int previous_focus_pos = focus_current;
+          // setting lens to starting position
+          // printMoveSteps(-1, preset1_3, CADETBLUE, 2); // setting lens to starting position
+          //asume going back part of motor time
+          // updateScreen(100);
+          // countdownMenu();
+          // goMultiDist(preset1_2, zoom_range, focus_range, VIOLET, motor_time,2, false, false,true);
+          // goMultiDist(preset1_2, previous_zoom_pos, previous_focus_pos, VIOLET, motor_time,2, false, true,false);
+          // fixed_paterns_menu1 = resetScreen(fixed_paterns_menu1);
           break;
         }
 
         //fixed_paterns_menu2
         case 4: {
           switch (fixed_paterns_menu2) {     
-            //ZigZag
+            //Zoomblue-max === zoom to max
             case 0: {
+              Serial.println("Zoom to max");
+              countdownMenu();
+              //return to starting position by default
+              goDist(ZOOM, preset2_0, zoom_range, SNOW, motor_time,1,true,true,true);
+              fixed_paterns_menu2 = resetScreen(fixed_paterns_menu2);
+              break;
+            }
+              //SinWave-1 assume focus - small to wide wave
+              //assume 3 wave motion
+              case 1: {
+              int initial_pos = focus_current;
+              int min_distance_range = initial_pos - 0;
+              int max_distance_range = focus_range - initial_pos;
+              countdownMenu();
+
+              int total_waves = 3;
+              for (int cur_wave = 1; cur_wave <= total_waves; cur_wave++) {
+
+                int max_direction_to_travel = initial_pos + ((max_distance_range / 3) * cur_wave);
+                int min_direction_to_travel = initial_pos - ((min_distance_range / 3) * cur_wave);
+                //trial and error (unless g0t better idea)
+                int wave_motor_div = total_waves * 12;
+                //first time initiate start sound and keep screen there
+                if(cur_wave == 1){
+                  goDist(FOCUS, preset2_1, max_direction_to_travel, SNOW, motor_time,wave_motor_div,false,false,true);
+                  goDist(FOCUS, preset2_1, initial_pos, SNOW, motor_time,wave_motor_div,false,false,false);
+                  goDist(FOCUS, preset2_1, min_direction_to_travel, SNOW, motor_time,wave_motor_div,false,false,false);
+                  goDist(FOCUS, preset2_1, initial_pos, SNOW, motor_time,wave_motor_div,false,false,false);
+                }
+                //last wave
+                else if(cur_wave == total_waves){
+                  goDist(FOCUS, preset2_1, max_direction_to_travel, SNOW, motor_time,wave_motor_div,false,false,false);
+                  goDist(FOCUS, preset2_1, initial_pos, SNOW, motor_time,wave_motor_div,false,false,false);
+                  goDist(FOCUS, preset2_1, min_direction_to_travel, SNOW, motor_time,wave_motor_div,false,false,false);
+                  //last movement and press close shutter
+                  goDist(FOCUS, preset2_1, initial_pos, SNOW, motor_time,wave_motor_div,false,true,false);
+                }
+                //rest of the waves
+                else{
+                  goDist(FOCUS, preset2_1, max_direction_to_travel, SNOW, motor_time,wave_motor_div,false,false,false);
+                  goDist(FOCUS, preset2_1, initial_pos, SNOW, motor_time,wave_motor_div,false,false,false);
+                  goDist(FOCUS, preset2_1, min_direction_to_travel, SNOW, motor_time,wave_motor_div,false,false,false);
+                  goDist(FOCUS, preset2_1, initial_pos, SNOW, motor_time,wave_motor_div,false,false,false);
+                }
+              }
+
+              fixed_paterns_menu2 = resetScreen(fixed_paterns_menu2);
+              break;
+            }
+            //SinWave-2 - wide to small wave
+            case 2: {
               fixed_paterns_menu2 = resetScreen(fixed_paterns_menu2);
               break;
             }
             
             //show fixed_paterns_menu2
             default:
-              custome_movements_menu2_screen(1, preset2_name, preset2_menu,DEEPPINK);
+              custome_movements_menu2_screen(3, preset2_name, preset2_menu,DEEPPINK);
               fixed_paterns_menu2 = get_custom_movements_menu2_update(fixed_paterns_menu2);
               if(fixed_paterns_menu2 == -2){
                     fixed_paterns_menu1 = -1;
