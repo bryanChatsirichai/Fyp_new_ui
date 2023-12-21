@@ -1282,7 +1282,7 @@ void loop() {
           switch (fixed_paterns_menu2) {     
             //Zoomblue-max === zoom to max
             case 0: {
-              Serial.println("Zoom to max");
+              //Serial.println("Zoom to max");
               countdownMenu();
               //return to starting position by default
               goDist(ZOOM, preset2_0, zoom_range, SNOW, motor_time,1,true,true,true);
@@ -1295,24 +1295,25 @@ void loop() {
               int initial_pos = focus_current;
               int min_distance_range = initial_pos - 0;
               int max_distance_range = focus_range - initial_pos;
-              countdownMenu();
-
+              
               int total_waves = 3;
+              int initial_wave = 1;
+              int last_wave = 3;
+              countdownMenu();
               for (int cur_wave = 1; cur_wave <= total_waves; cur_wave++) {
-
-                int max_direction_to_travel = initial_pos + ((max_distance_range / 3) * cur_wave);
-                int min_direction_to_travel = initial_pos - ((min_distance_range / 3) * cur_wave);
-                //trial and error (unless g0t better idea)
+                int max_direction_to_travel = initial_pos + ((max_distance_range / total_waves) * cur_wave);
+                int min_direction_to_travel = initial_pos - ((min_distance_range / total_waves) * cur_wave);
+                //trial and error (unless got better idea)
                 int wave_motor_div = total_waves * 12;
                 //first time initiate start sound and keep screen there
-                if(cur_wave == 1){
+                if(cur_wave == initial_wave){
                   goDist(FOCUS, preset2_1, max_direction_to_travel, SNOW, motor_time,wave_motor_div,false,false,true);
                   goDist(FOCUS, preset2_1, initial_pos, SNOW, motor_time,wave_motor_div,false,false,false);
                   goDist(FOCUS, preset2_1, min_direction_to_travel, SNOW, motor_time,wave_motor_div,false,false,false);
                   goDist(FOCUS, preset2_1, initial_pos, SNOW, motor_time,wave_motor_div,false,false,false);
                 }
                 //last wave
-                else if(cur_wave == total_waves){
+                else if(cur_wave == last_wave){
                   goDist(FOCUS, preset2_1, max_direction_to_travel, SNOW, motor_time,wave_motor_div,false,false,false);
                   goDist(FOCUS, preset2_1, initial_pos, SNOW, motor_time,wave_motor_div,false,false,false);
                   goDist(FOCUS, preset2_1, min_direction_to_travel, SNOW, motor_time,wave_motor_div,false,false,false);
@@ -1333,6 +1334,42 @@ void loop() {
             }
             //SinWave-2 - wide to small wave
             case 2: {
+              int initial_pos = focus_current;
+              int min_distance_range = initial_pos - 0;
+              int max_distance_range = focus_range - initial_pos;
+              int total_waves = 3;
+              int initial_wave = 3;
+              int last_wave = 1;
+              countdownMenu();
+              for (int cur_wave = 3; cur_wave >= last_wave; cur_wave--) {
+                int max_direction_to_travel = initial_pos + ((max_distance_range / total_waves) * cur_wave);
+                int min_direction_to_travel = initial_pos - ((min_distance_range / total_waves) * cur_wave);
+                //trial and error (unless got better idea)
+                int wave_motor_div = total_waves * 12;
+
+                //first time initiate start sound and keep screen there
+                if(cur_wave == initial_wave){
+                  goDist(FOCUS, preset2_1, max_direction_to_travel, SNOW, motor_time,wave_motor_div,false,false,true);
+                  goDist(FOCUS, preset2_1, initial_pos, SNOW, motor_time,wave_motor_div,false,false,false);
+                  goDist(FOCUS, preset2_1, min_direction_to_travel, SNOW, motor_time,wave_motor_div,false,false,false);
+                  goDist(FOCUS, preset2_1, initial_pos, SNOW, motor_time,wave_motor_div,false,false,false);
+                }
+                //last wave
+                else if(cur_wave == last_wave){
+                  goDist(FOCUS, preset2_1, max_direction_to_travel, SNOW, motor_time,wave_motor_div,false,false,false);
+                  goDist(FOCUS, preset2_1, initial_pos, SNOW, motor_time,wave_motor_div,false,false,false);
+                  goDist(FOCUS, preset2_1, min_direction_to_travel, SNOW, motor_time,wave_motor_div,false,false,false);
+                  //last movement and press close shutter
+                  goDist(FOCUS, preset2_1, initial_pos, SNOW, motor_time,wave_motor_div,false,true,false);
+                }
+                //rest of the waves
+                else{
+                  goDist(FOCUS, preset2_1, max_direction_to_travel, SNOW, motor_time,wave_motor_div,false,false,false);
+                  goDist(FOCUS, preset2_1, initial_pos, SNOW, motor_time,wave_motor_div,false,false,false);
+                  goDist(FOCUS, preset2_1, min_direction_to_travel, SNOW, motor_time,wave_motor_div,false,false,false);
+                  goDist(FOCUS, preset2_1, initial_pos, SNOW, motor_time,wave_motor_div,false,false,false);
+                }
+              }
               fixed_paterns_menu2 = resetScreen(fixed_paterns_menu2);
               break;
             }

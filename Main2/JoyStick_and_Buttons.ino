@@ -613,6 +613,12 @@ int get_custom_movements_menu2_update(int s){
     tft.fillScreen(ST77XX_BLACK);//clear screen
     updateMenu = true;
   }
+  if (digitalRead(X_BUTTON) == LOW) {
+    //update 
+    s = 2;
+    tft.fillScreen(ST77XX_BLACK);//clear screen
+    updateMenu = true;
+  }
   //scroll up 
   // -2 just a number to differentiate between -1s
   if (digitalRead(UP_BUTTON) == LOW) {
