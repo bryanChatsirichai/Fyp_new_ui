@@ -18,8 +18,8 @@ void resetToHomeScreen(){
   //motor_calibration_screen2 = -1;
   options_menu1 = -1;
   rotation_menu1 = -1;
-  zoom_rotation_menu1 = -1;
-  focus_rotation_menu1 = -1;
+  rear_rotation_menu1 = -1;
+  front_rotation_menu1 = -1;
   excess_option_screen = -1;
   action_screen_1 = -1;
   zoom_movements_menu1 = -1;
@@ -341,6 +341,29 @@ void motor_calibration_menu1_screen(int array_size,const char *menu_name ,const 
     tft.setTextColor(WHITE);
     tft.println(focus_current);  
 
+    tft.setCursor(0, 75);
+    tft.setTextColor(AQUA);
+    tft.println(F("Rear"));
+    tft.print(F("Rotation:"));
+    tft.setTextColor(WHITE,BLACK);
+    if(rear_rotation_direction == 0){
+      tft.print("0");
+    }
+    else if(rear_rotation_direction == 1){
+      tft.print("1");
+    }
+
+    tft.setCursor(0, 95);
+    tft.setTextColor(AQUA);
+    tft.println(F("Front"));
+    tft.print(F("Rotation:"));
+    tft.setTextColor(WHITE,BLACK);
+    if(front_rotation_direction == 0){
+      tft.print("0");
+    }
+    else if(front_rotation_direction == 1){
+      tft.print("1");
+    }
     //old version 
     //joystick icon only show arrows if can press them to go next page
     //tft.drawChar(12,60,UP_ARROW,WHITE,BLACK,2);
@@ -407,22 +430,24 @@ void rotation_menu1_screen(int array_size,const char *menu_name ,const char *con
 
   tft.setCursor(0,15);
   tft.setTextColor(AQUA);
-  tft.print(F("Z_Rotation: "));
+  tft.println(F("Rear"));
+  tft.print(F("Rotation:"));
   tft.setTextColor(WHITE,BLACK);
-  if(zoom_rotation_direction == 0){
+  if(rear_rotation_direction == 0){
     tft.print("0");
   }
-  else if(zoom_rotation_direction == 1){
+  else if(rear_rotation_direction == 1){
     tft.print("1");
   }
-  tft.setCursor(0,25);
+  tft.setCursor(0,35);
   tft.setTextColor(AQUA);
-  tft.print(F("F_Rotation: "));
+  tft.println(F("Front"));
+  tft.print(F("Rotation:"));
   tft.setTextColor(WHITE,BLACK);
-  if(focus_rotation_direction == 0){
+  if(front_rotation_direction == 0){
     tft.print("0");
   }
-  else if(zoom_rotation_direction == 1){
+  else if(front_rotation_direction == 1){
     tft.print("1");
   }
 
@@ -454,7 +479,7 @@ void rotation_menu1_screen(int array_size,const char *menu_name ,const char *con
   tft.setTextColor(WHITE,BLACK);
 }
 
-void zoom_rotation_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
+void rear_rotation_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
   int total_num = array_size;
 
   tft.setTextSize(1);
@@ -490,7 +515,7 @@ void zoom_rotation_menu1_screen(int array_size,const char *menu_name ,const char
   tft.setTextColor(WHITE,BLACK);
 }
 
-void focus_rotation_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
+void front_rotation_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
   int total_num = array_size;
 
   tft.setTextSize(1);

@@ -221,7 +221,7 @@ int get_rotation_menu1_update(int s){
   return s;
 }
 
-int get_zoom_rotation_menu1_update(int s){
+int get_rear_rotation_menu1_update(int s){
   //Go Home menu
   if (digitalRead(CENTER_BUTTON) == LOW) {
       resetToHomeScreen();
@@ -255,7 +255,7 @@ int get_zoom_rotation_menu1_update(int s){
   return s;
 }
 
-int get_focus_rotation_menu1_update(int s){
+int get_front_rotation_menu1_update(int s){
   //Go Home menu
   if (digitalRead(CENTER_BUTTON) == LOW) {
       resetToHomeScreen();
