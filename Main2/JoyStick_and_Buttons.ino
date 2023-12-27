@@ -187,6 +187,108 @@ int get_motor_calibration_menu1_update(int s){
     // return s;
 }
 
+int get_rotation_menu1_update(int s){
+  //Go Home menu
+  if (digitalRead(CENTER_BUTTON) == LOW) {
+      resetToHomeScreen();
+      s = -1;
+      updateMenu = true;
+    }
+
+  if (digitalRead(A_BUTTON) == LOW) {
+    s = 0;
+    tft.fillScreen(ST77XX_BLACK);//clear screen
+    updateMenu = true;
+  }
+  if (digitalRead(B_BUTTON) == LOW) {
+    //update 
+    s = 1;
+    tft.fillScreen(ST77XX_BLACK);//clear screen
+    updateMenu = true;
+  }
+  // if (digitalRead(X_BUTTON) == LOW) {
+  //   //update 
+  //   s = 2;
+  //   tft.fillScreen(ST77XX_BLACK);//clear screen
+  //   updateMenu = true;
+  // }
+  // if (digitalRead(Y_BUTTON) == LOW) {
+  //   //update 
+  //   s = 3;
+  //   tft.fillScreen(ST77XX_BLACK);//clear screen
+  //   updateMenu = true;
+  // } 
+  return s;
+}
+
+int get_zoom_rotation_menu1_update(int s){
+  //Go Home menu
+  if (digitalRead(CENTER_BUTTON) == LOW) {
+      resetToHomeScreen();
+      s = -1;
+      updateMenu = true;
+    }
+
+  if (digitalRead(A_BUTTON) == LOW) {
+    s = 0;
+    tft.fillScreen(ST77XX_BLACK);//clear screen
+    updateMenu = true;
+  }
+  if (digitalRead(B_BUTTON) == LOW) {
+    //update 
+    s = 1;
+    tft.fillScreen(ST77XX_BLACK);//clear screen
+    updateMenu = true;
+  }
+  // if (digitalRead(X_BUTTON) == LOW) {
+  //   //update 
+  //   s = 2;
+  //   tft.fillScreen(ST77XX_BLACK);//clear screen
+  //   updateMenu = true;
+  // }
+  // if (digitalRead(Y_BUTTON) == LOW) {
+  //   //update 
+  //   s = 3;
+  //   tft.fillScreen(ST77XX_BLACK);//clear screen
+  //   updateMenu = true;
+  // } 
+  return s;
+}
+
+int get_focus_rotation_menu1_update(int s){
+  //Go Home menu
+  if (digitalRead(CENTER_BUTTON) == LOW) {
+      resetToHomeScreen();
+      s = -1;
+      updateMenu = true;
+    }
+
+  if (digitalRead(A_BUTTON) == LOW) {
+    s = 0;
+    tft.fillScreen(ST77XX_BLACK);//clear screen
+    updateMenu = true;
+  }
+  if (digitalRead(B_BUTTON) == LOW) {
+    //update 
+    s = 1;
+    tft.fillScreen(ST77XX_BLACK);//clear screen
+    updateMenu = true;
+  }
+  // if (digitalRead(X_BUTTON) == LOW) {
+  //   //update 
+  //   s = 2;
+  //   tft.fillScreen(ST77XX_BLACK);//clear screen
+  //   updateMenu = true;
+  // }
+  // if (digitalRead(Y_BUTTON) == LOW) {
+  //   //update 
+  //   s = 3;
+  //   tft.fillScreen(ST77XX_BLACK);//clear screen
+  //   updateMenu = true;
+  // } 
+  return s;
+}
+
 int get_options_menu1_update(int s){
   //Go Home menu
   if (digitalRead(CENTER_BUTTON) == LOW) {
@@ -212,12 +314,12 @@ int get_options_menu1_update(int s){
     tft.fillScreen(ST77XX_BLACK);//clear screen
     updateMenu = true;
   }
-  // if (digitalRead(Y_BUTTON) == LOW) {
-  //   //update 
-  //   s = 3;
-  //   tft.fillScreen(ST77XX_BLACK);//clear screen
-  //   updateMenu = true;
-  // } 
+  if (digitalRead(Y_BUTTON) == LOW) {
+    //update 
+    s = 3;
+    tft.fillScreen(ST77XX_BLACK);//clear screen
+    updateMenu = true;
+  } 
   return s;
 }
 

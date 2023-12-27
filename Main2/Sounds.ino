@@ -32,8 +32,7 @@ void play(int Track) {
   // delay(500);
 }
 
-// delay is the duration of the sound to block the screen
-
+// delay is the duration of the sound/song duration to block the screen (adjust accrodingly)
 void play_sound_1(){
   play(1);
   delay(3000);

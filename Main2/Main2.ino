@@ -96,6 +96,8 @@ int motor_time = 0;
 int excess_option_set = 0; //default
 int camera_shutter_open = 0; //default 0 is not open
 
+int zoom_rotation_direction = 0; //default
+int focus_rotation_direction = 0; //default
 
 // Global Variables
 int updateMenu = true;
@@ -106,6 +108,9 @@ int camera_setting_screen = -1;
 int camera_positioning_screen = -1;
 int motor_calibration_screen1 = -1;
 int options_menu1 = -1;
+int rotation_menu1 = -1;
+int zoom_rotation_menu1 = -1;
+int focus_rotation_menu1 = -1;
 //int motor_calibration_screen2 = -1;
 int excess_option_screen = -1;
 int action_screen_1 = -1;
@@ -187,8 +192,24 @@ const char mc1_2[] PROGMEM = "POV_Cali";
 //options page
 const char option_name[] PROGMEM = "|- Options -|";
 const char option_0[] PROGMEM = "Switch Z/F";
-const char option_1[] PROGMEM = "RESET Cam";
-const char option_2[] PROGMEM = "RESET Cali";
+const char option_1[] PROGMEM = "Rotation";
+const char option_2[] PROGMEM = "RESET Cam";
+const char option_3[] PROGMEM = "RESET Cali";
+
+//rotation page
+const char rotation_name[] PROGMEM = "|- Rotations -|";
+const char rotation_0[] PROGMEM = "Zoom";
+const char rotation_1[] PROGMEM = "Focus";
+
+//zoom rotation page
+const char zoom_rotation_name[] PROGMEM = "|- Zoom Rotation -|";
+const char zoom_rotation_0[] PROGMEM = "Rotation-0";
+const char zoom_rotation_1[] PROGMEM = "Rotation-1";
+
+//focus rotation page
+const char focus_rotation_name[] PROGMEM = "|- Focus Rotation -|";
+const char focus_rotation_0[] PROGMEM = "Rotation-0";
+const char focus_rotation_1[] PROGMEM = "Rotation-1";
 
 //clibrating ZF len(s)
 const char cali_zoom[] PROGMEM = "|--Calibrate Zoom --|";
@@ -281,7 +302,12 @@ const char *const main_menu_2[] PROGMEM = {mm_action1_0, mm_action1_1, mm_action
 const char *const camera_settings_menu[] PROGMEM = {cs_0, cs_1, cs_2};
 const char *const positioning_menu[] PROGMEM = {pm_0,pm_1};
 const char *const motor_calibration_menu1[] PROGMEM {mc1_0, mc1_1, mc1_2};
-const char *const options_menu[] PROGMEM {option_0, option_1,option_2};
+const char *const options_menu[] PROGMEM {option_0, option_1,option_2,option_3};
+
+const char *const rotation_menu[] PROGMEM {rotation_0, rotation_1};
+const char *const zoom_rotation_menu[] PROGMEM {zoom_rotation_0, zoom_rotation_1};
+const char *const focus_rotation_menu[] PROGMEM {focus_rotation_0, focus_rotation_1};
+
 const char *const excess_option_menu[] PROGMEM {excess_option_0, excess_option_1,excess_option_2};
 
 const char *const zoom_menu1[] PROGMEM = {zm1_0,zm1_1,zm1_2,zm1_3};
@@ -356,6 +382,15 @@ int get_motor_calibration_menu1_update(int s);
 
 void options_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_options_menu1_update(int s);
+
+void rotation_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color);
+int get_rotation_menu1_update(int s);
+
+void zoom_rotation_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color);
+int get_zoom_rotation_menu1_update(int s);
+
+void focus_rotation_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color);
+int get_focus_rotation_menu1_update(int s);
 
 void caliMenu(const char *const string_table[], int current_step, int max_steps=200, uint16_t color=WHITE, bool updateBar=false);
 int calibrate(int type, const char *const string_table[], int upper_limit, int lower_limit, uint16_t color=DEEPPINK);
@@ -474,6 +509,8 @@ void setup() {
   shutter_time = EEPROM.read(5);
   motor_time = EEPROM.read(6);
   excess_option_set = EEPROM.read(7);
+  zoom_rotation_direction = EEPROM.read(8);
+  focus_rotation_direction = EEPROM.read(9);
 
   //set back last know position after on/off
   setAccel(ZOOM, CALI_ACCEL);
@@ -748,8 +785,77 @@ void loop() {
               }      
               break;
             }
-            //reset camera setting
+            //motor rotation option
             case 1:{
+              switch(rotation_menu1){
+                //zoom rotation option
+                case 0: {
+                  switch(zoom_rotation_menu1){
+                    //zoom rotation 0
+                    case 0:{
+                      zoom_rotation_direction = 0;
+                      EEPROM.write(8, zoom_rotation_direction);
+                      EEPROM.commit();
+                      zoom_rotation_menu1 = -1;
+                      rotation_menu1 = -1;
+
+                      break;
+                    }
+                    //zoom rotation 1
+                    case 1:{
+                      zoom_rotation_direction = 1;
+                      EEPROM.write(8, zoom_rotation_direction);
+                      EEPROM.commit();
+                      zoom_rotation_menu1 = -1;
+                      rotation_menu1 = -1;
+                      break;
+                    }
+                    default:
+                      zoom_rotation_menu1_screen(2,zoom_rotation_name,zoom_rotation_menu,DEEPPINK);
+                      zoom_rotation_menu1 = get_zoom_rotation_menu1_update(zoom_rotation_menu1);
+                      break;
+                  }
+                  break;
+                }
+                //focus rotation option
+                case 1:{
+                  switch(focus_rotation_menu1){
+                    //focus rotation 0
+                    case 0:{
+                      focus_rotation_direction = 0;
+                      EEPROM.write(9, focus_rotation_direction);
+                      EEPROM.commit();
+                      focus_rotation_menu1 = -1;
+                      rotation_menu1 = -1;
+
+                      break;
+                    }
+                    //focus rotation 1
+                    case 1:{
+                      focus_rotation_direction = 1;
+                      EEPROM.write(9, focus_rotation_direction);
+                      EEPROM.commit();
+                      focus_rotation_menu1 = -1;
+                      rotation_menu1 = -1;
+                      break;
+                    }
+                    default:
+                      focus_rotation_menu1_screen(2,focus_rotation_name,focus_rotation_menu,DEEPPINK);
+                      focus_rotation_menu1 = get_focus_rotation_menu1_update(focus_rotation_menu1);
+                      break;
+                  }
+                  break;
+                }
+                default:
+                  rotation_menu1_screen(2,rotation_name,rotation_menu,DEEPPINK);
+                  rotation_menu1 = get_rotation_menu1_update(rotation_menu1);
+                  break;
+
+              }
+              break;
+            }
+            //reset camera setting
+            case 2:{
               EEPROM.write(5,0);
               EEPROM.write(6,0);                 
               EEPROM.write(7,0);
@@ -762,7 +868,7 @@ void loop() {
               break;
             }
             //reset calibration
-            case 2:{
+            case 3:{
               EEPROM.write(0,0);
               EEPROM.write(1,0);
               EEPROM.write(2,0);
@@ -779,7 +885,7 @@ void loop() {
               break;
             }
             default:
-              options_menu1_screen(3,option_name,options_menu,DEEPPINK);
+              options_menu1_screen(4,option_name,options_menu,DEEPPINK);
               options_menu1 = get_options_menu1_update(options_menu1);
               break; 
           }
