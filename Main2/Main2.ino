@@ -86,6 +86,7 @@
  *  - shutter_speed   (Shutter speed)
  *  - motor_time
  */
+int first_time = 0; //first time the pico on
 int zoom_range = 0; 
 int focus_range = 0;    
 int zoom_current = 0;     
@@ -512,6 +513,9 @@ void setup() {
   rear_rotation_direction = EEPROM.read(8);
   front_rotation_direction = EEPROM.read(9);
 
+  first_time = EEPROM.read(10);
+
+
   //set back last know position after on/off
   setAccel(ZOOM, CALI_ACCEL);
   setAccel(FOCUS, CALI_ACCEL);
@@ -522,6 +526,32 @@ void setup() {
   // if empty (==255), setting default values to 0
   // for current positions -> Move the motor to stored current 
   // to be implemented when finalise...
+  if(first_time == 255){
+    focus_range = 0;
+    zoom_range = 0;
+    focus_current = 0;
+    zoom_current = 0;
+    orientation = 0;
+    shutter_time = 0;
+    motor_time = 0;
+    excess_option_set = 0; 
+    rear_rotation_direction = 0;
+    front_rotation_direction = 0;
+    first_time = 0;
+                        
+    EEPROM.write(0, focus_range);
+    EEPROM.write(1, zoom_range);
+    EEPROM.write(2, focus_current);
+    EEPROM.write(3, zoom_current);
+    EEPROM.write(4, orientation);
+    EEPROM.write(5, shutter_time);
+    EEPROM.write(6, motor_time);
+    EEPROM.write(7, excess_option_set);
+    EEPROM.write(8, rear_rotation_direction);
+    EEPROM.write(9, front_rotation_direction);
+    EEPROM.write(10, first_time);
+    EEPROM.commit();
+  }
 
   //Show ICM APP 'loading page'
   initializing_Page();
