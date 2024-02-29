@@ -86,6 +86,7 @@
  *  - shutter_speed   (Shutter speed)
  *  - motor_time
  */
+ // Global Variables 
 int first_time = 0; //first time the pico on
 int zoom_range = 0; 
 int focus_range = 0;    
@@ -96,11 +97,13 @@ int shutter_time = 0;
 int motor_time = 0;   
 int excess_option_set = 0; //default
 int camera_shutter_open = 0; //default 0 is not open
-
 int rear_rotation_direction = 0; //default
 int front_rotation_direction = 0; //default
+//shutter_time
+int max_shutter_time = 60;
+int max_motor_time = 60; //to be update in bar
 
-// Global Variables
+// Global Variables, control menus
 int updateMenu = true;
 int max_option = 0;
 int home_screen = -1;
@@ -125,9 +128,6 @@ int zoom_focus_movements_menu3 = -1;
 int fixed_paterns_menu1 = -1;
 int fixed_paterns_menu2 = -1;
 
-
-//shutter_time
-int max_shutter_time = 60;
 
 //symbol setting for display,calibration,interface ui etc,...
 int symbol_padding = 40;
@@ -160,7 +160,6 @@ const char mm_configuration_header[] PROGMEM = "|- Configuration Menu -|";
 const char mm_configuration_0[] PROGMEM = "Camera Settings";
 const char mm_configuration_1[] PROGMEM = "Motor Calibration";
 const char mm_configuration_2[] PROGMEM = "Options";
-
 
 
 ////main_menu2 options focus on actions,
@@ -512,7 +511,6 @@ void setup() {
   excess_option_set = EEPROM.read(7);
   rear_rotation_direction = EEPROM.read(8);
   front_rotation_direction = EEPROM.read(9);
-
   first_time = EEPROM.read(10);
 
 
@@ -742,7 +740,8 @@ void loop() {
 
                 //minimum becomes absolute min pos
                 EEPROM.write(2, focus_current);
-                EEPROM.commit();
+                
+                
                 motor_calibration_screen1 = -1;
                 break;
             }
