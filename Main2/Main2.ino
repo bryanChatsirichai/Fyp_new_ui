@@ -152,8 +152,8 @@ SoftwareSerial SoftwareSerial(RX,TX); // RX, TX
 //home_screen options focus on configuration,
 const char home_header[] PROGMEM = "|- Home Menu -|";
 const char home_0[] PROGMEM = "Camera Config";
-const char home_1[] PROGMEM = "Actions-Z/F";
-const char home_2[] PROGMEM = "Actions-Pattern";
+const char home_1[] PROGMEM = "Simple Actions";
+const char home_2[] PROGMEM = "Preset Actions ";
 
 //main_menu1 options focus on configuration,
 const char mm_configuration_header[] PROGMEM = "|- Configuration Menu -|";
@@ -285,8 +285,8 @@ const char preset1_3[] PROGMEM = "Z-Blur-min";
 //presets page2
 const char preset2_name[] PROGMEM = "|----- Presets -----|";
 const char preset2_0[] PROGMEM = "Z-Blur-max";
-const char preset2_1[] PROGMEM = "SinWave-1";
-const char preset2_2[] PROGMEM = "SinWave-2";
+const char preset2_1[] PROGMEM = "SinWave-1 inout";
+const char preset2_2[] PROGMEM = "SinWave-2 outin";
 
 const char counttext_1[] PROGMEM = "Get Ready!";
 const char counttext_2[] PROGMEM = "3";

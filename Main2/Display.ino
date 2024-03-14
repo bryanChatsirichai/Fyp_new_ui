@@ -347,10 +347,12 @@ void motor_calibration_menu1_screen(int array_size,const char *menu_name ,const 
     tft.print(F("Rotation:"));
     tft.setTextColor(WHITE,BLACK);
     if(rear_rotation_direction == 0){
-      tft.print("CW");
+      //tft.print("CW");
+      tft.print("0");
     }
     else if(rear_rotation_direction == 1){
-      tft.print("ACW");
+      //tft.print("ACW");
+      tft.print("1");
     }
 
     tft.setCursor(0, 95);
@@ -359,10 +361,12 @@ void motor_calibration_menu1_screen(int array_size,const char *menu_name ,const 
     tft.print(F("Rotation:"));
     tft.setTextColor(WHITE,BLACK);
     if(front_rotation_direction == 0){
-      tft.print("ACW");
+      //tft.print("ACW");
+      tft.print("0");
     }
     else if(front_rotation_direction == 1){
-      tft.print("CW");
+      //tft.print("CW");
+      tft.print("1");
     }
     //old version 
     //joystick icon only show arrows if can press them to go next page
@@ -434,10 +438,12 @@ void rotation_menu1_screen(int array_size,const char *menu_name ,const char *con
   tft.print(F("Rotation:"));
   tft.setTextColor(WHITE,BLACK);
   if(rear_rotation_direction == 0){
-    tft.print("CW");
+    //tft.print("CW");
+    tft.print("0");
   }
   else if(rear_rotation_direction == 1){
-    tft.print("ACW");
+    //tft.print("ACW");
+    tft.print("1");
   }
   tft.setCursor(0,35);
   tft.setTextColor(AQUA);
@@ -445,10 +451,12 @@ void rotation_menu1_screen(int array_size,const char *menu_name ,const char *con
   tft.print(F("Rotation:"));
   tft.setTextColor(WHITE,BLACK);
   if(front_rotation_direction == 0){
-    tft.print("ACW");
+    //tft.print("ACW");
+    tft.print("0");
   }
   else if(front_rotation_direction == 1){
-    tft.print("CW");
+    //tft.print("CW");
+    tft.print("1");
   }
 
   //joystick icon only show arrows if can press them to go next/prev page
