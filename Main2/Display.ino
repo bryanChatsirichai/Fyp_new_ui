@@ -16,6 +16,10 @@ void resetToHomeScreen(){
   camera_positioning_screen = -1;
   motor_calibration_screen1 = -1;
   //motor_calibration_screen2 = -1;
+  options_menu1 = -1;
+  rotation_menu1 = -1;
+  rear_rotation_menu1 = -1;
+  front_rotation_menu1 = -1;
   excess_option_screen = -1;
   action_screen_1 = -1;
   zoom_movements_menu1 = -1;
@@ -33,8 +37,6 @@ void resetToHomeScreen(){
 int resetScreen(int s) {
   tft.fillScreen(ST77XX_BLACK);//clear screen
   s = -1;
-  updateMenu = true;
-  option_selected = 0;
   return s;
 }
 
@@ -42,7 +44,6 @@ int resetScreen(int s) {
 void updateScreen(float delay_ms) {
   delay(delay_ms);
   tft.fillScreen(ST77XX_BLACK);//clear screen
-  updateMenu = true;
 }
 
 /* A simple way to print a countdown menu */
@@ -137,33 +138,25 @@ void printMoveSteps(int type, const char title[], uint16_t color, int movement_d
   }
 }
 
-int symbol_padding = 40;
-int symbol_size = 20;
 
 // ******** DISPLAY pages Functions **********
-int home_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color) {
+void home_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], uint16_t color) {
   int total_num = array_size;
-  int max_option = array_size;
-  if (!updateMenu) {
-    //updateMenu false
-    return total_num; 
-  }
-  updateMenu = false;
+
   tft.setTextSize(1);
   tft.setCursor(0, 0);
   tft.setTextColor(color);
   tft.println(menu_name);
+  //home-fullbar
   tft.setTextColor(WHITE,BLACK);
   tft.setTextSize(2);
-  tft.setCursor(130, 25);
-  //tft.println("Home - *");
-
-  //symbol
+  tft.setCursor(2, 23);
   tft.print("Home");
+  tft.drawRect(0,12,tft.width(),35,WHITE);
   tft.drawChar(tft.width()- symbol_size,25,RIGHT_ARROW,LIME,BLACK,2);
   
+  //other options
   int rect_y = 67;
-
   for (int i=0; i<total_num; i++) {
     //tft.drawRect(0,rect_y,tft.width()-symbol_padding,35,WHITE);
     tft.drawRect(0,rect_y,tft.width(),35,WHITE);
@@ -173,37 +166,28 @@ int home_menu_screen(int array_size,const char *menu_name ,const char *const str
 
     //symbol
     tft.drawChar(tft.width() - symbol_size,rect_y+10,RIGHT_ARROW,LIME,BLACK,2);
-
     rect_y = rect_y+55;
   }
-  tft.setTextColor(WHITE,BLACK);
-
-  //maybe don't need  
-  return total_num; 
+  tft.setTextColor(WHITE,BLACK); 
 }
 
-int configuration_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void configuration_menu_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
   int total_num = array_size;
-  int max_option = array_size;
-  if (!updateMenu) {
-    //updateMenu false
-    return total_num; 
-  }
-  updateMenu = false;
+
   tft.setTextSize(1);
   tft.setCursor(0, 0);
   tft.setTextColor(color);
   tft.println(menu_name);
+  //home-fullbar
   tft.setTextColor(WHITE,BLACK);
   tft.setTextSize(2);
-  tft.setCursor(130, 25);
-  //tft.println("Home - *");
-
-  //symbol
+  tft.setCursor(2, 23);
   tft.print("Home");
+  tft.drawRect(0,12,tft.width(),35,WHITE);
   tft.drawChar(tft.width()- symbol_size,25,RIGHT_ARROW,LIME,BLACK,2);
+  
+  //other options
   int rect_y = 67;
-
   for (int i=0; i<total_num; i++) {
     //tft.drawRect(0,rect_y,tft.width()-symbol_padding,35,WHITE);
     tft.drawRect(0,rect_y,tft.width(),35,WHITE);
@@ -218,20 +202,11 @@ int configuration_menu_screen(int array_size,const char *menu_name ,const char *
     rect_y = rect_y+55;
   }
   tft.setTextColor(WHITE,BLACK);
-  //maybe don't need  
-  return total_num; 
 }
 
-int cameraSetting_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void cameraSetting_menu_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
   int total_num = array_size;
-  int max_option = array_size;
-  if (!updateMenu) {
-    //updateMenu false
-    return total_num; 
-  }
-  updateMenu = false;
-  
-  
+
   tft.setTextSize(1);
   tft.setCursor(0, 0);
   tft.setTextColor(color);
@@ -269,18 +244,16 @@ int cameraSetting_menu_screen(int array_size,const char *menu_name ,const char *
       break;
     }
   }
-
+  //home-halfbar
   tft.setTextColor(WHITE,BLACK);
   tft.setTextSize(2);
-  tft.setCursor(130, 25);
-  //tft.println("Home - *");
-
-  //symbol
+  tft.setCursor(132, 25);
   tft.print("Home");
+  tft.drawRect(127,18,tft.width()-127,30,WHITE);
   tft.drawChar(tft.width()- symbol_size,25,RIGHT_ARROW,LIME,BLACK,2);
 
+  //other options
   int rect_y = 67;
-
   for (int i=0; i<total_num; i++) {
     tft.drawRect(0,rect_y,tft.width(),35,WHITE);
     tft.setCursor(2,rect_y+10);
@@ -293,18 +266,11 @@ int cameraSetting_menu_screen(int array_size,const char *menu_name ,const char *
     rect_y = rect_y+55;
   }
   tft.setTextColor(WHITE,BLACK);
-  //maybe don't need  
-  return total_num; 
 }
 
-int positioning_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void positioning_menu_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
     int total_num = array_size;
-    int max_option = array_size;
-    if (!updateMenu) {
-      //updateMenu false
-      return total_num; 
-    }
-    updateMenu = false;
+
     tft.setTextSize(1);
     tft.setCursor(0, 0);
     tft.setTextColor(color);
@@ -331,19 +297,11 @@ int positioning_menu_screen(int array_size,const char *menu_name ,const char *co
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
-    //maybe don't need  
-    return total_num; 
 }
 
-int motor_calibration_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void motor_calibration_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
     int total_num = array_size;
-    int max_option = array_size;
-    if (!updateMenu) {
-      //updateMenu false
-      return total_num; 
-    }
 
-    updateMenu = false;
     tft.setTextSize(1);
     tft.setCursor(0, 0);
     tft.setTextColor(color);
@@ -383,27 +341,76 @@ int motor_calibration_menu1_screen(int array_size,const char *menu_name ,const c
     tft.setTextColor(WHITE);
     tft.println(focus_current);  
 
+    tft.setCursor(0, 75);
+    tft.setTextColor(AQUA);
+    tft.println(F("Rear"));
+    tft.print(F("Rotation:"));
+    tft.setTextColor(WHITE,BLACK);
+    if(rear_rotation_direction == 0){
+      //tft.print("CW");
+      tft.print("0");
+    }
+    else if(rear_rotation_direction == 1){
+      //tft.print("ACW");
+      tft.print("1");
+    }
 
+    tft.setCursor(0, 95);
+    tft.setTextColor(AQUA);
+    tft.println(F("Front"));
+    tft.print(F("Rotation:"));
+    tft.setTextColor(WHITE,BLACK);
+    if(front_rotation_direction == 0){
+      //tft.print("ACW");
+      tft.print("0");
+    }
+    else if(front_rotation_direction == 1){
+      //tft.print("CW");
+      tft.print("1");
+    }
+    //old version 
     //joystick icon only show arrows if can press them to go next page
     //tft.drawChar(12,60,UP_ARROW,WHITE,BLACK,2);
-    tft.drawChar(12,100,SELECT,WHITE,BLACK,2);
-    tft.setCursor(30, 100);
-    tft.println("- Home");
+    // tft.drawChar(12,100,SELECT,WHITE,BLACK,2);
+    // tft.setCursor(30, 100);
+    // tft.println("- Home");
     //tft.drawChar(12,140,DOWN_ARROW,WHITE,BLACK,2);
     // tft.setCursor(30, 140);
     // tft.println("- Next");
+    // tft.setTextColor(WHITE,BLACK);
+    // tft.setTextSize(2);
+    // int rect_y = 12;
+    // for (int i=0; i<total_num; i++) {
+    //   tft.drawRect(90,rect_y,tft.width()-90,35,WHITE);
+    //   tft.setCursor(97,rect_y+10);
+    //   tft.setTextColor(WHITE,BLACK);
+    //   tft.print(string_table[i]);
+    //   rect_y = rect_y+55;
+    // }
 
+    //home-halfbar
     tft.setTextColor(WHITE,BLACK);
     tft.setTextSize(2);
-    int rect_y = 12;
+    tft.setCursor(132, 25);
+    tft.print("Home");
+    tft.drawRect(127,18,tft.width()-127,30,WHITE);
+    tft.drawChar(tft.width()- symbol_size,25,RIGHT_ARROW,LIME,BLACK,2);
+    
 
+    //other options
+    int rect_y = 67;
     for (int i=0; i<total_num; i++) {
-      tft.drawRect(90,rect_y,tft.width()-90,35,WHITE);
-      tft.setCursor(97,rect_y+10);
+      tft.drawRect(100,rect_y,tft.width()-100,35,WHITE);
+
+      tft.setCursor(105,rect_y+10);
       tft.setTextColor(WHITE,BLACK);
       tft.print(string_table[i]);
+
+      //symbol
+      tft.drawChar(tft.width() - symbol_size,rect_y+10,RIGHT_ARROW,LIME,BLACK,2);
       rect_y = rect_y+55;
     }
+    tft.setTextColor(WHITE,BLACK);
 
     //instruction(s)
     tft.setTextColor(AQUA);
@@ -414,18 +421,147 @@ int motor_calibration_menu1_screen(int array_size,const char *menu_name ,const c
     tft.println("Motor(s)");
     tft.println("before");
     tft.print("setting pov.");
-    //maybe don't need  
-    return total_num; 
+
 }
 
-int options_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void rotation_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
+  int total_num = array_size;
+
+  tft.setTextSize(1);
+  tft.setCursor(0, 0);
+  tft.setTextColor(color);
+  tft.println(menu_name);
+
+  tft.setCursor(0,15);
+  tft.setTextColor(AQUA);
+  tft.println(F("Rear"));
+  tft.print(F("Rotation:"));
+  tft.setTextColor(WHITE,BLACK);
+  if(rear_rotation_direction == 0){
+    //tft.print("CW");
+    tft.print("0");
+  }
+  else if(rear_rotation_direction == 1){
+    //tft.print("ACW");
+    tft.print("1");
+  }
+  tft.setCursor(0,35);
+  tft.setTextColor(AQUA);
+  tft.println(F("Front"));
+  tft.print(F("Rotation:"));
+  tft.setTextColor(WHITE,BLACK);
+  if(front_rotation_direction == 0){
+    //tft.print("ACW");
+    tft.print("0");
+  }
+  else if(front_rotation_direction == 1){
+    //tft.print("CW");
+    tft.print("1");
+  }
+
+  //joystick icon only show arrows if can press them to go next/prev page
+  //box to seaperate controls (may need edit dimensionsin future depending on headers if needed)
+  //tft.drawRect(2,50,60,122,WHITE); //(rest of the boxes use this)
+  tft.drawRect(2,90,60,82,WHITE);
+  //tft.drawChar(8,60,UP_ARROW,WHITE,BLACK,2);
+  //tft.setCursor(26, 60);
+  //tft.println("-Back");
+  tft.drawChar(8,100,SELECT,WHITE,BLACK,2);
+  tft.setCursor(26, 100);
+  tft.println("-Home");
+  //tft.drawChar(8,140,DOWN_ARROW,WHITE,BLACK,2);
+  //tft.setCursor(26, 140);
+  //tft.println("-Next");
+
+  tft.setTextColor(WHITE,BLACK);
+  tft.setTextSize(2);
+  int rect_y = 12;
+
+  for (int i=0; i<total_num; i++) {
+    tft.drawRect(90,rect_y,tft.width()-90,35,WHITE);
+    tft.setCursor(97,rect_y+10);
+    tft.setTextColor(WHITE,BLACK);
+    tft.print(string_table[i]);
+    rect_y = rect_y+55;
+  }
+  tft.setTextColor(WHITE,BLACK);
+}
+
+void rear_rotation_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
+  int total_num = array_size;
+
+  tft.setTextSize(1);
+  tft.setCursor(0, 0);
+  tft.setTextColor(color);
+  tft.println(menu_name);
+
+  //joystick icon only show arrows if can press them to go next/prev page
+  //box to seaperate controls (may need edit dimensionsin future depending on headers if needed)
+  //tft.drawRect(2,50,60,122,WHITE); //(rest of the boxes use this)
+  tft.drawRect(2,90,60,82,WHITE);
+  //tft.drawChar(8,60,UP_ARROW,WHITE,BLACK,2);
+  //tft.setCursor(26, 60);
+  //tft.println("-Back");
+  tft.drawChar(8,100,SELECT,WHITE,BLACK,2);
+  tft.setCursor(26, 100);
+  tft.println("-Home");
+  //tft.drawChar(8,140,DOWN_ARROW,WHITE,BLACK,2);
+  //tft.setCursor(26, 140);
+  //tft.println("-Next");
+
+  tft.setTextColor(WHITE,BLACK);
+  tft.setTextSize(2);
+  int rect_y = 12;
+
+  for (int i=0; i<total_num; i++) {
+    tft.drawRect(90,rect_y,tft.width()-90,35,WHITE);
+    tft.setCursor(97,rect_y+10);
+    tft.setTextColor(WHITE,BLACK);
+    tft.print(string_table[i]);
+    rect_y = rect_y+55;
+  }
+  tft.setTextColor(WHITE,BLACK);
+}
+
+void front_rotation_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
+  int total_num = array_size;
+
+  tft.setTextSize(1);
+  tft.setCursor(0, 0);
+  tft.setTextColor(color);
+  tft.println(menu_name);
+
+  //joystick icon only show arrows if can press them to go next/prev page
+  //box to seaperate controls (may need edit dimensionsin future depending on headers if needed)
+  //tft.drawRect(2,50,60,122,WHITE); //(rest of the boxes use this)
+  tft.drawRect(2,90,60,82,WHITE);
+  //tft.drawChar(8,60,UP_ARROW,WHITE,BLACK,2);
+  //tft.setCursor(26, 60);
+  //tft.println("-Back");
+  tft.drawChar(8,100,SELECT,WHITE,BLACK,2);
+  tft.setCursor(26, 100);
+  tft.println("-Home");
+  //tft.drawChar(8,140,DOWN_ARROW,WHITE,BLACK,2);
+  //tft.setCursor(26, 140);
+  //tft.println("-Next");
+
+  tft.setTextColor(WHITE,BLACK);
+  tft.setTextSize(2);
+  int rect_y = 12;
+
+  for (int i=0; i<total_num; i++) {
+    tft.drawRect(90,rect_y,tft.width()-90,35,WHITE);
+    tft.setCursor(97,rect_y+10);
+    tft.setTextColor(WHITE,BLACK);
+    tft.print(string_table[i]);
+    rect_y = rect_y+55;
+  }
+  tft.setTextColor(WHITE,BLACK);
+}
+
+void options_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
     int total_num = array_size;
-    int max_option = array_size;
-    if (!updateMenu) {
-      //updateMenu false
-      return total_num; 
-    }
-    updateMenu = false;
+
     tft.setTextSize(1);
     tft.setCursor(0, 0);
     tft.setTextColor(color);
@@ -487,14 +623,19 @@ int options_menu1_screen(int array_size,const char *menu_name ,const char *const
     tft.println(focus_range);
 
 
-    //joystick icon only show arrows if can press them to go next page
-    //tft.drawChar(12,60,UP_ARROW,WHITE,BLACK,2);
-    tft.drawChar(12,100,SELECT,WHITE,BLACK,2);
-    tft.setCursor(30, 100);
-    tft.println("- Home");
-    //tft.drawChar(12,140,DOWN_ARROW,WHITE,BLACK,2);
-    // tft.setCursor(30, 140);
-    // tft.println("- Next");
+    //joystick icon only show arrows if can press them to go next/prev page
+    //box to seaperate controls (may need edit dimensionsin future depending on headers if needed)
+    //tft.drawRect(2,50,60,122,WHITE); //(rest of the boxes use this)
+    tft.drawRect(2,90,60,82,WHITE);
+    //tft.drawChar(8,60,UP_ARROW,WHITE,BLACK,2);
+    //tft.setCursor(26, 60);
+    //tft.println("-Back");
+    tft.drawChar(8,100,SELECT,WHITE,BLACK,2);
+    tft.setCursor(26, 100);
+    tft.println("-Home");
+    //tft.drawChar(8,140,DOWN_ARROW,WHITE,BLACK,2);
+    //tft.setCursor(26, 140);
+    //tft.println("-Next");
 
     tft.setTextColor(WHITE,BLACK);
     tft.setTextSize(2);
@@ -508,36 +649,29 @@ int options_menu1_screen(int array_size,const char *menu_name ,const char *const
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
-    //maybe don't need  
-    return total_num; 
-  }
+
+}
 
 
-
-
-
-
-int excess_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void excess_menu_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
     int total_num = array_size;
-    int max_option = array_size;
-    if (!updateMenu) {
-      //updateMenu false
-      return total_num; 
-    }
-    updateMenu = false;
+
     tft.setTextSize(1);
     tft.setCursor(0, 0);
     tft.setTextColor(color);
     tft.println(menu_name);
     tft.setTextColor(WHITE,BLACK);
+    //home-fullbar
+    tft.setTextColor(WHITE,BLACK);
     tft.setTextSize(2);
-    tft.setCursor(130, 25);
-    //tft.println("Home - *");
-    //symbol
+    tft.setCursor(2, 23);
     tft.print("Home");
+    tft.drawRect(0,12,tft.width(),35,WHITE);
+    tft.drawChar(tft.width()- symbol_size,25,RIGHT_ARROW,LIME,BLACK,2);
+
+    //other options
     tft.drawChar(tft.width()- symbol_size,25,RIGHT_ARROW,LIME,BLACK,2);
     int rect_y = 67;
-
     for (int i=0; i<total_num; i++) {
       //tft.drawRect(0,rect_y,tft.width()-symbol_padding,35,WHITE);
       tft.drawRect(0,rect_y,tft.width(),35,WHITE);
@@ -551,31 +685,26 @@ int excess_menu_screen(int array_size,const char *menu_name ,const char *const s
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
-    //maybe don't need  
-    return total_num; 
+
 }
 
-int action_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void action_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
     int total_num = array_size;
-    int max_option = array_size;
-    if (!updateMenu) {
-      //updateMenu false
-      return total_num; 
-    }
-    updateMenu = false;
+
     tft.setTextSize(1);
     tft.setCursor(0, 0);
     tft.setTextColor(color);
     tft.println(menu_name);
+    //home-fullbar
     tft.setTextColor(WHITE,BLACK);
     tft.setTextSize(2);
-    tft.setCursor(130, 25);
-    //tft.println("Home - *");
-    //symbol
+    tft.setCursor(2, 23);
     tft.print("Home");
+    tft.drawRect(0,12,tft.width(),35,WHITE);
     tft.drawChar(tft.width()- symbol_size,25,RIGHT_ARROW,LIME,BLACK,2);
+    
+    //other options
     int rect_y = 67;
-
     for (int i=0; i<total_num; i++) {
       //tft.drawRect(0,rect_y,tft.width()-symbol_padding,35,WHITE);
       tft.drawRect(0,rect_y,tft.width(),35,WHITE);
@@ -589,31 +718,29 @@ int action_menu1_screen(int array_size,const char *menu_name ,const char *const 
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
-    //maybe don't need  
-    return total_num; 
+
 }
 
-int zoom_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void zoom_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
     int total_num = array_size;
-    int max_option = array_size;
-    if (!updateMenu) {
-      //updateMenu false
-      return total_num; 
-    }
-    updateMenu = false;
+
     tft.setTextSize(1);
     tft.setCursor(0, 0);
     tft.setTextColor(color);
     tft.println(menu_name);
 
-    //joystick icon only show arrows if can press them to go next page
-    // tft.drawChar(12,60,UP_ARROW,WHITE,BLACK,2);
-    tft.drawChar(12,100,SELECT,WHITE,BLACK,2);
-    tft.setCursor(30, 100);
-    tft.println("- Home");
-    tft.drawChar(12,140,DOWN_ARROW,WHITE,BLACK,2);
-    tft.setCursor(30, 140);
-    tft.println("- Next");
+    //joystick icon only show arrows if can press them to go next/prev page
+    //box to seaperate controls
+    tft.drawRect(2,50,60,122,WHITE);
+    //tft.drawChar(8,60,UP_ARROW,WHITE,BLACK,2);
+    //tft.setCursor(26, 60);
+    //tft.println("-Back");
+    tft.drawChar(8,100,SELECT,WHITE,BLACK,2);
+    tft.setCursor(26, 100);
+    tft.println("-Home");
+    tft.drawChar(8,140,DOWN_ARROW,WHITE,BLACK,2);
+    tft.setCursor(26, 140);
+    tft.println("-Next");
 
     tft.setTextColor(WHITE,BLACK);
     tft.setTextSize(2);
@@ -630,31 +757,29 @@ int zoom_movements_menu1_screen(int array_size,const char *menu_name ,const char
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
-    //maybe don't need  
-    return total_num; 
+
 }
 
-int zoom_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void zoom_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
     int total_num = array_size;
-    int max_option = array_size;
-    if (!updateMenu) {
-      //updateMenu false
-      return total_num; 
-    }
-    updateMenu = false;
+
     tft.setTextSize(1);
     tft.setCursor(0, 0);
     tft.setTextColor(color);
     tft.println(menu_name);
 
-    //joystick icon only show arrows if can press them to go next page
-    tft.drawChar(12,60,UP_ARROW,WHITE,BLACK,2);
-    tft.setCursor(30, 60);
-    tft.println("- Back");
-    tft.drawChar(12,100,SELECT,WHITE,BLACK,2);
-    tft.setCursor(30, 100);
-    tft.println("- Home");
-    //tft.drawChar(12,140,DOWN_ARROW,WHITE,BLACK,2);
+    //joystick icon only show arrows if can press them to go next/prev page
+    //box to seaperate controls
+    tft.drawRect(2,50,60,122,WHITE);
+    tft.drawChar(8,60,UP_ARROW,WHITE,BLACK,2);
+    tft.setCursor(26, 60);
+    tft.println("-Back");
+    tft.drawChar(8,100,SELECT,WHITE,BLACK,2);
+    tft.setCursor(26, 100);
+    tft.println("-Home");
+    //tft.drawChar(8,140,DOWN_ARROW,WHITE,BLACK,2);
+    //tft.setCursor(26, 140);
+    //tft.println("-Next");
 
     tft.setTextColor(WHITE,BLACK);
     tft.setTextSize(2);
@@ -671,31 +796,29 @@ int zoom_movements_menu2_screen(int array_size,const char *menu_name ,const char
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
-    //maybe don't need  
-    return total_num; 
+
 }
 
-int focus_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void focus_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
     int total_num = array_size;
-    int max_option = array_size;
-    if (!updateMenu) {
-      //updateMenu false
-      return total_num; 
-    }
-    updateMenu = false;
+
     tft.setTextSize(1);
     tft.setCursor(0, 0);
     tft.setTextColor(color);
     tft.println(menu_name);
 
-    //joystick icon only show arrows if can press them to go next page
-    // tft.drawChar(12,60,UP_ARROW,WHITE,BLACK,2);
-    tft.drawChar(12,100,SELECT,WHITE,BLACK,2);
-    tft.setCursor(30, 100);
-    tft.println("- Home");
-    tft.drawChar(12,140,DOWN_ARROW,WHITE,BLACK,2);
-    tft.setCursor(30, 140);
-    tft.println("- Next");
+    //joystick icon only show arrows if can press them to go next/prev page
+    //box to seaperate controls
+    tft.drawRect(2,50,60,122,WHITE);
+    //tft.drawChar(8,60,UP_ARROW,WHITE,BLACK,2);
+    //tft.setCursor(26, 60);
+    //tft.println("-Back");
+    tft.drawChar(8,100,SELECT,WHITE,BLACK,2);
+    tft.setCursor(26, 100);
+    tft.println("-Home");
+    tft.drawChar(8,140,DOWN_ARROW,WHITE,BLACK,2);
+    tft.setCursor(26, 140);
+    tft.println("-Next");
 
     tft.setTextColor(WHITE,BLACK);
     tft.setTextSize(2);
@@ -712,31 +835,29 @@ int focus_movements_menu1_screen(int array_size,const char *menu_name ,const cha
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
-    //maybe don't need  
-    return total_num; 
+
 }
 
-int focus_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void focus_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
     int total_num = array_size;
-    int max_option = array_size;
-    if (!updateMenu) {
-      //updateMenu false
-      return total_num; 
-    }
-    updateMenu = false;
+
     tft.setTextSize(1);
     tft.setCursor(0, 0);
     tft.setTextColor(color);
     tft.println(menu_name);
 
-    //joystick icon only show arrows if can press them to go next page
-    tft.drawChar(12,60,UP_ARROW,WHITE,BLACK,2);
-    tft.setCursor(30, 60);
-    tft.println("- Back");
-    tft.drawChar(12,100,SELECT,WHITE,BLACK,2);
-    tft.setCursor(30, 100);
-    tft.println("- Home");
-    //tft.drawChar(12,140,DOWN_ARROW,WHITE,BLACK,2);
+    //joystick icon only show arrows if can press them to go next/prev page
+    //box to seaperate controls
+    tft.drawRect(2,50,60,122,WHITE);
+    tft.drawChar(8,60,UP_ARROW,WHITE,BLACK,2);
+    tft.setCursor(26, 60);
+    tft.println("-Back");
+    tft.drawChar(8,100,SELECT,WHITE,BLACK,2);
+    tft.setCursor(26, 100);
+    tft.println("-Home");
+    //tft.drawChar(8,140,DOWN_ARROW,WHITE,BLACK,2);
+    //tft.setCursor(26, 140);
+    //tft.println("-Next");
 
     tft.setTextColor(WHITE,BLACK);
     tft.setTextSize(2);
@@ -752,31 +873,29 @@ int focus_movements_menu2_screen(int array_size,const char *menu_name ,const cha
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
-    //maybe don't need  
-    return total_num; 
+
 }
 
-int zoomfocus_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void zoomfocus_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
     int total_num = array_size;
-    int max_option = array_size;
-    if (!updateMenu) {
-      //updateMenu false
-      return total_num; 
-    }
-    updateMenu = false;
+
     tft.setTextSize(1);
     tft.setCursor(0, 0);
     tft.setTextColor(color);
     tft.println(menu_name);
 
-    //joystick icon only show arrows if can press them to go next page
-    // tft.drawChar(12,60,UP_ARROW,WHITE,BLACK,2);
-    tft.drawChar(12,100,SELECT,WHITE,BLACK,2);
-    tft.setCursor(30, 100);
-    tft.println("- Home");
-    tft.drawChar(12,140,DOWN_ARROW,WHITE,BLACK,2);
-    tft.setCursor(30, 140);
-    tft.println("- Next");
+    //joystick icon only show arrows if can press them to go next/prev page
+    //box to seaperate controls
+    tft.drawRect(2,50,60,122,WHITE);
+    //tft.drawChar(8,60,UP_ARROW,WHITE,BLACK,2);
+    //tft.setCursor(26, 60);
+    //tft.println("-Back");
+    tft.drawChar(8,100,SELECT,WHITE,BLACK,2);
+    tft.setCursor(26, 100);
+    tft.println("-Home");
+    tft.drawChar(8,140,DOWN_ARROW,WHITE,BLACK,2);
+    tft.setCursor(26, 140);
+    tft.println("-Next");
 
     tft.setTextColor(WHITE,BLACK);
     tft.setTextSize(2);
@@ -793,33 +912,29 @@ int zoomfocus_movements_menu1_screen(int array_size,const char *menu_name ,const
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
-    //maybe don't need  
-    return total_num; 
+
 }
 
-int zoomfocus_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void zoomfocus_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
     int total_num = array_size;
-    int max_option = array_size;
-    if (!updateMenu) {
-      //updateMenu false
-      return total_num; 
-    }
-    updateMenu = false;
+
     tft.setTextSize(1);
     tft.setCursor(0, 0);
     tft.setTextColor(color);
     tft.println(menu_name);
 
-    //joystick icon only show arrows if can press them to go next page
-    tft.drawChar(12,60,UP_ARROW,WHITE,BLACK,2);
-    tft.setCursor(30, 60);
-    tft.println("- Back");
-    tft.drawChar(12,100,SELECT,WHITE,BLACK,2);
-    tft.setCursor(30, 100);
-    tft.println("- Home");
-    tft.drawChar(12,140,DOWN_ARROW,WHITE,BLACK,2);
-    tft.setCursor(30, 140);
-    tft.println("- Next");
+    //joystick icon only show arrows if can press them to go next/prev page
+    //box to seaperate controls
+    tft.drawRect(2,50,60,122,WHITE);
+    tft.drawChar(8,60,UP_ARROW,WHITE,BLACK,2);
+    tft.setCursor(26, 60);
+    tft.println("-Back");
+    tft.drawChar(8,100,SELECT,WHITE,BLACK,2);
+    tft.setCursor(26, 100);
+    tft.println("-Home");
+    tft.drawChar(8,140,DOWN_ARROW,WHITE,BLACK,2);
+    tft.setCursor(26, 140);
+    tft.println("-Next");
 
     tft.setTextColor(WHITE,BLACK);
     tft.setTextSize(2);
@@ -835,31 +950,29 @@ int zoomfocus_movements_menu2_screen(int array_size,const char *menu_name ,const
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
-    //maybe don't need  
-    return total_num; 
+
 }
 
-int zoomfocus_movements_menu3_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void zoomfocus_movements_menu3_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
     int total_num = array_size;
-    int max_option = array_size;
-    if (!updateMenu) {
-      //updateMenu false
-      return total_num; 
-    }
-    updateMenu = false;
+
     tft.setTextSize(1);
     tft.setCursor(0, 0);
     tft.setTextColor(color);
     tft.println(menu_name);
 
     //joystick icon only show arrows if can press them to go next/prev page
-    tft.drawChar(12,60,UP_ARROW,WHITE,BLACK,2);
-    tft.setCursor(30, 60);
-    tft.println("- Back");
-    tft.drawChar(12,100,SELECT,WHITE,BLACK,2);
-    tft.setCursor(30, 100);
-    tft.println("- Home");
-    //tft.drawChar(12,140,DOWN_ARROW,WHITE,BLACK,2);
+    //box to seaperate controls
+    tft.drawRect(2,50,60,122,WHITE);
+    tft.drawChar(8,60,UP_ARROW,WHITE,BLACK,2);
+    tft.setCursor(26, 60);
+    tft.println("-Back");
+    tft.drawChar(8,100,SELECT,WHITE,BLACK,2);
+    tft.setCursor(26, 100);
+    tft.println("-Home");
+    //tft.drawChar(8,140,DOWN_ARROW,WHITE,BLACK,2);
+    //tft.setCursor(26, 140);
+    //tft.println("-Next");
 
     tft.setTextColor(WHITE,BLACK);
     tft.setTextSize(2);
@@ -875,69 +988,30 @@ int zoomfocus_movements_menu3_screen(int array_size,const char *menu_name ,const
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
-    //maybe don't need  
-    return total_num; 
+
 }
 
-int custome_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
+void custome_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
     int total_num = array_size;
     int max_option = array_size;
-    if (!updateMenu) {
-      //updateMenu false
-      return total_num; 
-    }
-    updateMenu = false;
+
     tft.setTextSize(1);
     tft.setCursor(0, 0);
     tft.setTextColor(color);
     tft.println(menu_name);
 
     //joystick icon only show arrows if can press them to go next page
-    // tft.drawChar(12,60,UP_ARROW,WHITE,BLACK,2);
-    tft.drawChar(12,100,SELECT,WHITE,BLACK,2);
-    tft.setCursor(30, 100);
-    tft.println("- Home");
-    tft.drawChar(12,140,DOWN_ARROW,WHITE,BLACK,2);
-    tft.setCursor(30, 140);
-    tft.println("- Next");
-
-    tft.setTextColor(WHITE,BLACK);
-    tft.setTextSize(2);
-    int rect_y = 12;
-
-    for (int i=0; i<total_num; i++) {
-      tft.drawRect(75,rect_y,tft.width()-75,35,WHITE);
-      tft.setCursor(82,rect_y+10);
-      tft.setTextColor(WHITE,BLACK);
-      tft.print(string_table[i]);
-      rect_y = rect_y+55;
-    }
-    tft.setTextColor(WHITE,BLACK);
-    //maybe don't need  
-    return total_num; 
-}
-
-int custome_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color){
-    int total_num = array_size;
-    int max_option = array_size;
-    if (!updateMenu) {
-      //updateMenu false
-      return total_num; 
-    }
-    updateMenu = false;
-    tft.setTextSize(1);
-    tft.setCursor(0, 0);
-    tft.setTextColor(color);
-    tft.println(menu_name);
-
-    //joystick icon only show arrows if can press them to go next/prev page
-    tft.drawChar(12,60,UP_ARROW,WHITE,BLACK,2);
-    tft.setCursor(30, 60);
-    tft.println("- Back");
-    tft.drawChar(12,100,SELECT,WHITE,BLACK,2);
-    tft.setCursor(30, 100);
-    tft.println("- Home");
-    //tft.drawChar(12,140,DOWN_ARROW,WHITE,BLACK,2);
+    //box to seaperate controls
+    tft.drawRect(2,50,60,122,WHITE);
+    //tft.drawChar(8,60,UP_ARROW,WHITE,BLACK,2);
+    //tft.setCursor(26, 60);
+    //tft.println("-Back");
+    tft.drawChar(8,100,SELECT,WHITE,BLACK,2);
+    tft.setCursor(26, 100);
+    tft.println("-Home");
+    tft.drawChar(8,140,DOWN_ARROW,WHITE,BLACK,2);
+    tft.setCursor(26, 140);
+    tft.println("-Next");
 
     tft.setTextColor(WHITE,BLACK);
     tft.setTextSize(2);
@@ -954,8 +1028,47 @@ int custome_movements_menu2_screen(int array_size,const char *menu_name ,const c
       rect_y = rect_y+55;
     }
     tft.setTextColor(WHITE,BLACK);
-    //maybe don't need  
-    return total_num; 
+
+}
+
+void custome_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color){
+    int total_num = array_size;
+    int max_option = array_size;
+
+    tft.setTextSize(1);
+    tft.setCursor(0, 0);
+    tft.setTextColor(color);
+    tft.println(menu_name);
+
+    //joystick icon only show arrows if can press them to go next/prev page
+    //box to seaperate controls
+    tft.drawRect(2,50,60,122,WHITE);
+    tft.drawChar(8,60,UP_ARROW,WHITE,BLACK,2);
+    tft.setCursor(26, 60);
+    tft.println("-Back");
+    tft.drawChar(8,100,SELECT,WHITE,BLACK,2);
+    tft.setCursor(26, 100);
+    tft.println("-Home");
+    //tft.drawChar(8,140,DOWN_ARROW,WHITE,BLACK,2);
+    //tft.setCursor(26, 140);
+    //tft.println("-Next");
+
+    tft.setTextColor(WHITE,BLACK);
+    tft.setTextSize(2);
+    int rect_y = 12;
+
+    for (int i=0; i<total_num; i++) {
+      //tft.drawRect(75,rect_y,tft.width()-symbol_padding,35,WHITE);
+      tft.drawRect(75,rect_y,tft.width()-75,35,WHITE);
+      tft.setCursor(82,rect_y+10);
+      tft.setTextColor(WHITE,BLACK);
+      tft.print(string_table[i]);
+      //symbol
+      tft.drawChar(tft.width() - symbol_size,rect_y+10,RIGHT_ARROW,LIME,BLACK,2);
+      rect_y = rect_y+55;
+    }
+    tft.setTextColor(WHITE,BLACK);
+
 }
 
 

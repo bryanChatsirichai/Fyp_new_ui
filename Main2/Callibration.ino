@@ -1,4 +1,4 @@
-void hotbar(const char title[], int current, int max_range, int current_option, bool haveBack, int header, int footer, uint16_t color, bool updateBar) {
+void hotbar(const char title[], int current, int max_range, bool haveBack, int header, int footer, uint16_t color, bool updateBar) {
   if (!updateMenu) {
     return;
   }
@@ -6,75 +6,44 @@ void hotbar(const char title[], int current, int max_range, int current_option, 
   
   int divs = (tft.width()-30)/(float)max_range * abs(current);
   tft.setCursor(0, 0);
-  int rect_y = 80;
+  int rect_y = 95;
 
-  /*
-  // add if needed
-  if (header != 0) {
-    if (!updateBar) {
-      tft.setTextColor(AQUA);
-      tft.print(F("Shutter Speed: "));
-      tft.setTextColor(WHITE);
-      tft.print(shutter_speed);
-      switch (header) {
-        case 1: {
-          tft.setTextColor(AQUA);
-          tft.print(F("Front Motor: "));
-          tft.setTextColor(WHITE);
-          tft.println(orientation ? "Zoom" : "Focus");
-          tft.setTextColor(AQUA);
-          tft.print(F("Rear Motor: "));
-          tft.setTextColor(WHITE);
-          tft.println(orientation ? "Focus" : "Zoom");
-        }
-        case 2: {
-          tft.setTextColor(AQUA);
-          tft.print(F("Focus Range: "));
-          tft.setTextColor(WHITE);
-          tft.println(focus_range);
-          tft.setTextColor(AQUA);
-          tft.print(F("Zoom Range: "));
-          tft.setTextColor(WHITE);
-          tft.println(zoom_range);
-        }
-      }
-      tft.println(); 
-    }
-    rect_y =75;
-  }
-  */
-
-  option_selected ? tft.setTextColor(WHITE,BLACK) : tft.setTextColor(BLACK,WHITE);
+  // title but for shutter-time and motor-time,  cali title settle in caliMenu
   if (title != NULL) {
+    tft.setTextColor(DEEPPINK);
     tft.setTextSize(1);
     tft.print(title);
   }
   //
-  
-  tft.setTextSize(2);
-  tft.println();
-  tft.setTextColor(WHITE);
-  tft.setCursor(0, 50);
-  tft.print(F("Max Range: "));
-  tft.println(max_range);
+  // tft.setTextSize(2);
+  // tft.println();
+  // tft.setTextColor(WHITE);
+  // tft.setCursor(0, 65);
+  // tft.print(F("Max Range: "));
+  // tft.println(max_range);
 
-  tft.setCursor(10, rect_y + 30);
-  option_selected ? tft.setTextColor(BLACK,WHITE) : tft.setTextColor(WHITE,BLACK);
   if (haveBack) {
     //page has back button
     tft.setTextColor(WHITE,BLACK);
     tft.setTextSize(2);
-    tft.setCursor(160, 25);
-    //tft.println("Home - *");
-    tft.println(F("[Home]"));
+    // tft.setCursor(140, 25);
+    // tft.println(F("[Home]"));
+    // tft.drawChar(tft.width()-160,25,RIGHT_ARROW,LIME,BLACK,2);
+    tft.setCursor(132, 26);
+    tft.print("Home");
+    tft.drawRect(127,18,tft.width()-127,30,WHITE);
+    tft.drawChar(tft.width()- symbol_size,26,RIGHT_ARROW,LIME,BLACK,2);
   }
 
   //comfirm buttom
   tft.setTextColor(WHITE,BLACK);
   tft.setTextSize(2);
-  tft.setCursor(170, 200);
-  //tft.println("Home - *");
-  tft.println(F("[Set]"));
+  // tft.setCursor(170, 200);
+  // tft.println(F("[Set]"));
+  tft.setCursor(162, 201);
+  tft.print("Set");
+  tft.drawRect(157,193,tft.width()-157,30,WHITE);
+  tft.drawChar(tft.width()- symbol_size,201,RIGHT_ARROW,LIME,BLACK,2);
 
   /* Draw Hotbar */
   tft.drawRect(0,rect_y,tft.width()-26,14,WHITE);
@@ -89,9 +58,9 @@ void hotbar(const char title[], int current, int max_range, int current_option, 
     tft.setTextSize(1);
     switch(footer) {
       case 1:
-        tft.drawChar(2,110,LEFT_ARROW,WHITE,BLACK,2);
-        tft.drawChar(17,110,RIGHT_ARROW,WHITE,BLACK,2);
-        tft.setCursor(32,120);
+        tft.drawChar(2,120,LEFT_ARROW,WHITE,BLACK,2);
+        tft.drawChar(17,120,RIGHT_ARROW,WHITE,BLACK,2);
+        tft.setCursor(32,130);
         tft.println(F(": Adjust values"));
         // tft.drawChar(2,105,SELECT,WHITE,BLACK,2);
         // tft.setCursor(17,109);
@@ -151,14 +120,12 @@ int get_camera_calibration_update() {
   if (digitalRead(A_BUTTON) == LOW) {
     resetToHomeScreen();
     s = 0;
-    option_selected = 0; //resets options
     updateMenu = true;
   }
 
   //go back camera_setting_screen
   if (digitalRead(Y_BUTTON) == LOW) {
   s = 1;
-  option_selected = 0; //resets options
   tft.fillScreen(ST77XX_BLACK);//clear screen
   updateMenu = true;
   }
@@ -170,7 +137,6 @@ int get_motor_calibration_update() {
   //go back camera_setting_screen
   if (digitalRead(Y_BUTTON) == LOW) {
   s = 1;
-  option_selected = 0; //resets options
   tft.fillScreen(ST77XX_BLACK);//clear screen
   updateMenu = true;
   }
@@ -183,15 +149,23 @@ int get_motor_calibration_update() {
   if (!updateMenu) {
     return;
   }
-  hotbar(NULL, current_step, max_steps, 0, false, false, 1, color, updateBar);
+  hotbar(NULL, current_step, max_steps, false, false, 1, color, updateBar);
 
-  //can add more text in needed...
+  
   tft.setTextSize(1);
   int i = 0;
+
+  //title
   tft.setCursor(0,0);
   tft.setTextColor(color);
   tft.println(string_table[i++]);
-                   
+
+  //just above the hot bar to show setting initial or maximum
+  tft.setCursor(2,60);
+  tft.setTextColor(AQUA);
+  tft.println(string_table[i++]);
+
+  //can add more text in needed... (show the text below the hotbar)              
   tft.setCursor(32,140);
   //tft.setCursor(0, 59);
   tft.setTextColor(WHITE);
@@ -208,7 +182,7 @@ int get_motor_calibration_update() {
 void moveMotorMenu(int count, const char *const string_table[], int current_step, int max_steps, uint16_t color, bool updateBar) {
   if (!updateMenu) return;
   int i=0;
-  hotbar(NULL, current_step, max_steps, 0, false, 0, 1, color, updateBar);
+  hotbar(NULL, current_step, max_steps, false, 0, 1, color, updateBar);
   tft.setTextSize(1);
   tft.setCursor(0,0);
   tft.setTextColor(color);

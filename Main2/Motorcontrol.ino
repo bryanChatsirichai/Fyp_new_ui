@@ -51,8 +51,8 @@ long toMS(float seconds) {
  */
 
 void moveMotor(int type, int pos_desired, float motor_time) {
-  Serial.print("@moveMotor motor_time = ");
-  Serial.println(motor_time);
+  // Serial.print("@moveMotor motor_time = ");
+  // Serial.println(motor_time);
   // zoom_range, focus_range, zoom_current, focus_current, 
   // zoom_min, focus_min, motor_time
   AccelStepper *stepper;
@@ -65,9 +65,6 @@ void moveMotor(int type, int pos_desired, float motor_time) {
     // 0 = false  ,1 = true
     stepper = orientation ? &front_motor : &rear_motor;
     pos_current = zoom_current;
-    // testing
-    //reverse = orientation ? true : false;
-    //
   } else { // FOCUS
     stepper = orientation ? &rear_motor : &front_motor;
     pos_current = focus_current;
@@ -86,12 +83,12 @@ void moveMotor(int type, int pos_desired, float motor_time) {
   if (motor_time != 0) {
     Serial.print("steps_to_move");
     Serial.println(steps_to_move);
-    delay(100);
+    //delay(100);
     //stepper->setAcceleration(calcAccel(abs(steps_to_move), (float)motor_time));
 
     //try
-    stepper->setMaxSpeed(steps_to_move / motor_time);
     stepper->setAcceleration(steps_to_move / motor_time);
+    stepper->setMaxSpeed(steps_to_move / motor_time);
   }
   else{
     //motor time pass in as 0 use default config
@@ -106,10 +103,24 @@ void moveMotor(int type, int pos_desired, float motor_time) {
   //stepper->moveTo((steps_to_move > 0) ? pos_desired * MS_STEP : -pos_desired * MS_STEP);
 
   if(stepper == &rear_motor){
-    stepper->moveTo(pos_desired * MS_STEP);
+    //default
+    if(rear_rotation_direction == 0){
+      stepper->moveTo(pos_desired * MS_STEP);
+    }
+    //rotate opposite
+    else if(rear_rotation_direction == 1){
+      stepper->moveTo(-pos_desired * MS_STEP);
+    }
   }
   else{
+    //default
+    if(front_rotation_direction == 0){
       stepper->moveTo(-pos_desired * MS_STEP);
+    }
+    //rotate opposite
+    else if(front_rotation_direction == 1){
+      stepper->moveTo(pos_desired * MS_STEP);
+    }
   }
 
 
@@ -118,9 +129,6 @@ void moveMotor(int type, int pos_desired, float motor_time) {
   //delay(shutter_spd);
   while (stepper->distanceToGo() != 0) {
     stepper->run();
-    // if(shutter_spd != 0) {
-    //   delay(toMS((float)shutter_spd/abs(steps_to_move)));
-    // }
   }
 
   //zoom / focus current postion after moving to desired position
@@ -145,12 +153,67 @@ void setAccel(int type, float accel) {
 void setCurrentPos(int type, float value) {
   AccelStepper *stepper;
   if (type) {
-    stepper = orientation ? &front_motor : &rear_motor;
-  } else {
-    stepper = orientation ? &rear_motor : &front_motor;
-  }
+    Serial.println("zoom");
+    if(orientation){
+      Serial.println("front_motor");
+      stepper = &front_motor;
 
-  stepper->setCurrentPosition(value);
+      //default
+      if(front_rotation_direction == 0){
+        stepper->setCurrentPosition(-value);
+      }
+      //rotate opposite
+      else if(front_rotation_direction == 1){
+        stepper->setCurrentPosition(value);
+      }
+    }
+    else{
+      Serial.println("rear_motor");
+      stepper = &rear_motor;
+      
+      //default
+      if(rear_rotation_direction == 0){
+        stepper->setCurrentPosition(value);
+      }
+      //rotate opposite
+      else if(rear_rotation_direction == 1){
+        stepper->setCurrentPosition(-value);
+      }
+
+    }
+    //stepper = orientation ? &front_motor : &rear_motor;
+  } 
+  else {
+    Serial.println("focus");
+    if(orientation){
+      Serial.println("rear_motor");
+      stepper = &rear_motor;
+      //default
+      if(rear_rotation_direction == 0){
+        stepper->setCurrentPosition(value);
+      }
+      //rotate opposite
+      else if(rear_rotation_direction == 1){
+        stepper->setCurrentPosition(-value);
+      }
+    }
+    else{
+      Serial.println("front_motor");
+      stepper = &front_motor;
+      //default
+      if(front_rotation_direction == 0){
+        stepper->setCurrentPosition(-value);
+      }
+      //rotate opposite
+      else if(front_rotation_direction == 1){
+        stepper->setCurrentPosition(value);
+      }
+    }  
+    //stepper = orientation ? &rear_motor : &front_motor;
+  }
+  // stepper->setCurrentPosition(value);
+  // Serial.println(stepper->currentPosition());
+  // delay(2000);
 }
 
 /*
@@ -227,9 +290,25 @@ void moveMultiMotor(int zoom_value, int focus_value, float motor_time) {
   // front_motor.moveTo(positions[1]);
   //steppers.moveTo(positions);
 
-// reverse 1 motor move ment to mirror suppose to be front but test on rear_motor till new pico arrive
-  rear_motor.moveTo(positions[0]);
-  front_motor.moveTo(-positions[1]);
+  // reverse 1 motor move ment to mirror suppose to be front but test on rear_motor till new pico arrive
+  
+  //default
+  if(rear_rotation_direction == 0){
+    rear_motor.moveTo(positions[0]);
+  }
+  else if(rear_rotation_direction == 1){
+    rear_motor.moveTo(-positions[0]);
+  }
+
+  //default
+  if(front_rotation_direction == 0){
+    front_motor.moveTo(-positions[1]);
+  }
+  else if(front_rotation_direction == 1){
+    front_motor.moveTo(positions[1]);
+  }
+  // rear_motor.moveTo(positions[0]);
+  // front_motor.moveTo(-positions[1]);
 
   while (rear_motor.distanceToGo() != 0 || front_motor.distanceToGo() != 0) {
     rear_motor.run();

@@ -86,6 +86,8 @@
  *  - shutter_speed   (Shutter speed)
  *  - motor_time
  */
+ // Global Variables 
+int first_time = 0; //first time the pico on
 int zoom_range = 0; 
 int focus_range = 0;    
 int zoom_current = 0;     
@@ -95,18 +97,24 @@ int shutter_time = 0;
 int motor_time = 0;   
 int excess_option_set = 0; //default
 int camera_shutter_open = 0; //default 0 is not open
+int rear_rotation_direction = 0; //default
+int front_rotation_direction = 0; //default
+//shutter_time
+int max_shutter_time = 60;
+int max_motor_time = 60; //to be update in bar
 
-
-// Global Variables
-int max_option = 0;
-int option_selected = 0;
+// Global Variables, control menus
 int updateMenu = true;
+int max_option = 0;
 int home_screen = -1;
 int configuration_screen = -1;
 int camera_setting_screen = -1;
 int camera_positioning_screen = -1;
 int motor_calibration_screen1 = -1;
 int options_menu1 = -1;
+int rotation_menu1 = -1;
+int rear_rotation_menu1 = -1;
+int front_rotation_menu1 = -1;
 //int motor_calibration_screen2 = -1;
 int excess_option_screen = -1;
 int action_screen_1 = -1;
@@ -119,6 +127,12 @@ int zoom_focus_movements_menu2 = -1;
 int zoom_focus_movements_menu3 = -1;
 int fixed_paterns_menu1 = -1;
 int fixed_paterns_menu2 = -1;
+
+
+//symbol setting for display,calibration,interface ui etc,...
+int symbol_padding = 40;
+int symbol_size = 20;
+
 
 /* Motor Objects*/
 AccelStepper front_motor(AccelStepper::DRIVER, front_STEP, front_DIR);
@@ -138,15 +152,14 @@ SoftwareSerial SoftwareSerial(RX,TX); // RX, TX
 //home_screen options focus on configuration,
 const char home_header[] PROGMEM = "|- Home Menu -|";
 const char home_0[] PROGMEM = "Camera Config";
-const char home_1[] PROGMEM = "Actions-Z/F";
-const char home_2[] PROGMEM = "Actions-Pattern";
+const char home_1[] PROGMEM = "Simple Actions";
+const char home_2[] PROGMEM = "Preset Actions ";
 
 //main_menu1 options focus on configuration,
 const char mm_configuration_header[] PROGMEM = "|- Configuration Menu -|";
 const char mm_configuration_0[] PROGMEM = "Camera Settings";
 const char mm_configuration_1[] PROGMEM = "Motor Calibration";
 const char mm_configuration_2[] PROGMEM = "Options";
-
 
 
 ////main_menu2 options focus on actions,
@@ -157,9 +170,9 @@ const char mm_action1_2[] PROGMEM = "Z/F-Movements";
 
 /////Calibration/////
 const char cs_name[] PROGMEM = "|- Camera Settings -|";
-const char cs_0[] PROGMEM = "Shutter Time"; //Camera Shutter Time, Shutter Speed
-const char cs_1[] PROGMEM = "Motor Time";
-const char cs_2[] PROGMEM = "Excess";
+const char cs_0[] PROGMEM = "1-Shutter Time"; //Camera Shutter Time, Shutter Speed
+const char cs_1[] PROGMEM = "2-Motor Time";
+const char cs_2[] PROGMEM = "3-Excess";
 
 //position orientation 
 const char pm_name[] PROGMEM = "|- Positioning Setting -|";
@@ -179,15 +192,36 @@ const char mc1_2[] PROGMEM = "POV_Cali";
 //options page
 const char option_name[] PROGMEM = "|- Options -|";
 const char option_0[] PROGMEM = "Switch Z/F";
-const char option_1[] PROGMEM = "RESET Cam";
-const char option_2[] PROGMEM = "RESET Cali";
+const char option_1[] PROGMEM = "Rotation";
+const char option_2[] PROGMEM = "RESET Cam";
+const char option_3[] PROGMEM = "RESET Cali";
+
+//rotation page
+const char rotation_name[] PROGMEM = "|- Rotations -|";
+const char rotation_0[] PROGMEM = "Rear motor";
+const char rotation_1[] PROGMEM = "Front motor";
+
+//zoom rotation page
+const char rear_rotation_name[] PROGMEM = "|- Rear Rotation -|";
+const char rear_rotation_0[] PROGMEM = "Rotation-0";
+const char rear_rotation_1[] PROGMEM = "Rotation-1";
+
+//focus rotation page
+const char front_rotation_name[] PROGMEM = "|- Front Rotation -|";
+const char front_rotation_0[] PROGMEM = "Rotation-0";
+const char front_rotation_1[] PROGMEM = "Rotation-1";
 
 //clibrating ZF len(s)
 const char cali_zoom[] PROGMEM = "|--Calibrate Zoom --|";
 const char cali_focus[] PROGMEM = "|--Calibrate Focus--|";
-const char string_cali[] PROGMEM = "Move joystick to extreme";
-const char string_left[] PROGMEM = "  left";
-const char string_right[] PROGMEM = "  right";
+const char string_cali_initial_position[] PROGMEM = "Initial Position (zero)";
+const char string_cali_final_position[] PROGMEM = "Final Position (max)";
+const char string_cali[] PROGMEM = "Move joystick to set";
+const char string_left[] PROGMEM = "  Min";
+const char string_right[] PROGMEM = "  Max";
+// const char string_cali[] PROGMEM = "Move joystick to extreme";
+// const char string_left[] PROGMEM = "  left";
+// const char string_right[] PROGMEM = "  right";
 
 const char adjust_zoom[] PROGMEM = "|--- Adjust Zoom ---|";
 const char adjust_focus[] PROGMEM = "|---Adjust Focus ---|";
@@ -244,13 +278,15 @@ const char zf3_1[] PROGMEM = "ZF Value&B";
 //presets page1
 const char preset1_name[] PROGMEM = "|----- Presets -----|";
 const char preset1_0[] PROGMEM = "Bokeh";
-const char preset1_1[] PROGMEM = "Firework";
-const char preset1_2[] PROGMEM = "ZoomBlur";
-const char preset1_3[] PROGMEM = "SineWave ";
+const char preset1_1[] PROGMEM = "Firework-F";
+const char preset1_2[] PROGMEM = "Firework-ZF";
+const char preset1_3[] PROGMEM = "Z-Blur-min";
 
 //presets page2
 const char preset2_name[] PROGMEM = "|----- Presets -----|";
-const char preset2_0[] PROGMEM = ".....";
+const char preset2_0[] PROGMEM = "Z-Blur-max";
+const char preset2_1[] PROGMEM = "SinWave-1 inout";
+const char preset2_2[] PROGMEM = "SinWave-2 outin";
 
 const char counttext_1[] PROGMEM = "Get Ready!";
 const char counttext_2[] PROGMEM = "3";
@@ -266,7 +302,12 @@ const char *const main_menu_2[] PROGMEM = {mm_action1_0, mm_action1_1, mm_action
 const char *const camera_settings_menu[] PROGMEM = {cs_0, cs_1, cs_2};
 const char *const positioning_menu[] PROGMEM = {pm_0,pm_1};
 const char *const motor_calibration_menu1[] PROGMEM {mc1_0, mc1_1, mc1_2};
-const char *const options_menu[] PROGMEM {option_0, option_1,option_2};
+const char *const options_menu[] PROGMEM {option_0, option_1,option_2,option_3};
+
+const char *const rotation_menu[] PROGMEM {rotation_0, rotation_1};
+const char *const rear_rotation_menu[] PROGMEM {rear_rotation_0, rear_rotation_1};
+const char *const front_rotation_menu[] PROGMEM {front_rotation_0, front_rotation_1};
+
 const char *const excess_option_menu[] PROGMEM {excess_option_0, excess_option_1,excess_option_2};
 
 const char *const zoom_menu1[] PROGMEM = {zm1_0,zm1_1,zm1_2,zm1_3};
@@ -279,11 +320,11 @@ const char *const zoomfocus_menu1[] PROGMEM = {zf1_0,zf1_1,zf1_2,zf1_3};
 const char *const zoomfocus_menu2[] PROGMEM = {zf2_0,zf2_1,zf2_2,zf2_3};
 const char *const zoomfocus_menu3[] PROGMEM = {zf3_0,zf3_1};
 
-const char *const calizoom_left[] PROGMEM = {cali_zoom, string_cali, string_left};
-const char *const calizoom_right[] PROGMEM = {cali_zoom, string_cali, string_right};
+const char *const calizoom_left[] PROGMEM = {cali_zoom, string_cali_initial_position, string_cali, string_left};
+const char *const calizoom_right[] PROGMEM = {cali_zoom, string_cali_final_position, string_cali, string_right};
 
-const char *const califocus_left[] PROGMEM = {cali_focus, string_cali, string_left};
-const char *const califocus_right[] PROGMEM = {cali_focus, string_cali, string_right};
+const char *const califocus_left[] PROGMEM = {cali_focus, string_cali_initial_position, string_cali, string_left};
+const char *const califocus_right[] PROGMEM = {cali_focus, string_cali_final_position, string_cali, string_right};
 
 const char *const focus_adjust[] PROGMEM = {adjust_focus, string_36_1, string_37};
 const char *const focus_dist[] PROGMEM = {fm1_2, string_36, string_38};
@@ -292,7 +333,7 @@ const char *const zoom_adjust[] PROGMEM = {adjust_zoom, string_36, string_37};
 const char *const zoom_dist[] PROGMEM = {zm1_2, string_36, string_38};
 
 const char *const preset1_menu[] PROGMEM = {preset1_0, preset1_1, preset1_2, preset1_3};
-const char *const preset2_menu[] PROGMEM = {preset2_0};
+const char *const preset2_menu[] PROGMEM = {preset2_0,preset2_1,preset2_2};
 
 const char *const countdown[] PROGMEM = {counttext_1, counttext_2, counttext_3, counttext_4, counttext_5};
 
@@ -304,11 +345,12 @@ int getUpDown(int max_option, int current_option, int delay_ms);
 void resetToHomeScreen();
 void countdownMenu();
 
-void hotbar(const char title[], int current, int max_range, int current_option=0, bool haveBack=false, int header=-1, int footer=-1, uint16_t color=WHITE, bool updateBar=false);
+void hotbar(const char title[], int current, int max_range, bool haveBack=false, int header=-1, int footer=-1, uint16_t color=WHITE, bool updateBar=false);
 int getLeftRight_value(int range, int current, int low_limit, int delay_ms);
 int get_camera_calibration_update();
 int get_motor_calibration_update();
-void caliMenu(const char *const string_table[], int current_step, int max_steps, uint16_t color, bool updateBar);
+
+//void caliMenu(const char *const string_table[], int current_step, int max_steps, uint16_t color, bool updateBar);
 void moveMotorMenu(int count, const char *const string_table[], int current_step, int max_steps, uint16_t color=WHITE, bool updateBar=false);
 
 void printMoveSteps(int type, const char title[], uint16_t color, int movement_display_option);
@@ -323,58 +365,67 @@ void moveMultiMotor(int zoom_value, int focus_value, float motor_time = motor_ti
 void goMultiDist(const char title[], int zoom_desired, int focus_desired, uint16_t color=WHITE, float motor_time = motor_time, float motor_div = 1,bool goBack=true,bool lastSequence=true,bool showScreen=true);
 
 
-int home_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected, uint16_t color=DEEPPINK);
+void home_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], uint16_t color=DEEPPINK);
 int get_HomeMenu_Update(int s);
 
-int configuration_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void configuration_menu_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_Configuration_Menu_Update(int s);
 
-int cameraSetting_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void cameraSetting_menu_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_CameraSetting_Menu_update(int s);
 
-int positioning_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void positioning_menu_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_positioning_Menu_update(int s);
 
-int motor_calibration_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void motor_calibration_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_motor_calibration_menu1_update(int s);
 
-int options_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void options_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_options_menu1_update(int s);
+
+void rotation_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color);
+int get_rotation_menu1_update(int s);
+
+void rear_rotation_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color);
+int get_rear_rotation_menu1_update(int s);
+
+void front_rotation_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color);
+int get_front_rotation_menu1_update(int s);
 
 void caliMenu(const char *const string_table[], int current_step, int max_steps=200, uint16_t color=WHITE, bool updateBar=false);
 int calibrate(int type, const char *const string_table[], int upper_limit, int lower_limit, uint16_t color=DEEPPINK);
 
-int excess_menu_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void excess_menu_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_excess_menu_update(int s);
 
-int action_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void action_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_Action_screen_1_Menu_update(int s);
 
-int zoom_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void zoom_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_zoom_movements_menu1_update(int s);
 
-int zoom_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void zoom_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_zoom_movements_menu2_update(int s);
 
-int focus_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void focus_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_focus_movements_menu1_update(int s);
 
-int focus_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void focus_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_focus_movements_menu2_update(int s);
 
-int zoomfocus_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void zoomfocus_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_zoomfocus_movements_menu1_update(int s);
 
-int zoomfocus_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void zoomfocus_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_zoomfocus_movements_menu2_update(int s);
 
-int zoomfocus_movements_menu3_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void zoomfocus_movements_menu3_screen(int array_size,const char *menu_name ,const char *const string_table[],uint16_t color=DEEPPINK);
 int get_zoomfocus_movements_menu3_update(int s);
 
-int custome_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void custome_movements_menu1_screen(int array_size,const char *menu_name ,const char *const string_table[], uint16_t color=DEEPPINK);
 int get_custom_movements_menu1_update(int s);
 
-int custome_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[], int option_selected,uint16_t color=DEEPPINK);
+void custome_movements_menu2_screen(int array_size,const char *menu_name ,const char *const string_table[], uint16_t color=DEEPPINK);
 int get_custom_movements_menu2_update(int s);
 
 void open_Shutter();
@@ -382,7 +433,7 @@ void close_Shutter();
 
 
 void open_Shutter() { // Controls the shutter of a Nikon camera
-  Serial.println("Open");
+  //Serial.println("Open");
   digitalWrite(FOCUS_CAMERA, HIGH);  
   digitalWrite(SHUTTER_CAMERA, HIGH);
   delay(150);
@@ -394,7 +445,7 @@ void open_Shutter() { // Controls the shutter of a Nikon camera
   delay(1000);
 }
 void close_Shutter() { // Controls the shutter of a Nikon camera
-  Serial.println("Close");
+  //Serial.println("Close");
   digitalWrite(FOCUS_CAMERA, HIGH);  
   digitalWrite(SHUTTER_CAMERA, HIGH);
   delay(150);
@@ -458,11 +509,47 @@ void setup() {
   shutter_time = EEPROM.read(5);
   motor_time = EEPROM.read(6);
   excess_option_set = EEPROM.read(7);
+  rear_rotation_direction = EEPROM.read(8);
+  front_rotation_direction = EEPROM.read(9);
+  first_time = EEPROM.read(10);
+
+
+  //set back last know position after on/off
+  setAccel(ZOOM, CALI_ACCEL);
+  setAccel(FOCUS, CALI_ACCEL);
+  setCurrentPos(ZOOM, zoom_current * MS_STEP);
+  setCurrentPos(FOCUS, focus_current * MS_STEP);
 
   // ***** Default Values *****
   // if empty (==255), setting default values to 0
   // for current positions -> Move the motor to stored current 
   // to be implemented when finalise...
+  if(first_time == 255){
+    focus_range = 0;
+    zoom_range = 0;
+    focus_current = 0;
+    zoom_current = 0;
+    orientation = 0;
+    shutter_time = 0;
+    motor_time = 0;
+    excess_option_set = 0; 
+    rear_rotation_direction = 0;
+    front_rotation_direction = 0;
+    first_time = 0;
+                        
+    EEPROM.write(0, focus_range);
+    EEPROM.write(1, zoom_range);
+    EEPROM.write(2, focus_current);
+    EEPROM.write(3, zoom_current);
+    EEPROM.write(4, orientation);
+    EEPROM.write(5, shutter_time);
+    EEPROM.write(6, motor_time);
+    EEPROM.write(7, excess_option_set);
+    EEPROM.write(8, rear_rotation_direction);
+    EEPROM.write(9, front_rotation_direction);
+    EEPROM.write(10, first_time);
+    EEPROM.commit();
+  }
 
   //Show ICM APP 'loading page'
   initializing_Page();
@@ -483,13 +570,11 @@ void loop() {
             // Set Shutter Time screen - shutter time of the DSLR camera
             case 0:{
                 //display shutter speed bar (motor calibration).
-                option_selected = 0; //set selected option on shutter menu
-                int max_shutter_time = 40;
+                // int max_shutter_time = 40;
                 int old_shutter_time = shutter_time; //if go_home before setting
-                //hotbar(shutter_menu,cur_shutter_time,max_shutter_time,option_selected,has_back)
-                hotbar(shutter_menu, shutter_time, max_shutter_time, option_selected, true,0,1);
+                hotbar(shutter_menu, shutter_time, max_shutter_time, true,0,1);
                 while(true){
-                  hotbar(shutter_menu, shutter_time, max_shutter_time, option_selected, true, 0, 1, GOLDENROD, true);
+                  hotbar(shutter_menu, shutter_time, max_shutter_time, true, 0, 1, GOLDENROD, true);
                   int option = get_camera_calibration_update();
                   shutter_time = getLeftRight_value(max_shutter_time, shutter_time,0, 0);
 
@@ -511,12 +596,11 @@ void loop() {
             } 
             // set motor movement time -  time needed to execute a sequence
             case 1: {
-              option_selected = 0; //set selected option on shutter menu
-              int motor_time_max = 40;
+              int motor_time_max = shutter_time;
               int old_motor_time = motor_time;
-               hotbar(motor_time_menu, motor_time, motor_time_max, option_selected, true,0,1);
+               hotbar(motor_time_menu, motor_time, motor_time_max, true,0,1);
               while(true){
-                hotbar(motor_time_menu, motor_time, motor_time_max, option_selected, true,0,1, GOLDENROD, true);
+                hotbar(motor_time_menu, motor_time, motor_time_max, true,0,1, GOLDENROD, true);
                 int option = get_camera_calibration_update();
                 motor_time = getLeftRight_value(motor_time_max, motor_time,0, 0);
 
@@ -572,8 +656,7 @@ void loop() {
                       break;
                     }
                     default:
-                      //max_option = excess_menu_screen(3,excess_option_name,excess_option_menu, option_selected,DEEPPINK);
-                      excess_menu_screen(3,excess_option_name,excess_option_menu, option_selected,DEEPPINK);
+                      excess_menu_screen(3,excess_option_name,excess_option_menu,DEEPPINK);
                       excess_option_screen = get_excess_menu_update(excess_option_screen);
                       break;
                   }
@@ -581,8 +664,7 @@ void loop() {
             }
             //show [camera settings menu]
             default:
-              // max_option = cameraSetting_menu_screen(3,cs_name ,camera_settings_menu, option_selected,DEEPPINK);
-              cameraSetting_menu_screen(3,cs_name ,camera_settings_menu, option_selected,DEEPPINK);
+              cameraSetting_menu_screen(3,cs_name ,camera_settings_menu,DEEPPINK);
               camera_setting_screen = get_CameraSetting_Menu_update(camera_setting_screen);
               break;
           }
@@ -601,13 +683,14 @@ void loop() {
                 setCurrentPos(ZOOM, zoom_current * MS_STEP);
             
                 // set to minimum left
-                int minZoom = calibrate(ZOOM, calizoom_left, 0, -MOTOR_STEPS, AQUA);
+                //int minZoom = calibrate(ZOOM, calizoom_left, 0, -MOTOR_STEPS, DEEPPINK);
+                int minZoom = calibrate(ZOOM, calizoom_left, MOTOR_STEPS, -MOTOR_STEPS, DEEPPINK);
                 setCurrentPos(ZOOM, 0); // set to 0
                 zoom_current = 0;
                 //updateScreen(100);
                 
                 // set to maximum right
-                int maxZoom = calibrate(ZOOM, calizoom_right, MOTOR_STEPS, 0, AQUA);
+                int maxZoom = calibrate(ZOOM, calizoom_right, MOTOR_STEPS, 0, DEEPPINK);
                 //moveMotor(ZOOM, 0,0); // returns back to 0
                 zoom_current = 0;
                 //zoom_range = maxZoom - minZoom;
@@ -628,54 +711,52 @@ void loop() {
             }
             //Focus Calibration
             case 1: {
-              focus_current = 0;
-              // moveMotor(FOCUS, focus_current);
-              // setCurrentPos(FOCUS, 0,0);
-              setAccel(FOCUS, CALI_ACCEL);
-              setCurrentPos(FOCUS, focus_current * MS_STEP);
-          
-              // set to minimum left
-              int minFocus = calibrate(FOCUS, califocus_left, 0, -MOTOR_STEPS, DEEPPINK);
-              setCurrentPos(FOCUS, 0); // set to 0
-              focus_current = 0;
-              //updateScreen(100);
-          
-              // set to maximum right
-              int maxFocus = calibrate(FOCUS, califocus_right, MOTOR_STEPS, 0, DEEPPINK);
-              // moveMotor(FOCUS, 0,0); // returns back to 0
-              focus_current = 0;
-              //focus_range = maxFocus - minFocus;
-              focus_range =  maxFocus - focus_current;
-              //updateScreen(100);
-              EEPROM.write(0, focus_range);
+                focus_current = 0;
+                //moveMotor(FOCUS, focus_current * MS_STEP);
+                //setCurrentPos(FOCUS, 0);
+                setAccel(FOCUS, CALI_ACCEL);
+                setCurrentPos(FOCUS, focus_current * MS_STEP);
+            
+                // set to minimum left
+                //int minFocus = calibrate(FOCUS, califocus_left, 0, -MOTOR_STEPS, DEEPPINK);
+                int minFocus = calibrate(FOCUS, califocus_left, MOTOR_STEPS, -MOTOR_STEPS, DEEPPINK);
+                setCurrentPos(FOCUS, 0); // set to 0
+                focus_current = 0;
+                //updateScreen(100);
+                
+                // set to maximum right
+                int maxFocus = calibrate(FOCUS, califocus_right, MOTOR_STEPS, 0, DEEPPINK);
+                //moveMotor(FOCUS, 0,0); // returns back to 0
+                focus_current = 0;
+                //focus_range = maxFocus - minFocus;
+                focus_range = maxFocus - focus_current;
+                //updateScreen(100);
+                EEPROM.write(0, focus_range);  
 
-              //move and set focus current to be the midlle of the minMax(range)
-              int focus_middle = focus_range / 2;
-              focus_current = focus_middle;
-              moveMotor(FOCUS, focus_middle,0);
-          
-              // minimum becomes absolute min pos
-              EEPROM.write(2, focus_current);
-              EEPROM.commit();
-              motor_calibration_screen1 = -1;
-              break;
+                //move and set focyus current to be the midlle of the minMax(range)
+                int focus_middle = focus_range / 2;
+                focus_current = focus_middle;
+                moveMotor(FOCUS, focus_middle,0);
+
+                //minimum becomes absolute min pos
+                EEPROM.write(2, focus_current);
+                
+                
+                motor_calibration_screen1 = -1;
+                break;
             }
             //POV Calibration
             case 2: {
-              //go to zoom POV bar
-                //Ideally shd be 0 & minimum becomes absolute min pos
-                //zoom_current = 0;
-                //focus_current = 0;
                 setAccel(ZOOM, CALI_ACCEL);
-                setAccel(FOCUS, CALI_ACCEL);
-
-                zoom_current = chooseDist(ZOOM, 3, zoom_adjust, false, AQUA);
+                setCurrentPos(ZOOM, zoom_current * MS_STEP);
+                zoom_current = chooseDist(ZOOM, 3, zoom_adjust, false, DEEPPINK);
                 EEPROM.write(3, zoom_current);
-                //updateScreen(0);
+
+                setAccel(FOCUS, CALI_ACCEL);
+                setCurrentPos(FOCUS, focus_current * MS_STEP);
                 focus_current = chooseDist(FOCUS, 3, focus_adjust, false, DEEPPINK);
                 EEPROM.write(2, focus_current);
-                //updateScreen(0);
-                //Serial.println("pov calibration");
+                
                 motor_calibration_screen1 = resetScreen(motor_calibration_screen1);
                 EEPROM.commit();
               break;
@@ -691,8 +772,7 @@ void loop() {
 
             //Show motor_calibration_menu1
             default:
-              //max_option = motor_calibration_menu1_screen(3,mc1_name,motor_calibration_menu1, option_selected,DEEPPINK);
-              motor_calibration_menu1_screen(3,mc1_name,motor_calibration_menu1, option_selected,DEEPPINK);
+              motor_calibration_menu1_screen(3,mc1_name,motor_calibration_menu1,DEEPPINK);
               motor_calibration_screen1 = get_motor_calibration_menu1_update(motor_calibration_screen1);
               break;
           }
@@ -728,15 +808,83 @@ void loop() {
                 }
                 // show [positioning settings menu]
                 default: 
-                  // max_option = positioning_menu_screen(2,pm_name ,positioning_menu, option_selected);
-                  positioning_menu_screen(2,pm_name ,positioning_menu, option_selected,DEEPPINK);
+                  positioning_menu_screen(2,pm_name ,positioning_menu,DEEPPINK);
                   camera_positioning_screen = get_positioning_Menu_update(camera_positioning_screen);
                   break;
               }      
               break;
             }
-            //reset camera setting
+            //motor rotation option
             case 1:{
+              switch(rotation_menu1){
+                //zoom rotation option
+                case 0: {
+                  switch(rear_rotation_menu1){
+                    //zoom rotation 0
+                    case 0:{
+                      rear_rotation_direction = 0;
+                      EEPROM.write(8, rear_rotation_direction);
+                      EEPROM.commit();
+                      rear_rotation_menu1 = -1;
+                      rotation_menu1 = -1;
+
+                      break;
+                    }
+                    //zoom rotation 1
+                    case 1:{
+                      rear_rotation_direction = 1;
+                      EEPROM.write(8, rear_rotation_direction);
+                      EEPROM.commit();
+                      rear_rotation_menu1 = -1;
+                      rotation_menu1 = -1;
+                      break;
+                    }
+                    default:
+                      rear_rotation_menu1_screen(2,rear_rotation_name,rear_rotation_menu,DEEPPINK);
+                      rear_rotation_menu1 = get_rear_rotation_menu1_update(rear_rotation_menu1);
+                      break;
+                  }
+                  break;
+                }
+                //focus rotation option
+                case 1:{
+                  switch(front_rotation_menu1){
+                    //focus rotation 0
+                    case 0:{
+                      front_rotation_direction = 0;
+                      EEPROM.write(9, front_rotation_direction);
+                      EEPROM.commit();
+                      front_rotation_menu1 = -1;
+                      rotation_menu1 = -1;
+
+                      break;
+                    }
+                    //focus rotation 1
+                    case 1:{
+                      front_rotation_direction = 1;
+                      EEPROM.write(9, front_rotation_direction);
+                      EEPROM.commit();
+                      front_rotation_menu1 = -1;
+                      rotation_menu1 = -1;
+                      break;
+                    }
+                    default:
+                      front_rotation_menu1_screen(2,front_rotation_name,front_rotation_menu,DEEPPINK);
+                      front_rotation_menu1 = get_front_rotation_menu1_update(front_rotation_menu1);
+                      break;
+                  }
+                  break;
+                }
+                default:
+                  rotation_menu1_screen(2,rotation_name,rotation_menu,DEEPPINK);
+                  rotation_menu1 = get_rotation_menu1_update(rotation_menu1);
+                  break;
+
+              }
+              break;
+            }
+            //reset camera setting
+            case 2:{
               EEPROM.write(5,0);
               EEPROM.write(6,0);                 
               EEPROM.write(7,0);
@@ -749,7 +897,7 @@ void loop() {
               break;
             }
             //reset calibration
-            case 2:{
+            case 3:{
               EEPROM.write(0,0);
               EEPROM.write(1,0);
               EEPROM.write(2,0);
@@ -766,8 +914,7 @@ void loop() {
               break;
             }
             default:
-              //max_option = options_menu1_screen(3,mc1_name,motor_calibration_menu1, option_selected,DEEPPINK);
-              options_menu1_screen(3,option_name,options_menu, option_selected,DEEPPINK);
+              options_menu1_screen(4,option_name,options_menu,DEEPPINK);
               options_menu1 = get_options_menu1_update(options_menu1);
               break; 
           }
@@ -776,8 +923,7 @@ void loop() {
         
         //Show configuation_menu
         default:
-          //max_option = configuration_menu_screen(3,mm_configuration_header,main_menu_1, option_selected,DEEPPINK);  
-          configuration_menu_screen(3,mm_configuration_header,main_menu_1, option_selected,DEEPPINK);  
+          configuration_menu_screen(3,mm_configuration_header,main_menu_1,DEEPPINK);  
           configuration_screen = get_Configuration_Menu_Update(configuration_screen);
           break;
       }
@@ -874,8 +1020,7 @@ void loop() {
                 }
 
                 default:
-                   //max_option = zoom_movements_menu2_screen(2,zm2_name ,zoom_menu2, option_selected,DEEPPINK);
-                   zoom_movements_menu2_screen(2,zm2_name ,zoom_menu2, option_selected,DEEPPINK);
+                   zoom_movements_menu2_screen(2,zm2_name ,zoom_menu2,DEEPPINK);
                    zoom_movements_menu2 = get_zoom_movements_menu2_update(zoom_movements_menu2);
                    if(zoom_movements_menu2 == -2){
                     zoom_movements_menu1 = -1;
@@ -887,8 +1032,7 @@ void loop() {
             }
 
             default:
-              //max_option = zoom_movements_menu1_screen(4,zm1_name ,zoom_menu1, option_selected,DEEPPINK)
-              zoom_movements_menu1_screen(4,zm1_name ,zoom_menu1, option_selected,DEEPPINK);
+              zoom_movements_menu1_screen(4,zm1_name ,zoom_menu1,DEEPPINK);
               zoom_movements_menu1 = get_zoom_movements_menu1_update(zoom_movements_menu1);
           }
           break;
@@ -968,8 +1112,7 @@ void loop() {
                 }
                 //show focus_movements_menu2
                 default:
-                   //max_option = focus_movements_menu2_screen(2,zm2_name ,zoom_menu2, option_selected,DEEPPINK);
-                   focus_movements_menu2_screen(2,fm2_name ,focus_menu2, option_selected,DEEPPINK);
+                   focus_movements_menu2_screen(2,fm2_name ,focus_menu2,DEEPPINK);
                    focus_movements_menu2 = get_zoom_movements_menu2_update(focus_movements_menu2);
                    if(focus_movements_menu2 == -2){
                     focus_movements_menu1 = -1;
@@ -981,16 +1124,13 @@ void loop() {
             }
             //show focus_movements_menu1
             default:
-              //max_option = focus_movements_menu1_screen(4,fm1_name ,focus_menu1, option_selected,DEEPPINK)
-              focus_movements_menu1_screen(4,fm1_name ,focus_menu1, option_selected,DEEPPINK);
+              focus_movements_menu1_screen(4,fm1_name ,focus_menu1,DEEPPINK);
               focus_movements_menu1 = get_zoom_movements_menu1_update(focus_movements_menu1);
           }
           break;
-        }
-        
+        }      
         //zoom-focus movement menu
         case 2: {
-
           switch (zoom_focus_movements_menu1) {
             //Z[MAX] F[MAX]
             case 0: {
@@ -1142,8 +1282,7 @@ void loop() {
                     }
                     //show zoom_focus_page3
                     default:
-                      //  max_option = zoomfocus_movements_menu3_screen(2, zf3_name,zoomfocus_menu3,option_selected,DEEPPINK);
-                      zoomfocus_movements_menu3_screen(2, zf3_name,zoomfocus_menu3,option_selected,DEEPPINK);
+                      zoomfocus_movements_menu3_screen(2, zf3_name,zoomfocus_menu3,DEEPPINK);
                       zoom_focus_movements_menu3 = get_zoomfocus_movements_menu3_update(zoom_focus_movements_menu3);
                       if(zoom_focus_movements_menu3 == -2){
                           zoom_focus_movements_menu2 = -1;
@@ -1156,8 +1295,7 @@ void loop() {
 
               //show zoom_focus_page2
               default:
-                // max_option = zoomfocus_movements_menu2_screen(4, zf2_name ,zoomfocus_menu2, option_selected,DEEPPINK);
-                zoomfocus_movements_menu2_screen(4, zf2_name ,zoomfocus_menu2, option_selected,DEEPPINK);
+                zoomfocus_movements_menu2_screen(4, zf2_name ,zoomfocus_menu2,DEEPPINK);
                 zoom_focus_movements_menu2 = get_zoomfocus_movements_menu2_update(zoom_focus_movements_menu2);
                 if(zoom_focus_movements_menu2 == -2){
                     zoom_focus_movements_menu1 = -1;
@@ -1169,16 +1307,14 @@ void loop() {
             }
             //show zoom_focus_page1
             default:
-              // max_option = zoomfocus_movements_menu1_screen(4, zf1_name ,zoomfocus_menu1, option_selected,DEEPPINK);
-              zoomfocus_movements_menu1_screen(4, zf1_name ,zoomfocus_menu1, option_selected,DEEPPINK);
+              zoomfocus_movements_menu1_screen(4, zf1_name ,zoomfocus_menu1,DEEPPINK);
               zoom_focus_movements_menu1 = get_zoomfocus_movements_menu1_update(zoom_focus_movements_menu1);
               break;
           }
           break;
         }
         default:
-          // max_option = action_menu1_screen(3,mm_action1_header,main_menu_2,option_selected,DEEPPINK);
-          action_menu1_screen(3,mm_action1_header,main_menu_2,option_selected,DEEPPINK);
+          action_menu1_screen(3,mm_action1_header,main_menu_2,DEEPPINK);
           action_screen_1 = get_Action_screen_1_Menu_update(action_screen_1);
           break;
       }
@@ -1187,107 +1323,195 @@ void loop() {
 
     //Action Custom
     case 2:{
-
       switch (fixed_paterns_menu1) {
-        // Bokeh Effect (S: Focus Max, Zoom Current. F: Focus Current, Zoom Widest)
+        // Bokeh Effect - changing focus to minimum from pov
+        //(S: Focus Max, Zoom Current. F: Focus Current, Zoom Widest)
         case 0: {
-          Serial.println("Bokeh Effect");
-          int previous_pos = focus_current;
-          // setting lens to starting position
-          printMoveSteps(-1, preset1_0, CADETBLUE, 2); 
-          //moving motor, haven start pattern yet so use default motor speed
-          moveMotor(FOCUS, focus_range, 0);
-          focus_current = focus_range;
-          //start pattern sequence
-          updateScreen(100);
+          //Serial.println("Bokeh Effect");
           countdownMenu();
-          goDist(FOCUS, preset1_0, previous_pos, VIOLET, motor_time,2,false,false,true);
-          goDist(ZOOM, preset1_0, 0, VIOLET, motor_time,2,true,true,false);
+          goDist(FOCUS, preset1_0, 0, SNOW,motor_time,1,true,true,true);
           fixed_paterns_menu1 = resetScreen(fixed_paterns_menu1);
+          // =============================================
+          // setting lens to starting position (old version)
+          // int previous_pos = focus_current;
+          // printMoveSteps(-1, preset1_0, CADETBLUE, 2); 
+          // moving motor, haven start pattern yet so use default motor speed
+          // moveMotor(FOCUS, focus_range, 0);
+          // focus_current = focus_range;
+          // start pattern sequence
+          // updateScreen(100);
+          // countdownMenu();
+          // goDist(FOCUS, preset1_0, previous_pos, VIOLET, motor_time,2,false,false,true);
+          // goDist(ZOOM, preset1_0, 0, VIOLET, motor_time,2,true,true,false);
+          // fixed_paterns_menu1 = resetScreen(fixed_paterns_menu1);
           break;
         }
-        //Firework Effect (Focus Max, then min, then return to original)
+        //Firework-F same as bokeh(Focus Max, then min, then return to original)
         case 1: {
-          Serial.println("Firework Effect");
-          int previous_pos = focus_current;
-          // setting lens to starting position
-          printMoveSteps(-1, preset1_1, CADETBLUE, 2);
-          //moving motor, haven start pattern yet so use default motor speed 
-          moveMotor(FOCUS, focus_range,0);
-          focus_current = focus_range;
-          updateScreen(100);
+          Serial.println("Firework-F");
           countdownMenu();
+          goDist(FOCUS, preset1_1, 0, SNOW,motor_time,1,true,true,true);
+          fixed_paterns_menu1 = resetScreen(fixed_paterns_menu1);
+          //===================================
+          // int previous_pos = focus_current;
+          // setting lens to starting position
+          // printMoveSteps(-1, preset1_1, CADETBLUE, 2);
+          // moving motor, haven start pattern yet so use default motor speed 
+          // moveMotor(FOCUS, focus_range,0);
+          // focus_current = focus_range;
+          // updateScreen(100);
+          // countdownMenu();
           // goDist(FOCUS, preset1_1, 0, AZURE, ((float)3/4)*motor_time, false,false,true);
           // goDist(FOCUS, preset1_1, previous_pos, AZURE, ((float)1/4)*motor_time,false,true,false);
-          goDist(FOCUS, preset1_1, 0, AZURE, motor_time, 1.33,false,false,true);
-          goDist(FOCUS, preset1_1, previous_pos, AZURE,motor_time,4,false,true,false);
-          fixed_paterns_menu1 = resetScreen(fixed_paterns_menu1);
+          // goDist(FOCUS, preset1_1, 0, AZURE, motor_time, 1.33,false,false,true);
+          // goDist(FOCUS, preset1_1, previous_pos, AZURE,motor_time,4,false,true,false);
+          // fixed_paterns_menu1 = resetScreen(fixed_paterns_menu1);
           break;
         }
-        // Zoom Blur Effect (Focus & Zoom Max then back to original)
-        // Is going back to original part of motor time or not?
+        // Firework-ZF Effect, zoom the wide(min), focus to min at the same time === ZF-min
         case 2: {
-          Serial.println("ZoomBlur Effect");
-          int previous_zoom_pos = zoom_current;
-          int previous_focus_pos = focus_current;
-          // setting lens to starting position
-          printMoveSteps(-1, preset1_2, CADETBLUE, 2); // setting lens to starting position
-          //asume going back part of motor time
-          updateScreen(100);
+          Serial.println("Firework-ZF");
           countdownMenu();
-          goMultiDist(preset1_2, zoom_range, focus_range, VIOLET, motor_time,2, false, false,true);
-          goMultiDist(preset1_2, previous_zoom_pos, previous_focus_pos, VIOLET, motor_time,2, false, true,false);
+          goMultiDist(preset1_2, 0, 0, AZURE,motor_time,1,true,true,true);
           fixed_paterns_menu1 = resetScreen(fixed_paterns_menu1);
+          //================================
+          // int previous_pos = zoom_current;
+          // // setting lens to starting position
+          // printMoveSteps(-1, preset1_2, CADETBLUE, 2);
+          // moving motor, haven start pattern yet so use default motor speed 
+          // moveMotor(ZOOM, focus_range,0);
+          // zoom_current = zoom_range;
+          // updateScreen(100);
+          // countdownMenu();
+          // goDist(ZOOM, preset1_2, 0, AZURE, ((float)3/4)*motor_time, false,false,true);
+          // goDist(ZOOM, preset1_2, previous_pos, AZURE, ((float)1/4)*motor_time,false,true,false);
+          // goDist(ZOOM, preset1_2, 0, AZURE, motor_time, 1.33,false,false,true);
+          // goDist(ZOOM, preset1_2, previous_pos, AZURE,motor_time,4,false,true,false);
+          // fixed_paterns_menu1 = resetScreen(fixed_paterns_menu1);
           break;
         }
-        //Sine Wave Effect
+        //ZoomBlur min === zoom to min
         case 3: {
-          Serial.println("Sine Wave Effect");
-          int previous_zoom = zoom_current;
-          int previous_focus = focus_current;
-          // Serial.print("zoom_current");
-          // Serial.println(zoom_current);
-          // Serial.print("zoom_current");
-          // Serial.println(zoom_current);
+          Serial.println("ZoomBlur min");
           countdownMenu();
-          // goDist(ZOOM, preset2_0, zoom_range, CORAL, motor_time/4, false,false,true);
-          // goDist(FOCUS, preset2_0, focus_range, CORAL, motor_time/4, false,false,false);
-          // goDist(ZOOM, preset2_0, 0, CORAL, motor_time/4,false,false,false);
-          // goDist(FOCUS, preset2_0, 0, CORAL, motor_time/4,false,true,false);
-          goDist(ZOOM, preset2_0, zoom_range, CORAL, motor_time,4, false,false,true);
-          goDist(FOCUS, preset2_0, focus_range, CORAL, motor_time,4, false,false,false);
-          goDist(ZOOM, preset2_0, 0, CORAL, motor_time,4,false,false,false);
-          goDist(FOCUS, preset2_0, 0, CORAL, motor_time,4,false,true,false);
-          //end of pattern
-          
-          // return to initial position
-          updateScreen(100);
-          printMoveSteps(1, preset2_0, CADETBLUE, 1); 
-          // Serial.print("previous_zoom");
-          // Serial.println(previous_zoom);
-          // Serial.print("previous_focus");
-          // Serial.println(previous_focus);
-          moveMultiMotor(previous_zoom,previous_focus,0);
-          updateScreen(100);
-          zoom_current = previous_zoom;
-          focus_current = previous_focus;
+          //global motor time pass in by default
+          //return to starting position by default
+          goDist(ZOOM, preset1_3, 0, SNOW, motor_time,1,true,true,true);
           fixed_paterns_menu1 = resetScreen(fixed_paterns_menu1);
+          //========================================
+          // int previous_zoom_pos = zoom_current;
+          // int previous_focus_pos = focus_current;
+          // setting lens to starting position
+          // printMoveSteps(-1, preset1_3, CADETBLUE, 2); // setting lens to starting position
+          //asume going back part of motor time
+          // updateScreen(100);
+          // countdownMenu();
+          // goMultiDist(preset1_2, zoom_range, focus_range, VIOLET, motor_time,2, false, false,true);
+          // goMultiDist(preset1_2, previous_zoom_pos, previous_focus_pos, VIOLET, motor_time,2, false, true,false);
+          // fixed_paterns_menu1 = resetScreen(fixed_paterns_menu1);
           break;
         }
 
         //fixed_paterns_menu2
         case 4: {
           switch (fixed_paterns_menu2) {     
-            //ZigZag
+            //Zoomblue-max === zoom to max
             case 0: {
+              //Serial.println("Zoom to max");
+              countdownMenu();
+              //return to starting position by default
+              goDist(ZOOM, preset2_0, zoom_range, SNOW, motor_time,1,true,true,true);
+              fixed_paterns_menu2 = resetScreen(fixed_paterns_menu2);
+              break;
+            }
+              //SinWave-1 assume focus - small to wide wave
+              //assume 3 wave motion
+              case 1: {
+              int initial_pos = focus_current;
+              int min_distance_range = initial_pos - 0;
+              int max_distance_range = focus_range - initial_pos;
+              
+              int total_waves = 3;
+              int initial_wave = 1;
+              int last_wave = 3;
+              countdownMenu();
+              for (int cur_wave = 1; cur_wave <= total_waves; cur_wave++) {
+                int max_direction_to_travel = initial_pos + ((max_distance_range / total_waves) * cur_wave);
+                int min_direction_to_travel = initial_pos - ((min_distance_range / total_waves) * cur_wave);
+                //trial and error (unless got better idea)
+                int wave_motor_div = total_waves * 12;
+                //first time initiate start sound and keep screen there
+                if(cur_wave == initial_wave){
+                  goDist(FOCUS, preset2_1, max_direction_to_travel, SNOW, motor_time,wave_motor_div,false,false,true);
+                  goDist(FOCUS, preset2_1, initial_pos, SNOW, motor_time,wave_motor_div,false,false,false);
+                  goDist(FOCUS, preset2_1, min_direction_to_travel, SNOW, motor_time,wave_motor_div,false,false,false);
+                  goDist(FOCUS, preset2_1, initial_pos, SNOW, motor_time,wave_motor_div,false,false,false);
+                }
+                //last wave
+                else if(cur_wave == last_wave){
+                  goDist(FOCUS, preset2_1, max_direction_to_travel, SNOW, motor_time,wave_motor_div,false,false,false);
+                  goDist(FOCUS, preset2_1, initial_pos, SNOW, motor_time,wave_motor_div,false,false,false);
+                  goDist(FOCUS, preset2_1, min_direction_to_travel, SNOW, motor_time,wave_motor_div,false,false,false);
+                  //last movement and press close shutter
+                  goDist(FOCUS, preset2_1, initial_pos, SNOW, motor_time,wave_motor_div,false,true,false);
+                }
+                //rest of the waves
+                else{
+                  goDist(FOCUS, preset2_1, max_direction_to_travel, SNOW, motor_time,wave_motor_div,false,false,false);
+                  goDist(FOCUS, preset2_1, initial_pos, SNOW, motor_time,wave_motor_div,false,false,false);
+                  goDist(FOCUS, preset2_1, min_direction_to_travel, SNOW, motor_time,wave_motor_div,false,false,false);
+                  goDist(FOCUS, preset2_1, initial_pos, SNOW, motor_time,wave_motor_div,false,false,false);
+                }
+              }
+
+              fixed_paterns_menu2 = resetScreen(fixed_paterns_menu2);
+              break;
+            }
+            //SinWave-2 - wide to small wave
+            case 2: {
+              int initial_pos = focus_current;
+              int min_distance_range = initial_pos - 0;
+              int max_distance_range = focus_range - initial_pos;
+              int total_waves = 3;
+              int initial_wave = 3;
+              int last_wave = 1;
+              countdownMenu();
+              for (int cur_wave = 3; cur_wave >= last_wave; cur_wave--) {
+                int max_direction_to_travel = initial_pos + ((max_distance_range / total_waves) * cur_wave);
+                int min_direction_to_travel = initial_pos - ((min_distance_range / total_waves) * cur_wave);
+                //trial and error (unless got better idea)
+                int wave_motor_div = total_waves * 12;
+
+                //first time initiate start sound and keep screen there
+                if(cur_wave == initial_wave){
+                  goDist(FOCUS, preset2_1, max_direction_to_travel, SNOW, motor_time,wave_motor_div,false,false,true);
+                  goDist(FOCUS, preset2_1, initial_pos, SNOW, motor_time,wave_motor_div,false,false,false);
+                  goDist(FOCUS, preset2_1, min_direction_to_travel, SNOW, motor_time,wave_motor_div,false,false,false);
+                  goDist(FOCUS, preset2_1, initial_pos, SNOW, motor_time,wave_motor_div,false,false,false);
+                }
+                //last wave
+                else if(cur_wave == last_wave){
+                  goDist(FOCUS, preset2_1, max_direction_to_travel, SNOW, motor_time,wave_motor_div,false,false,false);
+                  goDist(FOCUS, preset2_1, initial_pos, SNOW, motor_time,wave_motor_div,false,false,false);
+                  goDist(FOCUS, preset2_1, min_direction_to_travel, SNOW, motor_time,wave_motor_div,false,false,false);
+                  //last movement and press close shutter
+                  goDist(FOCUS, preset2_1, initial_pos, SNOW, motor_time,wave_motor_div,false,true,false);
+                }
+                //rest of the waves
+                else{
+                  goDist(FOCUS, preset2_1, max_direction_to_travel, SNOW, motor_time,wave_motor_div,false,false,false);
+                  goDist(FOCUS, preset2_1, initial_pos, SNOW, motor_time,wave_motor_div,false,false,false);
+                  goDist(FOCUS, preset2_1, min_direction_to_travel, SNOW, motor_time,wave_motor_div,false,false,false);
+                  goDist(FOCUS, preset2_1, initial_pos, SNOW, motor_time,wave_motor_div,false,false,false);
+                }
+              }
               fixed_paterns_menu2 = resetScreen(fixed_paterns_menu2);
               break;
             }
             
             //show fixed_paterns_menu2
             default:
-              //max_option = custome_movements_menu1_screen(1, preset2_name, preset2_menu, option_selected,DEEPPINK);
-              custome_movements_menu2_screen(1, preset2_name, preset2_menu, option_selected,DEEPPINK);
+              custome_movements_menu2_screen(3, preset2_name, preset2_menu,DEEPPINK);
               fixed_paterns_menu2 = get_custom_movements_menu2_update(fixed_paterns_menu2);
               if(fixed_paterns_menu2 == -2){
                     fixed_paterns_menu1 = -1;
@@ -1300,8 +1524,7 @@ void loop() {
 
         //show fixed_paterns_menu1
         default:
-          // max_option = custome_movements_menu1_screen(4, preset1_name, preset1_menu, option_selected,DEEPPINK);
-          custome_movements_menu1_screen(4, preset1_name, preset1_menu, option_selected,DEEPPINK);
+          custome_movements_menu1_screen(4, preset1_name, preset1_menu,DEEPPINK);
           fixed_paterns_menu1 = get_custom_movements_menu1_update(fixed_paterns_menu1);
           break;
       }
@@ -1310,11 +1533,9 @@ void loop() {
 
     //Home page
     default:
-        //max_option = home_menu_screen(3,home_header,home_menu, option_selected,DEEPPINK);  
-        home_menu_screen(3,home_header,home_menu, option_selected,DEEPPINK);  
+        home_menu_screen(3,home_header,home_menu,DEEPPINK);  
         home_screen = get_HomeMenu_Update(home_screen);
         break;
   }
-  //option_selected = getUpDown(max_option, option_selected, 0);
 
 }
